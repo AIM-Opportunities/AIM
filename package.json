@@ -8,7 +8,9 @@
     "ios": "expo start --ios",
     "web": "expo start --web",
     "test": "jest",
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "predeploy": "expo export:web",
+    "deploy-hosting": "npm run predeploy && firebase deploy --only hosting"
   },
   "dependencies": {
     "@expo/webpack-config": "^0.17.0",
@@ -23,6 +25,7 @@
     "firebase": "^9.12.0",
     "firebase-ios-sdk": "^5.7.1",
     "firebase-react-native": "^0.0.3",
+    "firebase-tools": "^11.14.2",
     "react": "18.0.0",
     "react-dom": "18.0.0",
     "react-native": "0.69.6",

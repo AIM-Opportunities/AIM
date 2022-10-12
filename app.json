@@ -1,4 +1,22 @@
 {
   "name": "ProjectX",
-  "displayName": "ProjectX"
+  "displayName": "ProjectX",
+  "extra": {
+    "eas": {
+      "projectId": "fb82d139-fafe-4f80-8c9d-da7ebb259d72"
+    }
+  },
+  "expo": {
+    "android": {
+      "package": "com.awadomar.projectx"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "fb82d139-fafe-4f80-8c9d-da7ebb259d72"
+      }
+    },
+    "ios": {
+      "bundleIdentifier": "com.awadomar.projectx"
+    }
+  }
 }
