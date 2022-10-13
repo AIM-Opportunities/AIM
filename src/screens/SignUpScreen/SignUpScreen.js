@@ -6,6 +6,8 @@ import SocialSignInButtons from '../../components/SocialSignInButtons';
 import {useNavigation} from '@react-navigation/native';
 import {authentication} from '../../../firebase/firebase-config';
 import {createUserWithEmailAndPassword} from 'firebase/auth';
+import {db} from '../../../firebase/firebase-config';
+import {doc,setDoc} from 'firebase/firestore/lite';
 
 const SignUpScreen = () => {
   const [isSignedIn, setIsSignedIn] = useState(false);
@@ -19,8 +21,11 @@ const SignUpScreen = () => {
 
   const onRegisterPressed = () => {
     createUserWithEmailAndPassword(authentication, email, password)
-      .then(re => {
-        console.log(re);
+      .then(async re => {
+        await setDoc(doc(db, "userProfiles", authentication.currentUser.uid,
+        ), {
+        email: authentication.currentUser.email
+      });
         setIsSignedIn(true);
         navigation.navigate('SignIn');
       })

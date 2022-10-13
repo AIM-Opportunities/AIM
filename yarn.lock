@@ -2617,6 +2617,11 @@
   resolved "https://registry.npmjs.org/@react-native-firebase/auth/-/auth-15.7.0.tgz#bc133cb6e0f33fd307e8d3dfa7ae04b5980d7fbb"
   integrity sha512-0HJfCc0SUcSFbz5SyZWZOJkhtn+kOU8ytuPHM+vOJBeg5owJzmLnFx1ZI20gHU5cxhN3UQy/GKMPvlIcDeW7Bg==
 
+"@react-native-firebase/firestore@^15.7.0":
+  version "15.7.0"
+  resolved "https://registry.npmjs.org/@react-native-firebase/firestore/-/firestore-15.7.0.tgz#9396d3cfcdf54aec3c10bb5c45d08d292a990abb"
+  integrity sha512-lcMApKFIo4k9GqOUuK03WBDs3JP0pa94jTmy+hZQLAqyeA78GYC57CzGGKCkR0qtwCzMtE8HXqICY9FKv4rxpg==
+
 "@react-native-firebase/installations@^15.7.0":
   version "15.7.0"
   resolved "https://registry.npmjs.org/@react-native-firebase/installations/-/installations-15.7.0.tgz#95c9ce6ca3a6b8ca1299e7636e24c18a4d4aa5c4"
@@ -6567,7 +6572,7 @@ expect@^29.1.2:
     jest-message-util "^29.1.2"
     jest-util "^29.1.2"
 
-expo-application@~4.2.2:
+expo-application@^4.2.2, expo-application@~4.2.2:
   version "4.2.2"
   resolved "https://registry.npmjs.org/expo-application/-/expo-application-4.2.2.tgz#c9500819723c59eaee5ca9832bf17d1fd4139f74"
   integrity sha512-bFEaFRUdV6aK2iBd+HzkHNPYsyj88EAhaQW5leznmO0qQMJxpAQ3eoUXMey1hfDBh1qgkkHgSyCZ9BIgMAGJ1g==
@@ -7026,6 +7031,11 @@ find-yarn-workspace-root@~2.0.0:
   integrity sha512-1IMnbjt4KzsQfnhnzNd8wUEgXZ44IzZaZmnLYx7D5FZlaHt2gW20Cri8Q+E/t5tIj4+epTBub+2Zxu/vNILzqQ==
   dependencies:
     micromatch "^4.0.2"
+
+firebase-firestore-lite@^1.0.3:
+  version "1.0.3"
+  resolved "https://registry.npmjs.org/firebase-firestore-lite/-/firebase-firestore-lite-1.0.3.tgz#492f45eaff1e6d061d6b2af46627f911f6792960"
+  integrity sha512-mc24fSlOJMUVpMmOETxRuFVjeMOO919r7uZlc3z+Hw5wjtCB9G5JXzg3PLGBxFB0KkT7jD7DjXIjpzxklEiC0Q==
 
 firebase-ios-sdk@^5.7.1:
   version "5.7.1"
