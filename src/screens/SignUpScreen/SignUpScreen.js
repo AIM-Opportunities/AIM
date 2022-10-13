@@ -21,11 +21,8 @@ const SignUpScreen = () => {
 
   const onRegisterPressed = () => {
     createUserWithEmailAndPassword(authentication, email, password)
-      .then(async re => {
-        await setDoc(doc(db, "userProfiles", authentication.currentUser.uid,
-        ), {
-        email: authentication.currentUser.email
-      });
+      .then(re => {
+        console.log(re);
         setIsSignedIn(true);
         navigation.navigate('SignIn');
       })

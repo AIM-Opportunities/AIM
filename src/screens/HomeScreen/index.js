@@ -8,7 +8,7 @@ import {collection, getDocs, doc,setDoc} from 'firebase/firestore/lite';
 import { authentication } from '../../../firebase/firebase-config';
 import CustomInput from '../../components/CustomInput';
 
-const HomeScreen = async () => {
+const HomeScreen = () => {
   const [isSignedIn, setIsSignedIn] = useState(!!authentication.currentUser);
 
   // get data WIP
@@ -21,14 +21,14 @@ const HomeScreen = async () => {
   const [occupation, setOccupation] = useState('');
 
   const navigation = useNavigation();
-  const onSetDataPressed = async () =>{
-    // Add a new document in collection "userProfiles"
+  const onSetDataPressed = async  () =>{
+    //Add a new document in collection "userProfiles"
     await setDoc(doc(db, "userProfiles", authentication.currentUser.uid,
     ), {
       'First Name': firstName,
       'Last Name': lastName,
       email: authentication.currentUser.email,
-      occupation: "swe"
+      occupation: occupation
     });
 
 
