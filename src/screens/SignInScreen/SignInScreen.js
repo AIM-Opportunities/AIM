@@ -10,7 +10,7 @@ import Logo from '../../../assets/images/ProjectX-Logo.png';
 import CustomInput from '../../components/CustomInput';
 import CustomButton from '../../components/CustomButton';
 import SocialSignInButtons from '../../components/SocialSignInButtons';
-import {useNavigation} from '@react-navigation/native';
+import {CurrentRenderContext, useNavigation, validatePathConfig} from '@react-navigation/native';
 import {authentication} from '../../../firebase/firebase-config';
 import {signInWithEmailAndPassword, signOut} from 'firebase/auth';
 
@@ -20,7 +20,7 @@ const SignInScreen = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
-  const {height} = useWindowDimensions();
+  const {height, width} = useWindowDimensions();
   const navigation = useNavigation();
 
   const onSignInPressed = () => {
@@ -54,14 +54,20 @@ const SignInScreen = () => {
   };
 
   return (
-    <ScrollView showsVerticalScrollIndicator={false}>
+    <ScrollView 
+      contentContainerStyle={{
+        flexGrow: 1, 
+        justifyContent: 'center',
+        alignSelf:'center'
+      }} 
+      showsVerticalScrollIndicator={false}
+      >
       <View style={styles.root}>
         <Image
           source={Logo}
-          style={[styles.logo, {height: height * 0.3}]}
+          style={[styles.logo, {height: height * 0.2}]}
           resizeMode="contain"
         />
-
         <CustomInput placeholder="Email" value={email} setValue={setEmail} />
         <CustomInput
           placeholder="Password"
@@ -92,13 +98,13 @@ const SignInScreen = () => {
 
 const styles = StyleSheet.create({
   root: {
-    alignItems: 'center',
-    padding: 20,
+    padding: 0,
+    maxWidth: 400,
   },
   logo: {
     width: '100%',
-    maxWidth: 500,
-    maxHeight: 300,
+    maxWidth: 600,
+    maxHeight: 600,
   },
 });
 

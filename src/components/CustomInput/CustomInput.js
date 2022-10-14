@@ -8,7 +8,6 @@ const CustomInput = ({value, setValue, placeholder, secureTextEntry}) => {
         value={value}
         onChangeText={setValue}
         placeholder={placeholder}
-        style={styles.input}
         secureTextEntry={secureTextEntry}
       />
     </View>
@@ -28,7 +27,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     marginVertical: 5,
   },
-  input: {},
 });
 
 export default CustomInput;
