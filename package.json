@@ -9,8 +9,8 @@
     "web": "export NODE_OPTIONS=--openssl-legacy-provider && expo start --web",
     "test": "jest",
     "lint": "eslint .",
-    "predeploy": "expo export:web",
-    "deploy-hosting": "npm run predeploy && firebase deploy --only hosting"
+    "predeploy": "export NODE_OPTIONS=--openssl-legacy-provider && expo export:web",
+    "deploy": "npm run predeploy && firebase deploy"
   },
   "dependencies": {
     "@expo/webpack-config": "^0.17.0",
