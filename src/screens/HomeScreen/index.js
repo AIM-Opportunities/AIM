@@ -26,6 +26,7 @@ const HomeScreen = () => {
   const [occupation, setOccupation] = useState('');
 
   const navigation = useNavigation();
+
   const onSetDataPressed = async  () =>{
     //Add a new document in collection "userProfiles"
     await setDoc(doc(db, "userProfiles", authentication.currentUser.uid,
