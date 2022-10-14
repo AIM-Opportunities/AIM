@@ -1,5 +1,10 @@
 import React, {useState} from 'react';
-import {View, Text, StyleSheet, ScrollView} from 'react-native';
+import {
+  Text,
+  View,
+  StyleSheet,
+  ScrollView,
+} from 'react-native';
 import CustomInput from '../../components/CustomInput';
 import CustomButton from '../../components/CustomButton';
 import {useNavigation} from '@react-navigation/native';
@@ -22,7 +27,14 @@ const ConfirmEmailScreen = () => {
   };
 
   return (
-    <ScrollView showsVerticalScrollIndicator={false}>
+    <ScrollView 
+    contentContainerStyle={{
+      flexGrow: 1, 
+      justifyContent: 'center',
+      alignSelf:'center'
+    }} 
+    showsVerticalScrollIndicator={false}
+    >
       <View style={styles.root}>
         <Text style={styles.title}>Confirm your email</Text>
         <CustomInput

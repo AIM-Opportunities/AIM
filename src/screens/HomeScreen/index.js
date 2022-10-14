@@ -1,11 +1,16 @@
 /* eslint-disable react-native/no-inline-styles */
-import {View, Text} from 'react-native';
+import {
+  Text,
+  View,
+  ScrollView,
+} from 'react-native';
 import React, {useState} from 'react';
 import CustomButton from '../../components/CustomButton';
 import {useNavigation} from '@react-navigation/native';
 import {db} from '../../../firebase/firebase-config';
 import {collection, getDocs, doc,setDoc} from 'firebase/firestore/lite';
-import { authentication } from '../../../firebase/firebase-config';
+import {authentication} from '../../../firebase/firebase-config';
+import {signInWithEmailAndPassword, signOut} from 'firebase/auth';
 import CustomInput from '../../components/CustomInput';
 
 const HomeScreen = () => {
@@ -33,13 +38,11 @@ const HomeScreen = () => {
 
 
   }
-  const onSignInPressed = () => {
-    navigation.navigate('SignIn');
-  };
+
   const onSignOutPressed = () => {
     signOut(authentication)
       .then(re => {
-        setIsSignedIn(false);
+        setIsSignedIn('false');
         navigation.navigate('SignIn')
       })
       .catch(err => {
@@ -48,36 +51,43 @@ const HomeScreen = () => {
   };
 
   return (
-    <View>
-      <Text
-        style={{
-          fontSize: 24,
-          alignSelf: 'center',
-          marginBottom: 300,
-        }}>
-        User Profile
-      </Text>
-      <CustomInput 
-        placeholder="First Name" 
-        value={firstName} 
-        setValue={setFirstName}
-      />
-      <CustomInput 
-        placeholder="Last Name" 
-        value={lastName} 
-        setValue={setLastName}
-      />
-      <CustomInput 
-        placeholder="Occupation" 
-        value={occupation} 
-        setValue={setOccupation}
-      />
-      <CustomButton text="Set Data" onPress={onSetDataPressed} />
-      {isSignedIn === true && (
-          <CustomButton text="Sign Out" onPress={onSignOutPressed} />
-        ) 
-        }
-    </View>
+    <ScrollView 
+    contentContainerStyle={{
+      flexGrow: 1, 
+      justifyContent: 'center',
+      alignSelf:'center'
+    }} 
+    showsVerticalScrollIndicator={false}
+    >
+      <View>
+        <Text
+          style={{
+            fontSize: 24,
+          }}>
+          User Profile
+        </Text>
+        <CustomInput 
+          placeholder="First Name" 
+          value={firstName} 
+          setValue={setFirstName}
+        />
+        <CustomInput 
+          placeholder="Last Name" 
+          value={lastName} 
+          setValue={setLastName}
+        />
+        <CustomInput 
+          placeholder="Occupation" 
+          value={occupation} 
+          setValue={setOccupation}
+        />
+        <CustomButton text="Set Data" onPress={onSetDataPressed} />
+        {isSignedIn === true && (
+            <CustomButton text="Sign Out" onPress={onSignOutPressed} />
+          ) 
+          }
+      </View>
+    </ScrollView>
   );
 };
 
