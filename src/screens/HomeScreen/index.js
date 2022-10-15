@@ -9,7 +9,7 @@ import React, {useState, useEffect} from 'react';
 import CustomButton from '../../components/CustomButton';
 import {useNavigation} from '@react-navigation/native';
 import {db} from '../../../firebase/firebase-config';
-import {collection, getDoc, doc,setDoc} from 'firebase/firestore/lite';
+import {collection, getDoc, doc,setDoc, DocumentData} from 'firebase/firestore/lite';
 import firestore, { endAt } from 'firebase/firestore';
 import {authentication} from '../../../firebase/firebase-config';
 import {signInWithEmailAndPassword, signOut} from 'firebase/auth';
@@ -24,40 +24,34 @@ const HomeScreen = () => {
 
   const navigation = useNavigation();
   
-  //we are reading data from firestore here but cant make use of it yet
-  // useEffect(()=> {
-  //   const loadData = async () => {
-  //     const docRef = doc(db, 'userProfiles', authentication.currentUser.uid);
-  //     const docSnap = await getDoc(docRef);
 
-  //     if (docSnap.exists()) {
-        
-  //       console.log("Document data:", docSnap.data())
-  //       setFirstName(docSnap.getDoc("First Name"))
-  //       console.warn(firstName)
-  //       console.warn('Apple')
-  //     } else {
-  //       // doc.data() will be undefined in this case
-  //       console.log("No such document!");
-  //     } 
-  //     loadData();
-  //   } 
-  // })
-
-  // this example works but it doesnt like that i put async in a use effect, it wants the async in a function with 
-  // useEffect as a wrapper
+    const [data, setData] = useState('');
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState('');
   
-  // useEffect( async ()=> {
-  //     const docRef = doc(db, 'userProfiles', authentication.currentUser.uid);
-  //     const docSnap = await getDoc(docRef);
-
-  //     if (docSnap.exists()) {
-  //       console.log("Document data:", docSnap.get("occupation"));
-  //     } else {
-  //       // doc.data() will be undefined in this case
-  //       console.log("No such document!");
-  //     }
-  //   });
+    useEffect(() => {
+      const getDocument = async () => {
+        setLoading(true);
+  
+        try {
+          const docRef = doc(db, 'userProfiles', authentication.currentUser.uid);
+          const docSnap = await getDoc(docRef);
+  
+          if (docSnap.exists()) {
+            setFirstName(docSnap.get("First Name"));
+            setLastName(docSnap.get("Last Name"));
+            setOccupation(docSnap.get("occupation"));
+          } else {
+            setData(undefined);
+            console.log('No document!');
+          }
+        } catch (e) {
+          setError(e.message);
+        }
+        setLoading(false);
+      };
+      getDocument();
+    }, [] );
   
   // press events can be async  
   const onSetDataPressed = async () =>{
@@ -101,18 +95,33 @@ const HomeScreen = () => {
           User Profile
         </Text>
         <CustomInput 
-          placeholder= "First Name"
+          placeholder= 
+            {firstName === null || undefined ? (
+              {firstName}
+            ) : (
+              "First Name"
+            )} 
           value={firstName} 
           setValue={setFirstName}
         />
         <CustomInput 
-          placeholder="Last Name" 
+          placeholder=
+            {lastName === null || undefined ? (
+              {lastName}
+            ) : (
+              "Last Name"
+            )} 
           value={lastName} 
           setValue={setLastName}
         />
         <CustomInput 
-          placeholder= "Occupation"
-          value={occupation} 
+          placeholder= 
+            {occupation === null || undefined ? (
+              {occupation}
+            ) : (
+              "Occupation"
+            )} 
+          value= {occupation}
           setValue={setOccupation}
         />
 
