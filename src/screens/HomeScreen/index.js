@@ -9,6 +9,7 @@ import CustomButton from '../../components/CustomButton';
 import {useNavigation} from '@react-navigation/native';
 import {db} from '../../../firebase/firebase-config';
 import {collection, getDocs, doc,setDoc} from 'firebase/firestore/lite';
+import firestore from 'firebase/firestore';
 import {authentication} from '../../../firebase/firebase-config';
 import {signInWithEmailAndPassword, signOut} from 'firebase/auth';
 import CustomInput from '../../components/CustomInput';
@@ -16,25 +17,22 @@ import CustomInput from '../../components/CustomInput';
 const HomeScreen = () => {
   const [isSignedIn, setIsSignedIn] = useState(!!authentication.currentUser);
 
-  // get data WIP
-  // const userProfileCol = collection(db,'userProfiles',authentication.currentUser.uid)
-  // const userProfileSnapshot = await getDocs(userProfileCol);
-  // const userProfileList = userProfileSnapshot.docs.map(doc => doc.data());
-
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [occupation, setOccupation] = useState('');
 
   const navigation = useNavigation();
 
-  const onSetDataPressed = async  () =>{
+  const onSetDataPressed = async () =>{
     //Add a new document in collection "userProfiles"
     await setDoc(doc(db, "userProfiles", authentication.currentUser.uid,
-    ), {
+    )
+    , {
       'First Name': firstName,
       'Last Name': lastName,
       email: authentication.currentUser.email,
       occupation: occupation
+      
     });
 
 
@@ -68,7 +66,7 @@ const HomeScreen = () => {
           User Profile
         </Text>
         <CustomInput 
-          placeholder="First Name" 
+          placeholder= "First Name"
           value={firstName} 
           setValue={setFirstName}
         />

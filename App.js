@@ -1,6 +1,7 @@
 import React from 'react';
 import {SafeAreaView, StyleSheet, Text} from 'react-native';
 import Navigation from './src/navigation';
+import '@firebase/firestore'
 
 const App = () => {
   return (

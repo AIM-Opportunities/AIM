@@ -18,4 +18,3 @@ const app = initializeApp(firebaseConfig);
 
 export const authentication = getAuth(app);
 export const db = getFirestore(app);
-
