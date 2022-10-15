@@ -22,8 +22,6 @@ const HomeScreen = () => {
   const [lastName, setLastName] = useState('');
   const [occupation, setOccupation] = useState('');
 
-  const [userData, setUserData] = useState('');
-
   const navigation = useNavigation();
   
   //we are reading data from firestore here but cant make use of it yet
@@ -48,17 +46,18 @@ const HomeScreen = () => {
 
   // this example works but it doesnt like that i put async in a use effect, it wants the async in a function with 
   // useEffect as a wrapper
-  useEffect( async ()=> {
-      const docRef = doc(db, 'userProfiles', authentication.currentUser.uid);
-      const docSnap = await getDoc(docRef);
+  
+  // useEffect( async ()=> {
+  //     const docRef = doc(db, 'userProfiles', authentication.currentUser.uid);
+  //     const docSnap = await getDoc(docRef);
 
-      if (docSnap.exists()) {
-        console.log("Document data:", docSnap.get("occupation"));
-      } else {
-        // doc.data() will be undefined in this case
-        console.log("No such document!");
-      }
-    });
+  //     if (docSnap.exists()) {
+  //       console.log("Document data:", docSnap.get("occupation"));
+  //     } else {
+  //       // doc.data() will be undefined in this case
+  //       console.log("No such document!");
+  //     }
+  //   });
   
   // press events can be async  
   const onSetDataPressed = async () =>{
