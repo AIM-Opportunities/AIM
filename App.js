@@ -1,5 +1,5 @@
 import React from 'react';
-import {SafeAreaView, StyleSheet, Text} from 'react-native';
+import {SafeAreaView, StyleSheet, Text, View} from 'react-native';
 import Navigation from './src/navigation';
 import '@firebase/firestore'
 
@@ -13,8 +13,8 @@ const App = () => {
 
 const styles = StyleSheet.create({
   root: {
-    flex: 1,
-    backgroundColor: '#0582FF',
+    flexGrow:1,
+    backgroundColor: '#0582FF'
   },
 });
 

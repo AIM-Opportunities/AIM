@@ -12,9 +12,7 @@ import HomeScreen from '../screens/HomeScreen';
 const Stack = createNativeStackNavigator();
 
 const MyTheme = {
-  DefaultTheme,
   colors: {
-    ...DefaultTheme.colors,
     background: '#0582FF',
   },
 };

@@ -57,9 +57,10 @@ const SignInScreen = () => {
   return (
     <ScrollView 
       contentContainerStyle={{
+        maxWidth: 400,
         flexGrow: 1, 
+        alignSelf:'center',
         justifyContent: 'center',
-        alignSelf:'center'
       }} 
       showsVerticalScrollIndicator={false}
       >
@@ -76,7 +77,7 @@ const SignInScreen = () => {
           setValue={setPassword}
           secureTextEntry
         />
-        {isSignedIn === !!!authentication.currentUser ? (
+        {isSignedIn === true ? (
           <CustomButton text="Sign Out" onPress={onSignOutPressed} />
         ) : (
           <CustomButton text="Sign In" onPress={onSignInPressed} />
@@ -99,13 +100,12 @@ const SignInScreen = () => {
 
 const styles = StyleSheet.create({
   root: {
-    padding: 0,
-    maxWidth: 400,
+    
   },
   logo: {
     width: '100%',
-    maxWidth: 600,
-    maxHeight: 600,
+    maxWidth: 500,
+    maxHeight: 500,
   },
 });
 
