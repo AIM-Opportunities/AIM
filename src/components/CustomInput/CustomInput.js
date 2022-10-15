@@ -8,6 +8,7 @@ const CustomInput = ({value, setValue, placeholder, secureTextEntry}) => {
         value={value}
         onChangeText={setValue}
         placeholder={placeholder}
+        placeholderTextColor={'#D3D3D3'}
         secureTextEntry={secureTextEntry}
       />
     </View>
