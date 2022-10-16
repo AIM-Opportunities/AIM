@@ -11,7 +11,7 @@ import Logo from '../../../assets/images/ProjectX-Logo.png';
 import CustomInput from '../../components/CustomInput';
 import CustomButton from '../../components/CustomButton';
 import SocialSignInButtons from '../../components/SocialSignInButtons';
-import {CurrentRenderContext, useNavigation, validatePathConfig} from '@react-navigation/native';
+import {useNavigation} from '@react-navigation/native';
 import {authentication} from '../../../firebase/firebase-config';
 import {signInWithEmailAndPassword, signOut} from 'firebase/auth';
 

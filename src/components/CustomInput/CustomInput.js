@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, Text, TextInput, StyleSheet, placeholder} from 'react-native';
+import {View, TextInput, StyleSheet} from 'react-native';
 
 const CustomInput = ({value, setValue, placeholder, secureTextEntry}) => {
   return (

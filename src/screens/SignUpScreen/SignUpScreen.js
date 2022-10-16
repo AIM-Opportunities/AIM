@@ -11,8 +11,6 @@ import SocialSignInButtons from '../../components/SocialSignInButtons';
 import {useNavigation} from '@react-navigation/native';
 import {authentication} from '../../../firebase/firebase-config';
 import {createUserWithEmailAndPassword} from 'firebase/auth';
-import {db} from '../../../firebase/firebase-config';
-import {doc,setDoc} from 'firebase/firestore/lite';
 
 const SignUpScreen = () => {
   const [isSignedIn, setIsSignedIn] = useState(false);

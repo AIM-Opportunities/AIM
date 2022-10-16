@@ -2,6 +2,7 @@ import React from 'react';
 import {SafeAreaView, StyleSheet, Text, View} from 'react-native';
 import Navigation from './src/navigation';
 import '@firebase/firestore'
+import {authentication} from './firebase/firebase-config';
 
 const App = () => {
   return (

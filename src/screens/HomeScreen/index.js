@@ -9,10 +9,9 @@ import React, {useState, useEffect} from 'react';
 import CustomButton from '../../components/CustomButton';
 import {useNavigation} from '@react-navigation/native';
 import {db} from '../../../firebase/firebase-config';
-import {collection, getDoc, doc,setDoc, DocumentData} from 'firebase/firestore/lite';
-import firestore, { endAt } from 'firebase/firestore';
+import {getDoc, doc,setDoc} from 'firebase/firestore/lite';
 import {authentication} from '../../../firebase/firebase-config';
-import {signInWithEmailAndPassword, signOut} from 'firebase/auth';
+import {signOut} from 'firebase/auth';
 import CustomInput from '../../components/CustomInput';
 
 const HomeScreen = () => {
@@ -81,9 +80,10 @@ const HomeScreen = () => {
   return (
     <ScrollView 
     contentContainerStyle={{
-      flexGrow: 3, 
+      maxWidth: 400,
+      flexGrow: 1, 
+      alignSelf:'center',
       justifyContent: 'center',
-      
     }} 
     showsVerticalScrollIndicator={false}
     >
@@ -91,6 +91,7 @@ const HomeScreen = () => {
         <Text
           style={{
             fontSize: 24,
+            color:'white'
           }}>
           User Profile
         </Text>

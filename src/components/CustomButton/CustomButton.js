@@ -1,11 +1,11 @@
-import {View, Text, StyleSheet, Pressable} from 'react-native';
+import {Text, StyleSheet, Pressable} from 'react-native';
 import React from 'react';
-import {white} from 'color-name';
 
-const CustomButton = ({onPress, text, type = 'PRIMARY', bgColor, fgColor}) => {
+const CustomButton = ({onPress,disabled, text, type = 'PRIMARY', bgColor, fgColor}) => {
   return (
     <Pressable
       onPress={onPress}
+      disabled={disabled}
       style={[
         styles.container,
         styles[`container_${type}`],
