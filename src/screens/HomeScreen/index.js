@@ -5,6 +5,7 @@ import {
   ScrollView,
   StyleSheet
 } from 'react-native';
+import * as DocumentPicker from 'expo-document-picker'
 import React, {useState, useEffect} from 'react';
 import CustomButton from '../../components/CustomButton';
 import {useNavigation} from '@react-navigation/native';
@@ -13,21 +14,24 @@ import {getDoc, doc,setDoc} from 'firebase/firestore/lite';
 import {authentication} from '../../../firebase/firebase-config';
 import {signOut} from 'firebase/auth';
 import CustomInput from '../../components/CustomInput';
+import FileInput from '../../components/FileInput';
+import { Storage } from 'firebase/storage';
 
 const HomeScreen = () => {
-  const [isSignedIn, setIsSignedIn] = useState(!!authentication.currentUser);
-
+  
+  const [isSignedIn, setIsSignedIn] = useState(!!!authentication.currentUser);
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [occupation, setOccupation] = useState('');
-
   const navigation = useNavigation();
-  
+  const [data, setData] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+  const [fileResponse, setFileResponse] = useState([]);
+  const [path,setPath] = useState([]);
+  const [file,setFile] = useState([]);
 
-    const [data, setData] = useState('');
-    const [loading, setLoading] = useState(false);
-    const [error, setError] = useState('');
-  
+    // get user data and display it
     useEffect(() => {
       const getDocument = async () => {
         setLoading(true);
@@ -51,7 +55,8 @@ const HomeScreen = () => {
       };
       getDocument();
     }, [] );
-  
+
+  // set the user data in firestore db
   // press events can be async  
   const onSetDataPressed = async () =>{
     //Add a new document in collection "userProfiles"
@@ -76,6 +81,19 @@ const HomeScreen = () => {
         console.log(err);
       });
   };
+
+  const onUploadResumePressed = async () => {
+    //Pick a single file
+    let result = await DocumentPicker.getDocumentAsync({});
+    alert(result.uri);
+    console.log(result);
+    let reference = Storage().ref(result.name);         
+    let task = reference.putFile(result.uri);             
+
+    task.then(() => {                               
+        console.log('File uploaded to the bucket!');
+    }).catch((e) => console.log('uploading file error => ', e));
+}
 
   return (
     <ScrollView 
@@ -125,9 +143,9 @@ const HomeScreen = () => {
           value= {occupation}
           setValue={setOccupation}
         />
-
+        <FileInput onPress={onUploadResumePressed}/>
         <CustomButton text="Set Data" onPress={onSetDataPressed} />
-        {isSignedIn === true && (
+        {isSignedIn === !!!authentication.currentUser && (
             <CustomButton text="Sign Out" onPress={onSignOutPressed} />
           ) 
           }
@@ -137,6 +155,7 @@ const HomeScreen = () => {
   );
 };
 
+// styles
 const styles = StyleSheet.create({
   root: {
     alignItems: 'center',
