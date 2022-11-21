@@ -15,7 +15,9 @@ import {authentication} from '../../../firebase/firebase-config';
 import {signOut} from 'firebase/auth';
 import CustomInput from '../../components/CustomInput';
 import FileInput from '../../components/FileInput';
-import { Storage } from 'firebase/storage';
+import { ref, getDownloadURL, uploadBytesResumable  } from 'firebase/storage';
+import { storage } from '../../../firebase/firebase-config';
+import moment from 'moment';
 
 const HomeScreen = () => {
   
@@ -27,9 +29,10 @@ const HomeScreen = () => {
   const [data, setData] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
-  const [fileResponse, setFileResponse] = useState([]);
-  const [path,setPath] = useState([]);
-  const [file,setFile] = useState([]);
+  const [blobFile,setBlobFile] = useState([]);
+  const [fileName,setFileName] = useState([]);
+  const [completed, setCompleted] = useState(false);
+
 
     // get user data and display it
     useEffect(() => {
@@ -75,25 +78,49 @@ const HomeScreen = () => {
     signOut(authentication)
       .then(re => {
         setIsSignedIn(false);
-        navigation.navigate('SignIn')
+        navigation.navigate('SignIn');
       })
       .catch(err => {
         console.log(err);
       });
   };
 
-  const onUploadResumePressed = async () => {
-    //Pick a single file
-    let result = await DocumentPicker.getDocumentAsync({});
-    alert(result.uri);
-    console.log(result);
-    let reference = Storage().ref(result.name);         
-    let task = reference.putFile(result.uri);             
+  const getFileInformation = async () => {
+    const result = await DocumentPicker.getDocumentAsync({});
+    if (result != null) {
+      const document = await fetch(result.uri);
+      const documentBlob = await document.blob();
+      setFileName(result.name);
+      setBlobFile(documentBlob);
+    }
+  }
 
-    task.then(() => {                               
-        console.log('File uploaded to the bucket!');
-    }).catch((e) => console.log('uploading file error => ', e));
-}
+  const uploadFile = (blobFile, fileName , isUploadCompleted) => {
+    if (!blobFile) return;
+    const currentDate = moment().format("DD_MM_YYYY");
+    const storageRef = ref(storage, `RESUME_${authentication.currentUser.uid}_${lastName}_${firstName}_${currentDate}`);
+    const uploadTask = uploadBytesResumable(storageRef, blobFile);
+    uploadTask.on(
+        "state_changed", null ,
+        (error) => console.log(error),
+        () => {
+            getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+                console.log("File available at", downloadURL);
+                isUploadCompleted(true)
+                return downloadURL
+            });
+        }
+      );
+  }
+
+  const isUploadCompleted = (completed) => {
+    setCompleted(completed);
+  }
+
+  const onUploadResumePressed = () => {
+    getFileInformation()
+    uploadFile(blobFile, fileName, isUploadCompleted)
+  };
 
   return (
     <ScrollView 
@@ -144,6 +171,7 @@ const HomeScreen = () => {
           setValue={setOccupation}
         />
         <FileInput onPress={onUploadResumePressed}/>
+        {completed && <Text style={{ color: 'white' }}>Resume Stored!</Text>}
         <CustomButton text="Set Data" onPress={onSetDataPressed} />
         {isSignedIn === !!!authentication.currentUser && (
             <CustomButton text="Sign Out" onPress={onSignOutPressed} />

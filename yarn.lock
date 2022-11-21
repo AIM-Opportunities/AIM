@@ -2718,79 +2718,6 @@
     color "^4.2.3"
     warn-once "^0.1.0"
 
-"@rpldy/abort@^1.1.0":
-  version "1.1.0"
-  resolved "https://registry.yarnpkg.com/@rpldy/abort/-/abort-1.1.0.tgz#c0378678e28d09e8d6a32fa97665b7a058ed2a01"
-  integrity sha512-fqMztaxEy27m6N0O9SUNQqc8G4C+JaMCaeFOhMVPBWYFvZoHqlUxiyowmJD7zLU00sNxhxHrsQuzFqJasaTpbw==
-  dependencies:
-    "@rpldy/raw-uploader" "^1.1.0"
-    "@rpldy/shared" "^1.1.0"
-    "@rpldy/simple-state" "^1.1.0"
-
-"@rpldy/life-events@^1.1.0":
-  version "1.1.0"
-  resolved "https://registry.yarnpkg.com/@rpldy/life-events/-/life-events-1.1.0.tgz#b8473958c5665f42c174d325df476864f86450f5"
-  integrity sha512-AYgvPamm37qGfPEcYHAYdKciVKVCtxExVPCw6iMjQg09dSA7Ult5eLXSgdvJVE9uWUZ2kmcQGhzsmodtu88OHw==
-  dependencies:
-    "@rpldy/shared" "^1.1.0"
-
-"@rpldy/native-uploady@^1.1.0":
-  version "1.1.0"
-  resolved "https://registry.yarnpkg.com/@rpldy/native-uploady/-/native-uploady-1.1.0.tgz#baba9e087f153bcf3ae5889618c2874308c85b01"
-  integrity sha512-zmMTrdPk2re+KRinZdldmxGFDDTFYekyR+VWGUeNxIqAR9EDVlwEisHWmGj8QBnn14C1hQV/iBAdA7zNIgrolg==
-  dependencies:
-    "@rpldy/shared-ui" "^1.1.0"
-
-"@rpldy/raw-uploader@^1.1.0":
-  version "1.1.0"
-  resolved "https://registry.yarnpkg.com/@rpldy/raw-uploader/-/raw-uploader-1.1.0.tgz#478ca1f3b00d9cb94560e4e979e9608dc3a138f1"
-  integrity sha512-YUOjQFA566PT5DCo4PzcxGiK56pU9DWT64lapm3Xv3d+FmjELUWDc4Rf61iJv+a0dpsmFpZL7ibub+Uqzp5Xow==
-  dependencies:
-    "@rpldy/life-events" "^1.1.0"
-    "@rpldy/shared" "^1.1.0"
-
-"@rpldy/sender@^1.1.0":
-  version "1.1.0"
-  resolved "https://registry.yarnpkg.com/@rpldy/sender/-/sender-1.1.0.tgz#a4f3d023239ee2199cd78e4057400a768ec274ca"
-  integrity sha512-JgwIom9oFR+qUfHMklsFJ9QebtLAEOADrnbqIG8mBvSqRPKLX0oFVyezetOJ2fkAMQIs2IraotwYPweKkGwv8A==
-  dependencies:
-    "@rpldy/shared" "^1.1.0"
-
-"@rpldy/shared-ui@^1.1.0":
-  version "1.1.0"
-  resolved "https://registry.yarnpkg.com/@rpldy/shared-ui/-/shared-ui-1.1.0.tgz#637dae4ff8e30b7df8e226c0763b25583938220c"
-  integrity sha512-nPybgfWt0BYRm6T+PWoN19tdqUswSa/P93yXlTRLc5fqdbb+w7lxUwFfPXgXmEeVnbWxQMOhU0Doxv7rdSmskA==
-  dependencies:
-    "@rpldy/shared" "^1.1.0"
-    "@rpldy/uploader" "^1.1.0"
-
-"@rpldy/shared@^1.1.0":
-  version "1.1.0"
-  resolved "https://registry.yarnpkg.com/@rpldy/shared/-/shared-1.1.0.tgz#ef9ee654957e4bc47aebe5afa9a7b2820d65e152"
-  integrity sha512-yme2l04RCO/XzUkRiXTJn/yLfCSm8rn3xPCOFkjHek2rK4MXxJQXW5duefSJQTaj1GJK/wv0HngfjhxThdMKlw==
-  dependencies:
-    invariant "^2.2.4"
-    just-throttle "^1.1.0"
-
-"@rpldy/simple-state@^1.1.0":
-  version "1.1.0"
-  resolved "https://registry.yarnpkg.com/@rpldy/simple-state/-/simple-state-1.1.0.tgz#f61c19a4c396e23633c4399c53fb4cd1decfd581"
-  integrity sha512-Gd5KMU6grkj6F+OaOlnHc56IqxbWnFFRmuSLaEgcN75+LemLlCHgTOiLLtsSJsdwMQaC4rvCkMxbLJSwWy9C5w==
-  dependencies:
-    "@rpldy/shared" "^1.1.0"
-
-"@rpldy/uploader@^1.1.0":
-  version "1.1.0"
-  resolved "https://registry.yarnpkg.com/@rpldy/uploader/-/uploader-1.1.0.tgz#31a715a5a19be3f302da936e373864f66cdde311"
-  integrity sha512-HI1lqQ0raz4kpP1+G7bNkvBkksgCkayY2X71GCaTnqtBUvhiL3H+Bgdpo5Jqsqk5pGfZW1vIdQGYIrFe2YLKTg==
-  dependencies:
-    "@rpldy/abort" "^1.1.0"
-    "@rpldy/life-events" "^1.1.0"
-    "@rpldy/raw-uploader" "^1.1.0"
-    "@rpldy/sender" "^1.1.0"
-    "@rpldy/shared" "^1.1.0"
-    "@rpldy/simple-state" "^1.1.0"
-
 "@segment/loosely-validate-event@^2.0.0":
   version "2.0.0"
   resolved "https://registry.npmjs.org/@segment/loosely-validate-event/-/loosely-validate-event-2.0.0.tgz"
@@ -6782,9 +6709,9 @@ expo-constants@~13.2.2, expo-constants@~13.2.4:
     "@expo/config" "~7.0.0"
     uuid "^3.3.2"
 
-expo-document-picker@^10.3.0:
+expo-document-picker@~10.3.0:
   version "10.3.0"
-  resolved "https://registry.yarnpkg.com/expo-document-picker/-/expo-document-picker-10.3.0.tgz#6a88fe69f6dcf6b8f2e65158de94c00695ae4972"
+  resolved "https://registry.npmjs.org/expo-document-picker/-/expo-document-picker-10.3.0.tgz#6a88fe69f6dcf6b8f2e65158de94c00695ae4972"
   integrity sha512-wo6PrZwTE8h5xTO5xKkR6bodBuimacyp5fhIho6vwzBDrBH/Mp6xEbsth6yP8jgcCFUGa1oWWPCSqBxBv+ZZIA==
   dependencies:
     "@expo/config-plugins" "~5.0.0"
@@ -9882,11 +9809,6 @@ jszip@^3.6.0:
     readable-stream "~2.3.6"
     setimmediate "^1.0.5"
 
-just-throttle@^1.1.0:
-  version "1.1.0"
-  resolved "https://registry.yarnpkg.com/just-throttle/-/just-throttle-1.1.0.tgz#178d305ece9876a8a0759abd8d403aafcc6e4849"
-  integrity sha512-iePC/13XYX1Tyn9C6jY+DG3UEejkDvrKsw5xxgGhtGUwYWmoJm4CoKexscBKELOu3FTyCDzjr21ZJ67AXnz+bg==
-
 jwa@^1.4.1:
   version "1.4.1"
   resolved "https://registry.npmjs.org/jwa/-/jwa-1.4.1.tgz"
@@ -11007,6 +10929,11 @@ mkdirp@^1.0.3, mkdirp@^1.0.4:
   version "1.0.4"
   resolved "https://registry.npmjs.org/mkdirp/-/mkdirp-1.0.4.tgz"
   integrity sha512-vVqVZQyf3WLx2Shd0qJ9xuvqgAyKPLAiqITEtqW0oIUjzo3PePDd6fW9iFz30ef7Ysp/oiWqbhszeGWW2T6Gzw==
+
+moment@^2.29.4:
+  version "2.29.4"
+  resolved "https://registry.npmjs.org/moment/-/moment-2.29.4.tgz#3dbe052889fe7c1b2ed966fcb3a77328964ef108"
+  integrity sha512-5LC9SOxjSc2HF6vO2CyuTDNivEdoz2IvyJJGj6X8DJ0eFyfszE0QiEd+iXmBvUP3WHxSjFH/vIsA0EN00cgr8w==
 
 morgan@^1.10.0, morgan@^1.8.2:
   version "1.10.0"
