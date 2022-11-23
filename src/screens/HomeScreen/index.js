@@ -84,6 +84,7 @@ const HomeScreen = () => {
       });
   };
 
+
   const getFileInformation = async () => {
     const result = await DocumentPicker.getDocumentAsync({});
     if (result != null) {
