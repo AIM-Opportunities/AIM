@@ -61,6 +61,7 @@ const ProfileScreen = () => {
       email: authentication.currentUser.email,
       occupation: occupation,
     });
+    navigation.navigate("Home");
   };
 
   const onSignOutPressed = () => {
