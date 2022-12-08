@@ -1,9 +1,9 @@
-import { View } from "react";
+import React, { View, Text } from "react";
 
 const HomeScreen = () => {
   return (
     <View>
-      <h1>HI</h1>
+      <Text>Hi</Text>
     </View>
   );
 };
