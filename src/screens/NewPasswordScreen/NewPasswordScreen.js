@@ -1,36 +1,31 @@
-import React, {useState} from 'react';
-import {
-  Text,
-  View,
-  StyleSheet,
-  ScrollView,
-} from 'react-native';
-import CustomInput from '../../components/CustomInput';
-import CustomButton from '../../components/CustomButton';
-import {useNavigation} from '@react-navigation/native';
+import React, { useState } from "react";
+import { Text, View, StyleSheet, ScrollView } from "react-native";
+import CustomInput from "../../components/CustomInput";
+import CustomButton from "../../components/CustomButton";
+import { useNavigation } from "@react-navigation/native";
 
 const NewPasswordScreen = () => {
-  const [code, setCode] = useState('');
-  const [newPassword, setNewPassword] = useState('');
+  const [code, setCode] = useState("");
+  const [newPassword, setNewPassword] = useState("");
 
   const navigation = useNavigation();
 
   const onSubmitPressed = () => {
-    navigation.navigate('Home');
+    navigation.navigate("Profile");
   };
 
   const onSignInPressed = () => {
-    navigation.navigate('SignIn');
+    navigation.navigate("SignIn");
   };
 
   return (
-    <ScrollView 
-    contentContainerStyle={{
-      flexGrow: 1, 
-      justifyContent: 'center',
-      alignSelf:'center'
-    }} 
-    showsVerticalScrollIndicator={false}
+    <ScrollView
+      contentContainerStyle={{
+        flexGrow: 1,
+        justifyContent: "center",
+        alignSelf: "center",
+      }}
+      showsVerticalScrollIndicator={false}
     >
       <View style={styles.root}>
         <Text style={styles.title}>Reset your password</Text>
@@ -58,21 +53,21 @@ const NewPasswordScreen = () => {
 
 const styles = StyleSheet.create({
   root: {
-    alignItems: 'center',
+    alignItems: "center",
     padding: 20,
   },
   title: {
     fontSize: 24,
-    fontWeight: 'bold',
-    color: 'white',
+    fontWeight: "bold",
+    color: "white",
     margin: 10,
   },
   text: {
-    color: 'white',
+    color: "white",
     marginVertical: 10,
   },
   link: {
-    color: '#ff9e3e',
+    color: "#ff9e3e",
   },
 });
 

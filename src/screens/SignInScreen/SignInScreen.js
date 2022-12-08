@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, { useState } from "react";
 import {
   Text,
   View,
@@ -6,68 +6,68 @@ import {
   StyleSheet,
   useWindowDimensions,
   ScrollView,
-} from 'react-native';
-import Logo from '../../../assets/images/ProjectX-Logo.png';
-import CustomInput from '../../components/CustomInput';
-import CustomButton from '../../components/CustomButton';
-import SocialSignInButtons from '../../components/SocialSignInButtons';
-import {useNavigation} from '@react-navigation/native';
-import {authentication} from '../../../firebase/firebase-config';
-import {signInWithEmailAndPassword, signOut} from 'firebase/auth';
+} from "react-native";
+import Logo from "../../../assets/images/ProjectX-Logo.png";
+import CustomInput from "../../components/CustomInput";
+import CustomButton from "../../components/CustomButton";
+import SocialSignInButtons from "../../components/SocialSignInButtons";
+import { useNavigation } from "@react-navigation/native";
+import { authentication } from "../../../firebase/firebase-config";
+import { signInWithEmailAndPassword, signOut } from "firebase/auth";
 
 const SignInScreen = () => {
   const [isSignedIn, setIsSignedIn] = useState(false);
 
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
-  const {height, width} = useWindowDimensions();
+  const { height, width } = useWindowDimensions();
   const navigation = useNavigation();
 
   const onSignInPressed = () => {
     signInWithEmailAndPassword(authentication, email, password)
-      .then(re => {
+      .then((re) => {
         console.log(re);
         setIsSignedIn(true);
-        navigation.navigate('Home');
+        navigation.navigate("Profile");
       })
-      .catch(re => {
+      .catch((re) => {
         console.log(re);
       });
   };
 
   const onForgotPasswordPressed = () => {
-    navigation.navigate('ForgotPassword');
+    navigation.navigate("ForgotPassword");
   };
 
   const onSignUpPressed = () => {
-    navigation.navigate('SignUp');
+    navigation.navigate("SignUp");
   };
 
   const onSignOutPressed = () => {
     signOut(authentication)
-      .then(re => {
+      .then((re) => {
         setIsSignedIn(false);
       })
-      .catch(err => {
+      .catch((err) => {
         console.log(err);
       });
   };
 
   return (
-    <ScrollView 
+    <ScrollView
       contentContainerStyle={{
         maxWidth: 400,
-        flexGrow: 1, 
-        alignSelf:'center',
-        justifyContent: 'center',
-      }} 
+        flexGrow: 1,
+        alignSelf: "center",
+        justifyContent: "center",
+      }}
       showsVerticalScrollIndicator={false}
-      >
+    >
       <View style={styles.root}>
         <Image
           source={Logo}
-          style={[styles.logo, {height: height * 0.2}]}
+          style={[styles.logo, { height: height * 0.2 }]}
           resizeMode="contain"
         />
         <CustomInput placeholder="Email" value={email} setValue={setEmail} />
@@ -99,11 +99,9 @@ const SignInScreen = () => {
 };
 
 const styles = StyleSheet.create({
-  root: {
-    
-  },
+  root: {},
   logo: {
-    width: '100%',
+    width: "100%",
     maxWidth: 500,
     maxHeight: 500,
   },
