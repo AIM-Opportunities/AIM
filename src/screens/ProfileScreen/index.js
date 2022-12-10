@@ -12,7 +12,6 @@ import FileInput from "../../components/FileInput";
 import { ref, getDownloadURL, uploadBytesResumable } from "firebase/storage";
 import { storage } from "../../../firebase/firebase-config";
 import moment from "moment";
-import HomeScreen from "../HomeScreen";
 
 const ProfileScreen = () => {
   const [isSignedIn, setIsSignedIn] = useState(!!!authentication.currentUser);
