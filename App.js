@@ -1,22 +1,20 @@
-import React from 'react';
-import {SafeAreaView, StyleSheet, Text, View} from 'react-native';
-import Navigation from './src/navigation';
-import '@firebase/firestore'
-
+import React from "react";
+import { SafeAreaView, StyleSheet, Text, View } from "react-native";
+import Navigation from "./src/navigation";
+import "@firebase/firestore";
 
 const App = () => {
   return (
-
     <SafeAreaView style={styles.root}>
-          <Navigation />
+      <Navigation />
     </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
   root: {
-    flexGrow:1,
-    backgroundColor: '#0582FF'
+    flexGrow: 1,
+    backgroundColor: "#0582FF",
   },
 });
 

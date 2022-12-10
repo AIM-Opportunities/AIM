@@ -18,8 +18,8 @@ import { signInWithEmailAndPassword, signOut } from "firebase/auth";
 const SignInScreen = () => {
   const [isSignedIn, setIsSignedIn] = useState(false);
 
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [email, setEmail] = useState("denfushi@gmail.com");
+  const [password, setPassword] = useState("123456");
 
   const { height, width } = useWindowDimensions();
   const navigation = useNavigation();
@@ -77,7 +77,7 @@ const SignInScreen = () => {
           setValue={setPassword}
           secureTextEntry
         />
-        {isSignedIn === !!!authentication.currentUser ? (
+        {isSignedIn === authentication.currentUser ? (
           <CustomButton text="Sign Out" onPress={onSignOutPressed} />
         ) : (
           <CustomButton text="Sign In" onPress={onSignInPressed} />
