@@ -1,17 +1,38 @@
 import React, { useState } from "react";
-import { View, Text, FlatList, StyleSheet, Dimensions } from "react-native";
+import {
+  View,
+  Text,
+  FlatList,
+  StyleSheet,
+  Dimensions,
+  ScrollView,
+} from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import CustomButton from "../../components/CustomButton";
+import useSwipe from "../../components/UseSwipe";
 
 const HomeScreen = () => {
   const navigation = useNavigation();
+  const { onTouchStart, onTouchEnd } = useSwipe(onSwipeUp, onSwipeDown, 6);
+  const [scrollin, setScrollin] = useState(true);
+
   const [page, setPage] = useState(0);
 
   const data = [
     { id: 1, title: "First Page", buttonText: "p1" },
     { id: 2, title: "Second Page", buttonText: "p2" },
   ];
+  function onSwipeUp() {
+    console.log("SWIPE_UP");
+    if ((data.id = 1)) {
+      setScrollin(false);
+      setScrollin(true);
+    }
+  }
 
+  function onSwipeDown() {
+    console.log("SWIPE_DOWN");
+  }
   const buttonPress = () => {
     navigation.navigate("Profile");
   };
@@ -46,6 +67,16 @@ const HomeScreen = () => {
     <FlatList
       data={data}
       renderItem={renderItem}
+      onTouchStart={onTouchStart}
+      onTouchEnd={onTouchEnd}
+      scrollEnabled={scrollin}
+      // onTouchStart={() => console.log("onTouchStart")}
+      // onTouchMove={() => console.log("onTouchMove")}
+      // onTouchEnd={() => console.log("onTouchEnd")}
+      // onScrollBeginDrag={() => console.log("onScrollBeginDrag")}
+      // onScrollEndDrag={() => console.log("onScrollEndDrag")}
+      // onMomentumScrollBegin={() => console.log("onMomentumScrollBegin")}
+      // onMomentumScrollEnd={() => console.log("onMomentumScrollEnd")}
       onEndReached={onEndReached}
       onEndReachedThreshold={0.5}
       pagingEnabled={true}
