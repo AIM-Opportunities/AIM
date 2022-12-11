@@ -1,70 +1,86 @@
 import CustomButton from "../../components/CustomButton";
 import { useNavigation } from "@react-navigation/native";
 import React, { useState } from "react";
-import {
-  View,
-  Text,
-  StyleSheet,
-  ScrollView,
-  TouchableOpacity,
-} from "react-native";
-import { PanGestureHandler, State } from "react-native-gesture-handler";
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#fff",
-  },
-  item: {
-    padding: 20,
-  },
-  itemText: {
-    fontSize: 18,
-  },
-});
+import { View, Text, StyleSheet, Button, ScrollView } from "react-native";
 
 const HomeScreen = () => {
-  const [items, setItems] = useState([
-    { id: 1, text: "Item 1" },
-    { id: 2, text: "Item 2" },
-    { id: 3, text: "Item 3" },
-    { id: 4, text: "Item 4" },
-    { id: 5, text: "Item 5" },
-  ]);
-  const [currentIndex, setCurrentIndex] = useState(0);
+  const navigation = useNavigation();
+  const [currentItemIndex, setCurrentItemIndex] = useState(0);
 
-  const handleItemPress = (id) => {
-    console.log(`Item with id ${id} pressed`);
+  const items = [
+    {
+      id: 1,
+      title: "Item 1",
+    },
+    {
+      id: 2,
+      title: "Item 2",
+    },
+    {
+      id: 3,
+      title: "Item 3",
+    },
+  ];
+
+  const handleButtonPress = (item) => {
+    navigation.navigate("Profile");
   };
 
-  const handleSwipe = ({ nativeEvent }) => {
-    if (nativeEvent.state === State.END) {
-      // Allow the user to swipe back up to item 1
-      const nextIndex = Math.max(
-        currentIndex + (nativeEvent.dy < 0 ? -1 : 1),
-        0
-      );
-      if (nextIndex >= 0 && nextIndex < items.length) {
-        setCurrentIndex(nextIndex);
+  const handleSwipe = (direction) => {
+    if (direction === "up") {
+      if (currentItemIndex < items.length - 1) {
+        setCurrentItemIndex(currentItemIndex + 1);
+      }
+    } else if (direction === "down") {
+      if (currentItemIndex > 0) {
+        setCurrentItemIndex(currentItemIndex - 1);
       }
     }
   };
 
   return (
-    <PanGestureHandler onHandlerStateChange={handleSwipe}>
-      <View style={styles.container}>
-        <TouchableOpacity style={styles.item}>
-          <TouchableOpacity
-            onPress={() => handleItemPress(items[currentIndex].id)}
-          >
-            <Text style={styles.itemText}>{items[currentIndex].text}</Text>
-          </TouchableOpacity>
-        </TouchableOpacity>
-      </View>
-    </PanGestureHandler>
+    <ScrollView
+      style={styles.container}
+      onScroll={(event) => {
+        const currentOffset = event.nativeEvent.contentOffset.y;
+        const direction =
+          currentOffset > 0 ? "up" : currentOffset < 0 ? "down" : null;
+        if (direction) {
+          handleSwipe(direction);
+        }
+      }}
+    >
+      {items.map((item, index) => {
+        if (index === currentItemIndex) {
+          return (
+            <View key={item.id} style={styles.item}>
+              <Text style={styles.itemTitle}>{item.title}</Text>
+              <CustomButton
+                text={item.title}
+                onPress={() => handleButtonPress(item)}
+              />
+            </View>
+          );
+        }
+        return null;
+      })}
+    </ScrollView>
   );
 };
 
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+  item: {
+    padding: 20,
+    alignItems: "center",
+  },
+  itemTitle: {
+    fontSize: 18,
+    fontWeight: "bold",
+  },
+});
 export default HomeScreen;
 //   const navigation = useNavigation();
 //   const onProfilePressed = () => {
