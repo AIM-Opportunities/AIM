@@ -8,6 +8,7 @@ import ForgotPasswordScreen from "../screens/ForgotPasswordScreen";
 import NewPasswordScreen from "../screens/NewPasswordScreen";
 import ProfileScreen from "../screens/ProfileScreen";
 import HomeScreen from "../screens/HomeScreen";
+import { authentication } from "../../firebase/firebase-config";
 
 const Stack = createNativeStackNavigator();
 
@@ -18,9 +19,25 @@ const MyTheme = {
 };
 
 const Navigation = () => {
+  var initialRoute = null;
+
+  React.useEffect(() => {
+    const unsubscribe = authentication.onAuthStateChanged((user) => {
+      if (user) {
+        initialRoute = "Home";
+      } else {
+        initialRoute = "SignIn";
+      }
+    });
+
+    return unsubscribe;
+  }, []);
   return (
     <NavigationContainer theme={MyTheme}>
-      <Stack.Navigator screenOptions={{ headerShown: false }}>
+      <Stack.Navigator
+        screenOptions={{ headerShown: false }}
+        initialRouteName={initialRoute}
+      >
         <Stack.Screen name="SignIn" component={SignInScreen} />
         <Stack.Screen name="SignUp" component={SignUpScreen} />
         <Stack.Screen name="ConfirmEmail" component={ConfirmEmailScreen} />
