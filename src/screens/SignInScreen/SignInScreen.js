@@ -77,7 +77,7 @@ const SignInScreen = () => {
           setValue={setPassword}
           secureTextEntry
         />
-        {isSignedIn === authentication.currentUser ? (
+        {authentication.currentUser ? (
           <CustomButton text="Sign Out" onPress={onSignOutPressed} />
         ) : (
           <CustomButton text="Sign In" onPress={onSignInPressed} />
