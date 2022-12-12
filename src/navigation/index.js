@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import SignInScreen from "../screens/SignInScreen";
@@ -19,25 +19,9 @@ const MyTheme = {
 };
 
 const Navigation = () => {
-  var initialRoute = null;
-
-  React.useEffect(() => {
-    const unsubscribe = authentication.onAuthStateChanged((user) => {
-      if (user) {
-        initialRoute = "Home";
-      } else {
-        initialRoute = "SignIn";
-      }
-    });
-
-    return unsubscribe;
-  }, []);
   return (
     <NavigationContainer theme={MyTheme}>
-      <Stack.Navigator
-        screenOptions={{ headerShown: false }}
-        initialRouteName={initialRoute}
-      >
+      <Stack.Navigator screenOptions={{ headerShown: false }}>
         <Stack.Screen name="SignIn" component={SignInScreen} />
         <Stack.Screen name="SignUp" component={SignUpScreen} />
         <Stack.Screen name="ConfirmEmail" component={ConfirmEmailScreen} />
