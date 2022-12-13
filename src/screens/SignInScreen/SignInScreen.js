@@ -16,6 +16,11 @@ import { authentication } from "../../../firebase/firebase-config";
 import { signInWithEmailAndPassword, signOut } from "firebase/auth";
 
 const SignInScreen = () => {
+  authentication.onAuthStateChanged((user) => {
+    if (user) {
+      navigation.navigate("Home");
+    }
+  });
   const [isSignedIn, setIsSignedIn] = useState(false);
 
   const [email, setEmail] = useState("denfushi@gmail.com");
