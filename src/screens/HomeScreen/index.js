@@ -10,8 +10,20 @@ import {
 import { useNavigation } from "@react-navigation/native";
 import CustomButton from "../../components/CustomButton";
 import useSwipe from "../../components/UseSwipe";
+import { authentication } from "../../../firebase/firebase-config";
 
 const HomeScreen = () => {
+  authentication
+    .setPersistence(authentication.ReactNative.Persistence.LOCAL)
+    .then(() => {
+      // The authentication service is now set to use persistence.
+      // You can now proceed to authenticate users and their sessions will be
+      // persisted across app restarts.
+    })
+    .catch((error) => {
+      // An error occurred while setting the persistence.
+      // You can handle the error here.
+    });
   const navigation = useNavigation();
   const { onTouchStart, onTouchEnd } = useSwipe(onSwipeUp, onSwipeDown, 6);
   const [scrollin, setScrollin] = useState(true);
