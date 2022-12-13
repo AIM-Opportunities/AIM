@@ -14,17 +14,6 @@ import { storage } from "../../../firebase/firebase-config";
 import moment from "moment";
 
 const ProfileScreen = () => {
-  authentication
-    .setPersistence(authentication.ReactNative.Persistence.LOCAL)
-    .then(() => {
-      // The authentication service is now set to use persistence.
-      // You can now proceed to authenticate users and their sessions will be
-      // persisted across app restarts.
-    })
-    .catch((error) => {
-      // An error occurred while setting the persistence.
-      // You can handle the error here.
-    });
   const [isSignedIn, setIsSignedIn] = useState(!!!authentication.currentUser);
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
