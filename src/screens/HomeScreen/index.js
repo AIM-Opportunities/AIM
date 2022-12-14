@@ -11,6 +11,7 @@ import { useNavigation } from "@react-navigation/native";
 import CustomButton from "../../components/CustomButton";
 import useSwipe from "../../components/UseSwipe";
 import { authentication } from "../../../firebase/firebase-config";
+import data from "../../data/data";
 
 const HomeScreen = () => {
   const navigation = useNavigation();
@@ -19,16 +20,8 @@ const HomeScreen = () => {
 
   const [page, setPage] = useState(0);
 
-  const data = [
-    { id: 1, title: "First Page", buttonText: "p1" },
-    { id: 2, title: "Second Page", buttonText: "p2" },
-  ];
   function onSwipeUp() {
     console.log("SWIPE_UP");
-    if ((data.id = 1)) {
-      setScrollin(false);
-      setScrollin(true);
-    }
   }
 
   function onSwipeDown() {
@@ -41,8 +34,8 @@ const HomeScreen = () => {
   const renderItem = ({ item }) => {
     return (
       <View style={styles.itemWrapper}>
-        <Text>{item.title}</Text>
-        <CustomButton text={item.buttonText} onPress={buttonPress} />
+        <Text>{item.Title}</Text>
+        <CustomButton text="Profile" onPress={buttonPress} />
         {/* other content here */}
       </View>
     );
