@@ -27,7 +27,7 @@ const TestScreen = () => {
         <View style={styles.root}>
           <Text style={styles.title}>Test Screen</Text>
           <CustomButton text="Back to Home" onPress={onHomePressed} />
-          <Text style={styles.title}>{JSON.stringify(docs)}</Text>
+          <Text>{JSON.stringify(docs)}</Text>
         </View>
       </ScrollView>
     </>
