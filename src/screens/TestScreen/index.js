@@ -9,12 +9,8 @@ const TestScreen = () => {
 
   const navigation = useNavigation();
 
-  const onSendPressed = () => {
-    navigation.navigate("NewPassword");
-  };
-
-  const onSignInPressed = () => {
-    navigation.navigate("SignIn");
+  const onHomePressed = () => {
+    navigation.navigate("Home");
   };
 
   return (
@@ -27,19 +23,9 @@ const TestScreen = () => {
       showsVerticalScrollIndicator={false}
     >
       <View style={styles.root}>
-        <Text style={styles.title}>Reset your password</Text>
-        <CustomInput
-          placeholder="Username"
-          value={username}
-          setValue={setUsername}
-        />
-        <CustomButton text="SEND" onPress={onSendPressed} />
+        <Text style={styles.title}>Test Screen</Text>
 
-        <CustomButton
-          text="Back to Sign in"
-          onPress={onSignInPressed}
-          type="TERTIARY"
-        />
+        <CustomButton text="Back to Home" onPress={onHomePressed} />
       </View>
     </ScrollView>
   );
