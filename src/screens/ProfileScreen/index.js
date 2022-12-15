@@ -3,7 +3,7 @@ import * as DocumentPicker from "expo-document-picker";
 import React, { useState, useEffect } from "react";
 import CustomButton from "../../components/CustomButton";
 import { useNavigation } from "@react-navigation/native";
-import { db } from "../../../firebase/firebase-config";
+import { dbLite } from "../../../firebase/firebase-config";
 import { getDoc, doc, setDoc } from "firebase/firestore/lite";
 import { authentication } from "../../../firebase/firebase-config";
 import { signOut } from "firebase/auth";
@@ -32,7 +32,11 @@ const ProfileScreen = () => {
       setLoading(true);
 
       try {
-        const docRef = doc(db, "userProfiles", authentication.currentUser.uid);
+        const docRef = doc(
+          dbLite,
+          "userProfiles",
+          authentication.currentUser.uid
+        );
         const docSnap = await getDoc(docRef);
 
         if (docSnap.exists()) {
@@ -55,7 +59,7 @@ const ProfileScreen = () => {
   // press events can be async
   const onSetDataPressed = async () => {
     //Add a new document in collection "userProfiles"
-    await setDoc(doc(db, "userProfiles", authentication.currentUser.uid), {
+    await setDoc(doc(dbLite, "userProfiles", authentication.currentUser.uid), {
       "First Name": firstName,
       "Last Name": lastName,
       email: authentication.currentUser.email,
