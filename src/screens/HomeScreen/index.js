@@ -30,12 +30,16 @@ const HomeScreen = () => {
   const buttonPress = () => {
     navigation.navigate("Profile");
   };
+  const testPress = () => {
+    navigation.navigate("Test");
+  };
 
   const renderItem = ({ item }) => {
     return (
       <View style={styles.itemWrapper}>
         <Text>{item.Title}</Text>
         <CustomButton text="Profile" onPress={buttonPress} />
+        <CustomButton text="Test Screen" onPress={testPress} />
         {/* other content here */}
       </View>
     );
