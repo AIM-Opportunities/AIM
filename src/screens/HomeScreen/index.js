@@ -11,13 +11,14 @@ import { useNavigation } from "@react-navigation/native";
 import CustomButton from "../../components/CustomButton";
 import useSwipe from "../../components/UseSwipe";
 import { authentication } from "../../../firebase/firebase-config";
-import data from "../../data/data";
+//import data from "../../data/data";
+import data from "../../data/firebaseDocs";
 
 const HomeScreen = () => {
   const navigation = useNavigation();
   const { onTouchStart, onTouchEnd } = useSwipe(onSwipeUp, onSwipeDown, 6);
   const [scrollin, setScrollin] = useState(true);
-
+  const docs = data();
   const [page, setPage] = useState(0);
 
   function onSwipeUp() {
@@ -33,13 +34,19 @@ const HomeScreen = () => {
   const testPress = () => {
     navigation.navigate("Test");
   };
+  const scrollPress = () => {
+    navigation.navigate("Scroll");
+  };
 
   const renderItem = ({ item }) => {
     return (
       <View style={styles.itemWrapper}>
-        <Text>{item.Title}</Text>
+        <Text>{item.Company}</Text>
+        <Text>{item.Title}{`\n`}</Text>
+        <Text>Looking for: {item.lookingFor}</Text>
         <CustomButton text="Profile" onPress={buttonPress} />
         <CustomButton text="Test Screen" onPress={testPress} />
+        <CustomButton text="Scroll Screen" onPress={scrollPress} />
         {/* other content here */}
       </View>
     );
@@ -61,9 +68,10 @@ const HomeScreen = () => {
       alignSelf: "center",
     },
   });
+
   return (
     <FlatList
-      data={data}
+      data={docs}
       renderItem={renderItem}
       onTouchStart={onTouchStart}
       onTouchEnd={onTouchEnd}
