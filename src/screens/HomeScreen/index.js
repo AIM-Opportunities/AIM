@@ -34,19 +34,20 @@ const HomeScreen = () => {
   const testPress = () => {
     navigation.navigate("Test");
   };
-  const scrollPress = () => {
-    navigation.navigate("Scroll");
-  };
 
   const renderItem = ({ item }) => {
+    const dateAdded = new Date(item.DateAdded.seconds * 1000).toDateString();
     return (
       <View style={styles.itemWrapper}>
         <Text>{item.Company}</Text>
-        <Text>{item.Title}{`\n`}</Text>
+        <Text>
+          {item.Title}
+          {`\n`}
+        </Text>
         <Text>Looking for: {item.lookingFor}</Text>
+        <Text>Added on: {dateAdded}</Text>
         <CustomButton text="Profile" onPress={buttonPress} />
         <CustomButton text="Test Screen" onPress={testPress} />
-        <CustomButton text="Scroll Screen" onPress={scrollPress} />
         {/* other content here */}
       </View>
     );
@@ -68,7 +69,7 @@ const HomeScreen = () => {
       alignSelf: "center",
     },
   });
-
+  console.log(docs);
   return (
     <FlatList
       data={docs}
