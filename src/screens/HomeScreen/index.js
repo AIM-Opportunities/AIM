@@ -82,6 +82,8 @@ const HomeScreen = () => {
       onTouchStart={onTouchStart}
       onTouchEnd={onTouchEnd}
       scrollEnabled={scrollin}
+      showsVerticalScrollIndicator={false}
+      showsHorizontalScrollIndicator={false}
       // onTouchStart={() => console.log("onTouchStart")}
       // onTouchMove={() => console.log("onTouchMove")}
       // onTouchEnd={() => console.log("onTouchEnd")}
