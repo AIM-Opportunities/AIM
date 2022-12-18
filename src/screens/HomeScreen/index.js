@@ -76,12 +76,14 @@ const HomeScreen = () => {
 
   const styles = StyleSheet.create({
     itemWrapper: {
-      backgroundColor: "white",
-      alignItems: "center",
-      justifyContent: "center",
-      flex: 1,
-      margin: 1,
       height: Dimensions.get("window").height,
+      width: Dimensions.get("window").width,
+      justifyContent: "center",
+      alignItems: "center",
+      backgroundColor: "white",
+      borderColor: "#000",
+      borderWidth: 2,
+      alignSelf: "center",
     },
   });
   return (
