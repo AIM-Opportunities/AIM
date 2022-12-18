@@ -12,19 +12,36 @@ const HomeScreen = () => {
   const [scrollin, setScrollin] = useState(true);
   const [docs, setDocs] = useState([]);
   useEffect(() => {
-    getDocs(collection(db, "opportunities")).then((querySnapshot) => {
-      // Create a new array to store the documents
-      const newDocs = [];
-      let count = 0;
-      querySnapshot.forEach((doc) => {
-        // Push each document into the newDocs array
-        if (count < 3) {
-          newDocs.push({ ...doc.data(), id: doc.id });
-        }
-        count++;
+    // Get the userProfile docs
+    getDocs(collection(db, "userProfiles")).then((userProfileSnapshot) => {
+      // Create a new array to store the userProfile docs
+      const userProfiles = [];
+      userProfileSnapshot.forEach((doc) => {
+        userProfiles.push(doc.data());
       });
-      // Set the state with the newDocs array
-      setDocs(newDocs);
+
+      // Get the opportunities docs and filter them based on the userProfile docs
+      getDocs(collection(db, "opportunities")).then((querySnapshot) => {
+        // Create a new array to store the filtered opportunities docs
+        const newDocs = [];
+        let count = 0;
+        querySnapshot.forEach((doc) => {
+          // Check if the opportunity doc's "lookingFor" field matches any of the userProfile docs' "position" field
+          if (
+            userProfiles.find(
+              (userProfile) => userProfile.position === doc.data().lookingFor
+            )
+          ) {
+            // Push the opportunity doc into the newDocs array if it matches
+            if (count < 3) {
+              newDocs.push({ ...doc.data(), id: doc.id });
+            }
+            count++;
+          }
+        });
+        // Set the state with the newDocs array
+        setDocs(newDocs);
+      });
     });
   }, []);
 
@@ -35,19 +52,36 @@ const HomeScreen = () => {
 
   function onSwipeDown() {
     console.log("SWIPE_DOWN");
-    getDocs(collection(db, "opportunities")).then((querySnapshot) => {
-      // Create a new array to store the documents
-      const newDocs = [...docs];
-      let count = 0;
-      querySnapshot.forEach((doc) => {
-        // Push each document (that is not already in the array) into the newDocs array
-        if (!newDocs.find((d) => d.id === doc.id)) {
-          newDocs.push({ ...doc.data(), id: doc.id });
-        }
-        count++;
+    // Get the userProfile docs
+    getDocs(collection(db, "userProfiles")).then((userProfileSnapshot) => {
+      // Create a new array to store the userProfile docs
+      const userProfiles = [];
+      userProfileSnapshot.forEach((doc) => {
+        userProfiles.push(doc.data());
       });
-      // Set the state with the newDocs array
-      setDocs(newDocs);
+
+      // Get the opportunities docs and filter them based on the userProfile docs
+      getDocs(collection(db, "opportunities")).then((querySnapshot) => {
+        // Create a new array to store the filtered opportunities docs
+        const newDocs = [...docs];
+        let count = 0;
+        querySnapshot.forEach((doc) => {
+          // Check if the opportunitydoc's "lookingFor" field matches any of the userProfile docs' "position" field
+          if (
+            userProfiles.find(
+              (userProfile) => userProfile.position === doc.data().lookingFor
+            )
+          ) {
+            // Push the opportunity doc (that is not already in the array) into the newDocs array if it matches
+            if (!newDocs.find((d) => d.id === doc.id)) {
+              newDocs.push({ ...doc.data(), id: doc.id });
+            }
+            count++;
+          }
+        });
+        // Set the state with the newDocs array
+        setDocs(newDocs);
+      });
     });
   }
   const buttonPress = () => {
@@ -74,19 +108,35 @@ const HomeScreen = () => {
     );
   };
   const onEndReached = () => {
-    getDocs(collection(db, "opportunities")).then((querySnapshot) => {
-      // Create a new array to store the documents
-      const newDocs = [...docs];
-      let count = 0;
-      querySnapshot.forEach((doc) => {
-        // Push each document (that is not already in the array) into the newDocs array
-        if (!newDocs.find((d) => d.id === doc.id)) {
-          newDocs.push({ ...doc.data(), id: doc.id });
-        }
-        count++;
+    // Get the userProfile docs
+    getDocs(collection(db, "userProfiles")).then((userProfileSnapshot) => {
+      // Create a new array to store the userProfile docs
+      const userProfiles = [];
+      userProfileSnapshot.forEach((doc) => {
+        userProfiles.push(doc.data());
       });
-      // Set the state with the newDocs array
-      setDocs(newDocs);
+      // Get the opportunities docs and filter them based on the userProfile docs
+      getDocs(collection(db, "opportunities")).then((querySnapshot) => {
+        // Create a new array to store the filtered opportunities docs
+        const newDocs = [...docs];
+        let count = 0;
+        querySnapshot.forEach((doc) => {
+          // Check if the opportunity doc's "lookingFor" field matches any of the userProfile docs' "position" field
+          if (
+            userProfiles.find(
+              (userProfile) => userProfile.position === doc.data().lookingFor
+            )
+          ) {
+            // Push the opportunity doc (that is not already in the array) into the newDocs array if it matches
+            if (!newDocs.find((d) => d.id === doc.id)) {
+              newDocs.push({ ...doc.data(), id: doc.id });
+            }
+            count++;
+          }
+        });
+        // Set the state with the newDocs array
+        setDocs(newDocs);
+      });
     });
   };
   const styles = StyleSheet.create({
@@ -101,8 +151,9 @@ const HomeScreen = () => {
       alignSelf: "center",
     },
   });
+
   return (
-    <View style={{ flex: 1 }}>
+    <View style={styles.container}>
       <FlatList
         data={docs}
         renderItem={renderItem}
