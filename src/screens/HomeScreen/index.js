@@ -1,12 +1,5 @@
 import React, { useState, useEffect } from "react";
-import {
-  View,
-  Text,
-  FlatList,
-  StyleSheet,
-  Dimensions,
-  ScrollView,
-} from "react-native";
+import { View, Text, FlatList, StyleSheet, Dimensions } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import CustomButton from "../../components/CustomButton";
 import useSwipe from "../../components/UseSwipe";
@@ -32,6 +25,7 @@ const HomeScreen = () => {
   }, []);
   const [page, setPage] = useState(0);
 
+  //FUNCTIONS
   function onSwipeUp() {
     console.log("SWIPE_UP");
   }
@@ -80,7 +74,7 @@ const HomeScreen = () => {
       alignSelf: "center",
     },
   });
-  console.log(docs);
+
   return (
     <FlatList
       data={docs}
