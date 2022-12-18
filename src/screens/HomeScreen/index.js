@@ -81,7 +81,7 @@ const HomeScreen = () => {
       justifyContent: "center",
       flex: 1,
       margin: 1,
-      height: Dimensions.get("window").height, // approximate a square
+      height: Dimensions.get("window").height,
     },
   });
   return (
