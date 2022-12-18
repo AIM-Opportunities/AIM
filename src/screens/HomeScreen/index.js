@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   View,
   Text,
@@ -10,15 +10,26 @@ import {
 import { useNavigation } from "@react-navigation/native";
 import CustomButton from "../../components/CustomButton";
 import useSwipe from "../../components/UseSwipe";
-import { authentication } from "../../../firebase/firebase-config";
-//import data from "../../data/data";
-import data from "../../data/firebaseDocs";
+import { collection, getDocs } from "firebase/firestore";
+import { db } from "../../../firebase/firebase-config";
 
 const HomeScreen = () => {
   const navigation = useNavigation();
   const { onTouchStart, onTouchEnd } = useSwipe(onSwipeUp, onSwipeDown, 6);
   const [scrollin, setScrollin] = useState(true);
-  const docs = data();
+  const [docs, setDocs] = useState([]);
+  useEffect(() => {
+    getDocs(collection(db, "opportunities")).then((querySnapshot) => {
+      // Create a new array to store the documents
+      const newDocs = [];
+      querySnapshot.forEach((doc) => {
+        // Push each document into the newDocs array
+        newDocs.push({ ...doc.data(), id: doc.id });
+      });
+      // Set the state with the newDocs array
+      setDocs(newDocs);
+    });
+  }, []);
   const [page, setPage] = useState(0);
 
   function onSwipeUp() {
