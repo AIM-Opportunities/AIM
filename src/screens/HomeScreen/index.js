@@ -73,7 +73,22 @@ const HomeScreen = () => {
       </View>
     );
   };
-
+  const onEndReached = () => {
+    getDocs(collection(db, "opportunities")).then((querySnapshot) => {
+      // Create a new array to store the documents
+      const newDocs = [...docs];
+      let count = 0;
+      querySnapshot.forEach((doc) => {
+        // Push each document (that is not already in the array) into the newDocs array
+        if (!newDocs.find((d) => d.id === doc.id)) {
+          newDocs.push({ ...doc.data(), id: doc.id });
+        }
+        count++;
+      });
+      // Set the state with the newDocs array
+      setDocs(newDocs);
+    });
+  };
   const styles = StyleSheet.create({
     itemWrapper: {
       height: Dimensions.get("window").height,
@@ -102,6 +117,7 @@ const HomeScreen = () => {
         // onMomentumScrollBegin={() => console.log("onMomentumScrollBegin")}
         // onMomentumScrollEnd={() => console.log("onMomentumScrollEnd")}r
         onEndReachedThreshold={0.5}
+        onEndReached={onEndReached}
         pagingEnabled={true}
         snapToAlignment="start"
         decelerationRate={"fast"}
