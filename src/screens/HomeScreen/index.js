@@ -15,15 +15,18 @@ const HomeScreen = () => {
     getDocs(collection(db, "opportunities")).then((querySnapshot) => {
       // Create a new array to store the documents
       const newDocs = [];
+      let count = 0;
       querySnapshot.forEach((doc) => {
         // Push each document into the newDocs array
-        newDocs.push({ ...doc.data(), id: doc.id });
+        if (count < 3) {
+          newDocs.push({ ...doc.data(), id: doc.id });
+        }
+        count++;
       });
       // Set the state with the newDocs array
       setDocs(newDocs);
     });
   }, []);
-  const [page, setPage] = useState(0);
 
   //FUNCTIONS
   function onSwipeUp() {
@@ -32,6 +35,20 @@ const HomeScreen = () => {
 
   function onSwipeDown() {
     console.log("SWIPE_DOWN");
+    getDocs(collection(db, "opportunities")).then((querySnapshot) => {
+      // Create a new array to store the documents
+      const newDocs = [...docs];
+      let count = 0;
+      querySnapshot.forEach((doc) => {
+        // Push each document (that is not already in the array) into the newDocs array
+        if (!newDocs.find((d) => d.id === doc.id)) {
+          newDocs.push({ ...doc.data(), id: doc.id });
+        }
+        count++;
+      });
+      // Set the state with the newDocs array
+      setDocs(newDocs);
+    });
   }
   const buttonPress = () => {
     navigation.navigate("Profile");
@@ -53,52 +70,44 @@ const HomeScreen = () => {
         <Text>Added on: {dateAdded}</Text>
         <CustomButton text="Profile" onPress={buttonPress} />
         <CustomButton text="Test Screen" onPress={testPress} />
-        {/* other content here */}
       </View>
     );
   };
 
-  const onEndReached = () => {
-    // fetch next page of content here
-    setPage(page + 1);
-  };
   const styles = StyleSheet.create({
     itemWrapper: {
-      height: Dimensions.get("window").height,
-      width: Dimensions.get("window").width,
-      justifyContent: "center",
-      alignItems: "center",
       backgroundColor: "white",
-      borderColor: "#000",
-      borderWidth: 2,
-      alignSelf: "center",
+      alignItems: "center",
+      justifyContent: "center",
+      flex: 1,
+      margin: 1,
+      height: Dimensions.get("window").height, // approximate a square
     },
   });
-
   return (
-    <FlatList
-      data={docs}
-      renderItem={renderItem}
-      onTouchStart={onTouchStart}
-      onTouchEnd={onTouchEnd}
-      scrollEnabled={scrollin}
-      showsVerticalScrollIndicator={false}
-      showsHorizontalScrollIndicator={false}
-      // onTouchStart={() => console.log("onTouchStart")}
-      // onTouchMove={() => console.log("onTouchMove")}
-      // onTouchEnd={() => console.log("onTouchEnd")}
-      // onScrollBeginDrag={() => console.log("onScrollBeginDrag")}
-      // onScrollEndDrag={() => console.log("onScrollEndDrag")}
-      // onMomentumScrollBegin={() => console.log("onMomentumScrollBegin")}
-      // onMomentumScrollEnd={() => console.log("onMomentumScrollEnd")}
-      onEndReached={onEndReached}
-      onEndReachedThreshold={0.5}
-      pagingEnabled={true}
-      snapToAlignment="start"
-      decelerationRate={"fast"}
-      snapToInterval={Dimensions.get("window").height}
-      keyExtractor={(item) => item.id}
-    />
+    <View style={{ flex: 1 }}>
+      <FlatList
+        data={docs}
+        renderItem={renderItem}
+        onTouchStart={onTouchStart}
+        onTouchEnd={onTouchEnd}
+        scrollEnabled={scrollin}
+        // onTouchStart={() => console.log("onTouchStart")}
+        // onTouchMove={() => console.log("onTouchMove")}
+        // onTouchEnd={() => console.log("onTouchEnd")}
+        // onScrollBeginDrag={() => console.log("onScrollBeginDrag")}
+        // onScrollEndDrag={() => console.log("onScrollEndDrag")}
+        // onMomentumScrollBegin={() => console.log("onMomentumScrollBegin")}
+        // onMomentumScrollEnd={() => console.log("onMomentumScrollEnd")}r
+        onEndReachedThreshold={0.5}
+        pagingEnabled={true}
+        snapToAlignment="start"
+        decelerationRate={"fast"}
+        snapToInterval={Dimensions.get("window").height}
+        keyboardDismissMode="on-drag"
+        showsVerticalScrollIndicator={false}
+      />
+    </View>
   );
 };
 
