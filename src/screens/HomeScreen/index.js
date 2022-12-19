@@ -194,8 +194,6 @@ const HomeScreen = () => {
           snapToInterval={Dimensions.get("window").height}
           keyboardDismissMode="on-drag"
           showsVerticalScrollIndicator={false}
-          keyExtractor={(item) => item.id}
-
         />
       )}
       <CustomButton text="Go to Profile" onPress={buttonPress} />
