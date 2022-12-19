@@ -18,6 +18,7 @@ const ProfileScreen = () => {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [occupation, setOccupation] = useState("");
+  const [lookingFor, setLookingFor] = useState("");
   const navigation = useNavigation();
   const [data, setData] = useState("");
   const [loading, setLoading] = useState(false);
@@ -43,6 +44,7 @@ const ProfileScreen = () => {
           setFirstName(docSnap.get("First Name"));
           setLastName(docSnap.get("Last Name"));
           setOccupation(docSnap.get("occupation"));
+          setLookingFor(docSnap.get("lookingFor"));
         } else {
           setData(undefined);
           console.log("No document!");
@@ -64,6 +66,7 @@ const ProfileScreen = () => {
       "Last Name": lastName,
       email: authentication.currentUser.email,
       occupation: occupation,
+      lookingFor: lookingFor,
     });
     navigation.navigate("Home");
   };
@@ -159,6 +162,13 @@ const ProfileScreen = () => {
           }
           value={occupation}
           setValue={setOccupation}
+        />
+                <CustomInput
+          placeholder={
+            lookingFor === null || undefined ? { lookingFor } : "Looking For"
+          }
+          value={lookingFor}
+          setValue={setLookingFor}
         />
         <FileInput onPress={onUploadResumePressed} />
         {completed && <Text style={{ color: "white" }}>Resume Stored!</Text>}

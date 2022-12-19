@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { View, Text, FlatList, StyleSheet, Dimensions } from "react-native";
+import { includes } from "lodash";
 import { useNavigation } from "@react-navigation/native";
 import CustomButton from "../../components/CustomButton";
 import useSwipe from "../../components/UseSwipe";
@@ -9,8 +10,9 @@ import { db } from "../../../firebase/firebase-config";
 const HomeScreen = () => {
   const navigation = useNavigation();
   const { onTouchStart, onTouchEnd } = useSwipe(onSwipeUp, onSwipeDown, 6);
-  const [scrollin, setScrollin] = useState(true);
   const [docs, setDocs] = useState([]);
+  const [noMatches, setNoMatches] = useState(false);
+
   useEffect(() => {
     // Get the userProfile docs
     getDocs(collection(db, "userProfiles")).then((userProfileSnapshot) => {
@@ -25,11 +27,13 @@ const HomeScreen = () => {
         // Create a new array to store the filtered opportunities docs
         const newDocs = [];
         let count = 0;
+        let hasMatches = false;
         querySnapshot.forEach((doc) => {
-          // Check if the opportunity doc's "lookingFor" field matches any of the userProfile docs' "position" field
+          
+          // Check if the opportunity doc's "lookingFor" field matches any of the userProfile docs' "lookingFor" field
           if (
-            userProfiles.find(
-              (userProfile) => userProfile.position === doc.data().lookingFor
+            userProfiles.find((userProfile) =>
+              includes(doc.data().lookingFor, userProfile.lookingFor)
             )
           ) {
             // Push the opportunity doc into the newDocs array if it matches
@@ -37,10 +41,12 @@ const HomeScreen = () => {
               newDocs.push({ ...doc.data(), id: doc.id });
             }
             count++;
+            hasMatches = true;
           }
         });
         // Set the state with the newDocs array
         setDocs(newDocs);
+        setNoMatches(!hasMatches);
       });
     });
   }, []);
@@ -65,11 +71,12 @@ const HomeScreen = () => {
         // Create a new array to store the filtered opportunities docs
         const newDocs = [...docs];
         let count = 0;
+        let hasMatches = false;
         querySnapshot.forEach((doc) => {
-          // Check if the opportunitydoc's "lookingFor" field matches any of the userProfile docs' "position" field
+          // Check if the opportunitydoc's "lookingFor" field matches any of the userProfile docs' "lookingFor" field
           if (
-            userProfiles.find(
-              (userProfile) => userProfile.position === doc.data().lookingFor
+            userProfiles.find((userProfile) =>
+              includes(doc.data().lookingFor, userProfile.lookingFor)
             )
           ) {
             // Push the opportunity doc (that is not already in the array) into the newDocs array if it matches
@@ -77,10 +84,12 @@ const HomeScreen = () => {
               newDocs.push({ ...doc.data(), id: doc.id });
             }
             count++;
+            hasMatches = true;
           }
         });
         // Set the state with the newDocs array
         setDocs(newDocs);
+        setNoMatches(!hasMatches);
       });
     });
   }
@@ -120,11 +129,12 @@ const HomeScreen = () => {
         // Create a new array to store the filtered opportunities docs
         const newDocs = [...docs];
         let count = 0;
+        let hasMatches = false;
         querySnapshot.forEach((doc) => {
-          // Check if the opportunity doc's "lookingFor" field matches any of the userProfile docs' "position" field
+          // Check if the opportunity doc's "lookingFor" field matches any of the userProfile docs' "lookingFor" field
           if (
-            userProfiles.find(
-              (userProfile) => userProfile.position === doc.data().lookingFor
+            userProfiles.find((userProfile) =>
+              includes(doc.data().lookingFor, userProfile.lookingFor)
             )
           ) {
             // Push the opportunity doc (that is not already in the array) into the newDocs array if it matches
@@ -132,10 +142,12 @@ const HomeScreen = () => {
               newDocs.push({ ...doc.data(), id: doc.id });
             }
             count++;
+            hasMatches = true;
           }
         });
         // Set the state with the newDocs array
         setDocs(newDocs);
+        setNoMatches(!hasMatches);
       });
     });
   };
@@ -154,28 +166,40 @@ const HomeScreen = () => {
 
   return (
     <View style={styles.container}>
-      <FlatList
-        data={docs}
-        renderItem={renderItem}
-        onTouchStart={onTouchStart}
-        onTouchEnd={onTouchEnd}
-        scrollEnabled={scrollin}
-        // onTouchStart={() => console.log("onTouchStart")}
-        // onTouchMove={() => console.log("onTouchMove")}
-        // onTouchEnd={() => console.log("onTouchEnd")}
-        // onScrollBeginDrag={() => console.log("onScrollBeginDrag")}
-        // onScrollEndDrag={() => console.log("onScrollEndDrag")}
-        // onMomentumScrollBegin={() => console.log("onMomentumScrollBegin")}
-        // onMomentumScrollEnd={() => console.log("onMomentumScrollEnd")}r
-        onEndReachedThreshold={0.5}
-        onEndReached={onEndReached}
-        pagingEnabled={true}
-        snapToAlignment="start"
-        decelerationRate={"fast"}
-        snapToInterval={Dimensions.get("window").height}
-        keyboardDismissMode="on-drag"
-        showsVerticalScrollIndicator={false}
-      />
+      {noMatches ? (
+        // show this page when there are no matches
+        <View style={styles.container}>
+          <Text >
+            There are currently no opportunities that match your profile.
+          </Text>
+        </View>
+      ) : (
+        <FlatList
+          data={docs}
+          renderItem={renderItem}
+          onTouchStart={onTouchStart}
+          onTouchEnd={onTouchEnd}
+          // onTouchStart={() => console.log("onTouchStart")}
+          // onTouchMove={() => console.log("onTouchMove")}
+          // onTouchEnd={() => console.log("onTouchEnd")}
+          // onScrollBeginDrag={() => console.log("onScrollBeginDrag")}
+          // onScrollEndDrag={() => console.log("onScrollEndDrag")}
+          // onMomentumScrollBegin={() => console.log("onMomentumScrollBegin")}
+          // onMomentumScrollEnd={() => console.log("onMomentumScrollEnd")}r
+          onEndReachedThreshold={0.5}
+          onEndReached={onEndReached}
+          pagingEnabled={true}
+          snapToAlignment="start"
+          decelerationRate={"fast"}
+          snapToInterval={Dimensions.get("window").height}
+          keyboardDismissMode="on-drag"
+          showsVerticalScrollIndicator={false}
+          keyExtractor={(item) => item.id}
+
+        />
+      )}
+      <CustomButton text="Go to Profile" onPress={buttonPress} />
+      <CustomButton text="Go to Test" onPress={testPress} />
     </View>
   );
 };
