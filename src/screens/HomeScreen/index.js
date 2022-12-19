@@ -172,6 +172,7 @@ const HomeScreen = () => {
           <Text >
             There are currently no opportunities that match your profile.
           </Text>
+          <CustomButton text="Profile" onPress={buttonPress} />
         </View>
       ) : (
         <FlatList
