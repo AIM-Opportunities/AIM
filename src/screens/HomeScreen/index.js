@@ -168,7 +168,7 @@ const HomeScreen = () => {
     <View style={styles.container}>
       {noMatches ? (
         // show this page when there are no matches
-        <View style={styles.container}>
+        <View >
           <Text >
             There are currently no opportunities that match your profile.
           </Text>
@@ -196,8 +196,6 @@ const HomeScreen = () => {
           showsVerticalScrollIndicator={false}
         />
       )}
-      <CustomButton text="Go to Profile" onPress={buttonPress} />
-      <CustomButton text="Go to Test" onPress={testPress} />
     </View>
   );
 };
