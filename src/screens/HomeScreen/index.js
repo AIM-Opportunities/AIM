@@ -33,7 +33,7 @@ const HomeScreen = () => {
           // Check if the opportunity doc's "lookingFor" field matches any of the userProfile docs' "lookingFor" field
           if (
             userProfiles.find((userProfile) =>
-              includes(doc.data().lookingFor, userProfile.lookingFor)
+              includes(doc.data().lookingFor.toLowerCase(), userProfile.lookingFor)
             )
           ) {
             // Push the opportunity doc into the newDocs array if it matches
@@ -76,7 +76,7 @@ const HomeScreen = () => {
           // Check if the opportunitydoc's "lookingFor" field matches any of the userProfile docs' "lookingFor" field
           if (
             userProfiles.find((userProfile) =>
-              includes(doc.data().lookingFor, userProfile.lookingFor)
+              includes(doc.data().lookingFor.toLowerCase(), userProfile.lookingFor)
             )
           ) {
             // Push the opportunity doc (that is not already in the array) into the newDocs array if it matches
@@ -134,7 +134,7 @@ const HomeScreen = () => {
           // Check if the opportunity doc's "lookingFor" field matches any of the userProfile docs' "lookingFor" field
           if (
             userProfiles.find((userProfile) =>
-              includes(doc.data().lookingFor, userProfile.lookingFor)
+              includes(doc.data().lookingFor.toLowerCase(), userProfile.lookingFor)
             )
           ) {
             // Push the opportunity doc (that is not already in the array) into the newDocs array if it matches
