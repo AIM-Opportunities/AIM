@@ -29,11 +29,10 @@ const HomeScreen = () => {
         let count = 0;
         let hasMatches = false;
         querySnapshot.forEach((doc) => {
-          
           // Check if the opportunity doc's "lookingFor" field matches any of the userProfile docs' "lookingFor" field
           if (
             userProfiles.find((userProfile) =>
-              includes(doc.data().lookingFor.toLowerCase(), userProfile.lookingFor)
+              includes(doc.data().lookingFor, userProfile.lookingFor)
             )
           ) {
             // Push the opportunity doc into the newDocs array if it matches
@@ -76,7 +75,7 @@ const HomeScreen = () => {
           // Check if the opportunitydoc's "lookingFor" field matches any of the userProfile docs' "lookingFor" field
           if (
             userProfiles.find((userProfile) =>
-              includes(doc.data().lookingFor.toLowerCase(), userProfile.lookingFor)
+              includes(doc.data().lookingFor, userProfile.lookingFor)
             )
           ) {
             // Push the opportunity doc (that is not already in the array) into the newDocs array if it matches
@@ -134,7 +133,7 @@ const HomeScreen = () => {
           // Check if the opportunity doc's "lookingFor" field matches any of the userProfile docs' "lookingFor" field
           if (
             userProfiles.find((userProfile) =>
-              includes(doc.data().lookingFor.toLowerCase(), userProfile.lookingFor)
+              includes(doc.data().lookingFor, userProfile.lookingFor)
             )
           ) {
             // Push the opportunity doc (that is not already in the array) into the newDocs array if it matches
@@ -168,8 +167,8 @@ const HomeScreen = () => {
     <View style={styles.container}>
       {noMatches ? (
         // show this page when there are no matches
-        <View >
-          <Text >
+        <View>
+          <Text>
             There are currently no opportunities that match your profile.
           </Text>
           <CustomButton text="Profile" onPress={buttonPress} />
