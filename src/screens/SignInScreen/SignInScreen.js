@@ -23,7 +23,7 @@ const SignInScreen = () => {
   });
   const [isSignedIn, setIsSignedIn] = useState(false);
 
-  const [email, setEmail] = useState("denfushi@gmail.com");
+  const [email, setEmail] = useState("t@t.com");
   const [password, setPassword] = useState("123456");
 
   const { height, width } = useWindowDimensions();

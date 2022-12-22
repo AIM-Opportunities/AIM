@@ -30,15 +30,11 @@ const HomeScreen = () => {
         let hasMatches = false;
         querySnapshot.forEach((doc) => {
           // Check if the opportunity doc's "lookingFor" field matches any of the userProfile docs' "lookingFor" field
-          if (
-            userProfiles.find((userProfile) =>
-              includes(doc.data().lookingFor, userProfile.lookingFor)
-            )
-          ) {
-            // Push the opportunity doc into the newDocs array if it matches
-            if (count < 3) {
-              newDocs.push({ ...doc.data(), id: doc.id });
-            }
+
+          // Push the opportunity doc into the newDocs array if it matches
+          if (count < 3) {
+            newDocs.push({ ...doc.data(), id: doc.id });
+
             count++;
             hasMatches = true;
           }
@@ -73,18 +69,13 @@ const HomeScreen = () => {
         let hasMatches = false;
         querySnapshot.forEach((doc) => {
           // Check if the opportunitydoc's "lookingFor" field matches any of the userProfile docs' "lookingFor" field
-          if (
-            userProfiles.find((userProfile) =>
-              includes(doc.data().lookingFor, userProfile.lookingFor)
-            )
-          ) {
-            // Push the opportunity doc (that is not already in the array) into the newDocs array if it matches
-            if (!newDocs.find((d) => d.id === doc.id)) {
-              newDocs.push({ ...doc.data(), id: doc.id });
-            }
-            count++;
-            hasMatches = true;
+
+          // Push the opportunity doc (that is not already in the array) into the newDocs array if it matches
+          if (!newDocs.find((d) => d.id === doc.id)) {
+            newDocs.push({ ...doc.data(), id: doc.id });
           }
+          count++;
+          hasMatches = true;
         });
         // Set the state with the newDocs array
         setDocs(newDocs);
@@ -131,18 +122,13 @@ const HomeScreen = () => {
         let hasMatches = false;
         querySnapshot.forEach((doc) => {
           // Check if the opportunity doc's "lookingFor" field matches any of the userProfile docs' "lookingFor" field
-          if (
-            userProfiles.find((userProfile) =>
-              includes(doc.data().lookingFor, userProfile.lookingFor)
-            )
-          ) {
-            // Push the opportunity doc (that is not already in the array) into the newDocs array if it matches
-            if (!newDocs.find((d) => d.id === doc.id)) {
-              newDocs.push({ ...doc.data(), id: doc.id });
-            }
-            count++;
-            hasMatches = true;
+
+          // Push the opportunity doc (that is not already in the array) into the newDocs array if it matches
+          if (!newDocs.find((d) => d.id === doc.id)) {
+            newDocs.push({ ...doc.data(), id: doc.id });
           }
+          count++;
+          hasMatches = true;
         });
         // Set the state with the newDocs array
         setDocs(newDocs);
