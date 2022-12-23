@@ -63,7 +63,7 @@ const HomeScreen = () => {
       getDocs(collection(db, "opportunities")).then((querySnapshot) => {
         // Create a new array to store the filtered opportunities docs
         const newDocs = [...docs];
-        let count
+        let count;
         let hasMatches = false;
         querySnapshot.forEach((doc) => {
           // Check if the opportunity doc's "lookingFor" field matches any of the userProfile docs' "lookingFor" field
@@ -103,7 +103,7 @@ const HomeScreen = () => {
       getDocs(collection(db, "opportunities")).then((querySnapshot) => {
         // Create a new array to store the filtered opportunities docs
         const newDocs = [];
-        let count 
+        let count = 0;
         let hasMatches = false;
         querySnapshot.forEach((doc) => {
           // Check if the opportunity doc's "lookingFor" field matches any of the userProfile docs' "lookingFor" field
