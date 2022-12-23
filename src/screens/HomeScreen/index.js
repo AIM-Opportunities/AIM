@@ -63,7 +63,7 @@ const HomeScreen = () => {
       getDocs(collection(db, "opportunities")).then((querySnapshot) => {
         // Create a new array to store the filtered opportunities docs
         const newDocs = [...docs];
-        let count = 0;
+        let count
         let hasMatches = false;
         querySnapshot.forEach((doc) => {
           // Check if the opportunity doc's "lookingFor" field matches any of the userProfile docs' "lookingFor" field
@@ -103,7 +103,7 @@ const HomeScreen = () => {
       getDocs(collection(db, "opportunities")).then((querySnapshot) => {
         // Create a new array to store the filtered opportunities docs
         const newDocs = [];
-        let count = 0;
+        let count 
         let hasMatches = false;
         querySnapshot.forEach((doc) => {
           // Check if the opportunity doc's "lookingFor" field matches any of the userProfile docs' "lookingFor" field
@@ -111,7 +111,6 @@ const HomeScreen = () => {
           // Push the opportunity doc into the newDocs array if it matches
           if (count < 3) {
             newDocs.push({ ...doc.data(), id: doc.id });
-
             count++;
             hasMatches = true;
           }
@@ -146,7 +145,7 @@ const HomeScreen = () => {
       );
     }
     // Return the default rendering for the other items
-    const dateAdded = new Date(item.DateAdded.seconds * 1000).toDateString();
+    const dateAdded = new Date(item.DateAdded?.seconds * 1000).toDateString();
     return (
       <View style={styles.itemWrapper}>
         <Text>{item.Company}</Text>
