@@ -43,7 +43,6 @@ const HomeScreen = () => {
         // Randomize the array of docs
         newDocs.sort(() => Math.random() - 0.5);
 
- 
         // Set the state with the newDocs array
         setDocs(newDocs);
         setNoMatches(!hasMatches);
@@ -72,11 +71,11 @@ const HomeScreen = () => {
           if (!newDocs.find((d) => d.id === doc.id)) {
             newDocs.push({ ...doc.data(), id: doc.id });
           }
+          count++;
           hasMatches = true;
         });
         // Randomize the array of docs
         newDocs.sort(() => Math.random() - 0.5);
-
 
         // Set the state with the newDocs array
         setDocs(newDocs);
