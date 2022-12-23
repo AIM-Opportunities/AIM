@@ -35,7 +35,6 @@ const HomeScreen = () => {
           // Push the opportunity doc into the newDocs array if it matches
           if (count < 3) {
             newDocs.push({ ...doc.data(), id: doc.id });
-
             count++;
             hasMatches = true;
           }
