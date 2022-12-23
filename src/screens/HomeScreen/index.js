@@ -152,9 +152,6 @@ const HomeScreen = () => {
         keyboardDismissMode="on-drag"
         showsVerticalScrollIndicator={false}
       />
-      {noMatches && <Text style={styles.noMatches}>No matches</Text>}
-      <CustomButton title="Go to Profile" onPress={buttonPress} />
-      <CustomButton title="Go to Test" onPress={testPress} />
     </View>
   );
 };
