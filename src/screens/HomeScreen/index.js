@@ -63,6 +63,7 @@ const HomeScreen = () => {
       getDocs(collection(db, "opportunities")).then((querySnapshot) => {
         // Create a new array to store the filtered opportunities docs
         const newDocs = [...docs];
+        let count = 0;
         let hasMatches = false;
         querySnapshot.forEach((doc) => {
           // Check if the opportunity doc's "lookingFor" field matches any of the userProfile docs' "lookingFor" field
@@ -91,6 +92,38 @@ const HomeScreen = () => {
   function onSwipeDown() {
     console.log("SWIPE_DOWN");
     // Get the userProfile docs
+    getDocs(collection(db, "userProfiles")).then((userProfileSnapshot) => {
+      // Create a new array to store the userProfile docs
+      const userProfiles = [];
+      userProfileSnapshot.forEach((doc) => {
+        userProfiles.push(doc.data());
+      });
+
+      // Get the opportunities docs and filter them based on the userProfile docs
+      getDocs(collection(db, "opportunities")).then((querySnapshot) => {
+        // Create a new array to store the filtered opportunities docs
+        const newDocs = [];
+        let count = 0;
+        let hasMatches = false;
+        querySnapshot.forEach((doc) => {
+          // Check if the opportunity doc's "lookingFor" field matches any of the userProfile docs' "lookingFor" field
+
+          // Push the opportunity doc into the newDocs array if it matches
+          if (count < 3) {
+            newDocs.push({ ...doc.data(), id: doc.id });
+
+            count++;
+            hasMatches = true;
+          }
+        });
+        // Randomize the array of docs
+        newDocs.sort(() => Math.random() - 0.5);
+
+        // Set the state with the newDocs array
+        setDocs(newDocs);
+        setNoMatches(!hasMatches);
+      });
+    });
   }
   const buttonPress = () => {
     navigation.navigate("Profile");
