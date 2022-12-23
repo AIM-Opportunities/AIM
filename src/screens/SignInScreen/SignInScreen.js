@@ -19,6 +19,8 @@ const SignInScreen = () => {
   authentication.onAuthStateChanged((user) => {
     if (user) {
       navigation.navigate("Home");
+    } else {
+      setIsSignedIn(false);
     }
   });
   const [isSignedIn, setIsSignedIn] = useState(false);
