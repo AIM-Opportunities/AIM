@@ -20,7 +20,7 @@ const SignInScreen = () => {
     if (user) {
       navigation.navigate("Home");
     } else {
-      setIsSignedIn(false);
+      setIsSignedIn();
     }
   });
   const [isSignedIn, setIsSignedIn] = useState(false);

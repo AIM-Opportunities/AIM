@@ -1,18 +1,18 @@
-import React, { useState, useEffect } from "react";
-import { Text, View, StyleSheet, ScrollView } from "react-native";
+import React from "react";
+import { View, Text, StyleSheet, Dimensions } from "react-native";
 import CustomButton from "../../components/CustomButton";
 import { useNavigation } from "@react-navigation/native";
 
 const TestScreen = () => {
   const navigation = useNavigation();
 
-  const onHomePressed = () => {
-    navigation.navigate("Home");
+  const onProfilePressed = () => {
+    navigation.navigate("Profile");
   };
 
   return (
     <>
-      <ScrollView
+      <View
         contentContainerStyle={{
           flexGrow: 1,
           justifyContent: "center",
@@ -22,17 +22,25 @@ const TestScreen = () => {
       >
         <View style={styles.root}>
           <Text style={styles.title}>Test Screen</Text>
-          <CustomButton text="Back to Home" onPress={onHomePressed} />
+          <CustomButton text="Edit Profile" onPress={onProfilePressed} />
         </View>
-      </ScrollView>
+      </View>
     </>
   );
 };
 
 const styles = StyleSheet.create({
   root: {
-    alignItems: "center",
     padding: 20,
+    height: Dimensions.get("window").height,
+    width: Dimensions.get("window").width,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "#0582FF",
+    borderColor: "#000",
+    borderWidth: 2,
+    alignSelf: "center",
+
   },
   title: {
     fontSize: 24,
