@@ -1,5 +1,5 @@
-import React, { useState, useEffect, lazy, Suspense } from "react";
-import { View, Text, FlatList, StyleSheet, Dimensions } from "react-native";
+import React, { useState, useEffect, lazy, Suspense  } from "react";
+import { View, Text, FlatList, StyleSheet, Dimensions, Platform } from "react-native";
 import { includes } from "lodash";
 import { useNavigation } from "@react-navigation/native";
 import CustomButton from "../../components/CustomButton";
@@ -173,7 +173,9 @@ const HomeScreen = () => {
         // onScrollEndDrag={() => console.log("onScrollEndDrag")}
         // onMomentumScrollBegin={() => console.log("onMomentumScrollBegin")}
         // onMomentumScrollEnd={() => console.log("onMomentumScrollEnd")}r
-        onEndReachedThreshold={0.5}
+        onEndReachedThreshold={
+          Platform.OS === "ios" ? 0.5 : Dimensions.get("window").height / 1.2
+        }
         onEndReached={onEndReached}
         pagingEnabled={true}
         snapToAlignment="start"
@@ -181,6 +183,7 @@ const HomeScreen = () => {
         snapToInterval={Dimensions.get("window").height}
         keyboardDismissMode="on-drag"
         showsVerticalScrollIndicator={false}
+        keyExtractor={(item) => item.id}
       />
     </View>
   );
