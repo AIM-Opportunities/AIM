@@ -1,18 +1,25 @@
-import React, { useState, useEffect, lazy, Suspense  } from "react";
-import { View, Text, FlatList, StyleSheet, Dimensions, Platform } from "react-native";
+import React, { useState, useEffect, lazy, Suspense } from "react";
+import {
+  View,
+  Text,
+  FlatList,
+  StyleSheet,
+  Dimensions,
+  RefreshControl,
+} from "react-native";
 import { includes } from "lodash";
 import { useNavigation } from "@react-navigation/native";
 import CustomButton from "../../components/CustomButton";
 import useSwipe from "../../components/UseSwipe";
 import { collection, getDocs } from "firebase/firestore";
 import { db } from "../../../firebase/firebase-config";
+import { ScrollView } from "react-native-gesture-handler";
 
 const HomeScreen = () => {
   const navigation = useNavigation();
   const { onTouchStart, onTouchEnd } = useSwipe(onSwipeUp, onSwipeDown, 6);
   const [docs, setDocs] = useState([]);
   const [noMatches, setNoMatches] = useState(false);
-  const [testDisplayed, setTestDisplayed] = useState(false); // Add a flag variable to track whether the TestScreen component has been displayed
 
   useEffect(() => {
     // Get the userProfile docs
@@ -51,6 +58,7 @@ const HomeScreen = () => {
 
   //FUNCTIONS
   const onEndReached = () => {
+    console.log("END");
     // Get the userProfile docs
     getDocs(collection(db, "userProfiles")).then((userProfileSnapshot) => {
       // Create a new array to store the userProfile docs
@@ -146,6 +154,7 @@ const HomeScreen = () => {
     // Return the default rendering for the other items
     const dateAdded = new Date(item.DateAdded?.seconds * 1000).toDateString();
     return (
+
       <View style={styles.itemWrapper}>
         <Text>{item.Company}</Text>
         <Text>
@@ -156,6 +165,7 @@ const HomeScreen = () => {
         <Text>Added on: {dateAdded}</Text>
         <CustomButton text="Profile" onPress={buttonPress} />
       </View>
+
     );
   };
 
@@ -173,12 +183,11 @@ const HomeScreen = () => {
         // onScrollEndDrag={() => console.log("onScrollEndDrag")}
         // onMomentumScrollBegin={() => console.log("onMomentumScrollBegin")}
         // onMomentumScrollEnd={() => console.log("onMomentumScrollEnd")}r
-        onEndReachedThreshold={
-          Platform.OS === "ios" ? 0.5 : Dimensions.get("window").height / 1.2
-        }
+        onEndReachedThreshold={0.5}
         onEndReached={onEndReached}
         pagingEnabled={true}
         snapToAlignment="start"
+        scrollEnabled={true}
         decelerationRate={"fast"}
         snapToInterval={Dimensions.get("window").height}
         keyboardDismissMode="on-drag"
@@ -190,14 +199,17 @@ const HomeScreen = () => {
 };
 const styles = StyleSheet.create({
   itemWrapper: {
-    height: Dimensions.get("window").height,
     width: Dimensions.get("window").width,
+    height: Dimensions.get("window").height,
     justifyContent: "center",
     alignItems: "center",
     backgroundColor: "white",
     borderColor: "#000",
     borderWidth: 2,
     alignSelf: "center",
+  },
+  container: {
+
   },
 });
 
