@@ -19,7 +19,7 @@ const HomeScreen = () => {
   const navigation = useNavigation();
   const { onTouchStart, onTouchEnd } = useSwipe(onSwipeUp, onSwipeDown, 6);
   const [docs, setDocs] = useState([]);
-  const [noMatches, setNoMatches] = useState(false);
+  const [hasMatches, setNoMatches] = useState(false);
 
   useEffect(() => {
     // Get the userProfile docs
@@ -33,12 +33,11 @@ const HomeScreen = () => {
       // Get the opportunities docs and filter them based on the userProfile docs
       getDocs(collection(db, "opportunities")).then((querySnapshot) => {
         // Create a new array to store the filtered opportunities docs
+
         const newDocs = [];
         let hasMatches = false;
         let count = 0;
         querySnapshot.forEach((doc) => {
-          // Check if the opportunity doc's "lookingFor" field matches any of the userProfile docs' "lookingFor" field
-
           // Push the opportunity doc into the newDocs array if it matches
           if (count < 3) {
             newDocs.push({ ...doc.data(), id: doc.id });
@@ -48,7 +47,6 @@ const HomeScreen = () => {
         });
         // Randomize the array of docs
         newDocs.sort(() => Math.random() - 0.5);
-
         // Set the state with the newDocs array
         setDocs(newDocs);
         setNoMatches(!hasMatches);
@@ -59,8 +57,8 @@ const HomeScreen = () => {
   //FUNCTIONS
   const onEndReached = () => {
     console.log("END");
-    // Get the userProfile docs
-    getDocs(collection(db, "userProfiles")).then((userProfileSnapshot) => {
+     // Get the userProfile docs
+     getDocs(collection(db, "userProfiles")).then((userProfileSnapshot) => {
       // Create a new array to store the userProfile docs
       const userProfiles = [];
       userProfileSnapshot.forEach((doc) => {
@@ -68,68 +66,37 @@ const HomeScreen = () => {
       });
       // Get the opportunities docs and filter them based on the userProfile docs
       getDocs(collection(db, "opportunities")).then((querySnapshot) => {
+
         // Create a new array to store the filtered opportunities docs
         const newDocs = [...docs];
         let count = 0;
         let hasMatches = false;
         querySnapshot.forEach((doc) => {
-          // Check if the opportunity doc's "lookingFor" field matches any of the userProfile docs' "lookingFor" field
-
           // Push the opportunity doc (that is not already in the array) into the newDocs array if it matches
           if (!newDocs.find((d) => d.id === doc.id)) {
-            newDocs.push({ ...doc.data(), id: doc.id });
+            if (count < 3) {
+              newDocs.push({ ...doc.data(), id: doc.id });
+              count++;
+              hasMatches = true;
+            }
           }
-          count++;
-          hasMatches = true;
         });
-        // Randomize the array of docs
-        newDocs.sort(() => Math.random() - 0.5);
-
-        // Set the state with the newDocs array
-        setDocs(newDocs);
-        setNoMatches(!hasMatches);
-      });
-    });
-  };
-
+     // Randomize the array of docs
+     newDocs.sort(() => Math.random() - 0.5);
+     // Set the state with the newDocs array
+     setDocs(newDocs);
+     setNoMatches(!hasMatches);
+   });
+ });
+   
+};
   function onSwipeUp() {
     console.log("SWIPE_UP");
   }
 
   function onSwipeDown() {
     console.log("SWIPE_DOWN");
-    // Get the userProfile docs
-    getDocs(collection(db, "userProfiles")).then((userProfileSnapshot) => {
-      // Create a new array to store the userProfile docs
-      const userProfiles = [];
-      userProfileSnapshot.forEach((doc) => {
-        userProfiles.push(doc.data());
-      });
-
-      // Get the opportunities docs and filter them based on the userProfile docs
-      getDocs(collection(db, "opportunities")).then((querySnapshot) => {
-        // Create a new array to store the filtered opportunities docs
-        const newDocs = [];
-        let count = 0;
-        let hasMatches = false;
-        querySnapshot.forEach((doc) => {
-          // Check if the opportunity doc's "lookingFor" field matches any of the userProfile docs' "lookingFor" field
-
-          // Push the opportunity doc into the newDocs array if it matches
-          if (count < 3) {
-            newDocs.push({ ...doc.data(), id: doc.id });
-            count++;
-            hasMatches = true;
-          }
-        });
-        // Randomize the array of docs
-        newDocs.sort(() => Math.random() - 0.5);
-
-        // Set the state with the newDocs array
-        setDocs(newDocs);
-        setNoMatches(!hasMatches);
-      });
-    });
+    
   }
   const buttonPress = () => {
     navigation.navigate("Profile");
@@ -189,9 +156,8 @@ const HomeScreen = () => {
         decelerationRate={"fast"}
         snapToInterval={Dimensions.get("window").height}
         keyboardDismissMode="on-drag"
-        showsVerticalScrollIndicator={false}
+        showsVerticalScrollIndicator={true}
         keyExtractor={(item) => item.id}
-
       />
     </View>
   );
@@ -209,7 +175,7 @@ const styles = StyleSheet.create({
   },
   container: {
     flex: 1,
-},
+  },
 });
 
 export default HomeScreen;
