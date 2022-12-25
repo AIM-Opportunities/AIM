@@ -154,7 +154,6 @@ const HomeScreen = () => {
     // Return the default rendering for the other items
     const dateAdded = new Date(item.DateAdded?.seconds * 1000).toDateString();
     return (
-
       <View style={styles.itemWrapper}>
         <Text>{item.Company}</Text>
         <Text>
@@ -165,7 +164,6 @@ const HomeScreen = () => {
         <Text>Added on: {dateAdded}</Text>
         <CustomButton text="Profile" onPress={buttonPress} />
       </View>
-
     );
   };
 
@@ -193,6 +191,7 @@ const HomeScreen = () => {
         keyboardDismissMode="on-drag"
         showsVerticalScrollIndicator={false}
         keyExtractor={(item) => item.id}
+
       />
     </View>
   );
@@ -209,8 +208,8 @@ const styles = StyleSheet.create({
     alignSelf: "center",
   },
   container: {
-
-  },
+    flex: 1,
+},
 });
 
 export default HomeScreen;
