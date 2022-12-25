@@ -55,23 +55,22 @@ const HomeScreen = () => {
       });
       // Get the opportunities docs and filter them based on the userProfile docs
       getDocs(collection(db, "opportunities")).then((querySnapshot) => {
-        // Create a new array to store the filtered opportunities docs
-        const newDocs = [...docs];
-        let count = 0;
+        // Create a new array to store the remaining opportunities docs that have not been loaded
+        let remainingDocs = [];
         querySnapshot.forEach((doc) => {
-          if (
-            !newDocs.find((d) => d.id === doc.id) &&
-            !includes(allDocIds, doc.id)
-          ) {
-            if (count < 3) {
-              newDocs.push({ ...doc.data(), id: doc.id });
-              count++;
-              setAllDocIds((prevAllDocIds) => [...prevAllDocIds, doc.id]); // add the doc id to the allDocIds array
-            }
+          if (!includes(allDocIds, doc.id)) {
+            remainingDocs.push({ ...doc.data(), id: doc.id });
+            setAllDocIds((prevAllDocIds) => [...prevAllDocIds, doc.id]); // add the doc id to the allDocIds array
           }
         });
-        // Randomize the array of docs
-        newDocs.sort(() => Math.random() - 0.5);
+        // If there are no remaining docs, exit the function
+        if (remainingDocs.length === 0) return;
+        // Randomize the remaining docs array
+        remainingDocs.sort(() => Math.random() - 0.5);
+        // Get the next 3 docs from the remainingDocs array
+        const nextThreeDocs = remainingDocs.slice(0, 3);
+        // Add the next three docs to the existing docs array
+        const newDocs = [...docs, ...nextThreeDocs];
         // Set the state with the newDocs array
         setDocs(newDocs);
       });
@@ -92,24 +91,22 @@ const HomeScreen = () => {
       });
       // Get the opportunities docs and filter them based on the userProfile docs
       getDocs(collection(db, "opportunities")).then((querySnapshot) => {
-        // Create a new array to store the filtered opportunities docs
-        const newDocs = [...docs];
-        let count = 0;
+        // Create a new array to store the remaining opportunities docs that have not been loaded
+        let remainingDocs = [];
         querySnapshot.forEach((doc) => {
-          // Push the opportunity doc (that is not already in the array) into the newDocs array if it matches
-          if (
-            !newDocs.find((d) => d.id === doc.id) &&
-            !includes(allDocIds, doc.id)
-          ) {
-            if (count < 3) {
-              newDocs.push({ ...doc.data(), id: doc.id });
-              count++;
-              setAllDocIds((prevAllDocIds) => [...prevAllDocIds, doc.id]); // add the doc id to the allDocIds array
-            }
+          if (!includes(allDocIds, doc.id)) {
+            remainingDocs.push({ ...doc.data(), id: doc.id });
+            setAllDocIds((prevAllDocIds) => [...prevAllDocIds, doc.id]); // add the doc id to the allDocIds array
           }
         });
-        // Randomize the array of docs
-        newDocs.sort(() => Math.random() - 0.5);
+        // If there are no remaining docs, exit the function
+        if (remainingDocs.length === 0) return;
+        // Randomize the remaining docs array
+        remainingDocs.sort(() => Math.random() - 0.5);
+        // Get the next 3 docs from the remainingDocs array
+        const nextThreeDocs = remainingDocs.slice(0, 3);
+        // Add the next three docs to the existing docs array
+        const newDocs = [...docs, ...nextThreeDocs];
         // Set the state with the newDocs array
         setDocs(newDocs);
       });
