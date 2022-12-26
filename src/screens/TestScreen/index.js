@@ -23,6 +23,7 @@ const TestScreen = () => {
         <View style={styles.root}>
           <Text style={styles.title}>Test Screen</Text>
           <CustomButton text="Edit Profile" onPress={onProfilePressed} />
+          <Text>TestScreen</Text>
         </View>
       </View>
     </>
@@ -40,7 +41,6 @@ const styles = StyleSheet.create({
     borderColor: "#000",
     borderWidth: 2,
     alignSelf: "center",
-
   },
   title: {
     fontSize: 24,

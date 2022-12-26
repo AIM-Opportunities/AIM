@@ -3,15 +3,19 @@ import { View, Text, FlatList, StyleSheet, Dimensions } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { includes } from "lodash";
 import CustomButton from "../../components/CustomButton";
-import useSwipe from "../../components/UseSwipe";
 import { collection, getDocs } from "firebase/firestore";
+import { authentication } from "../../../firebase/firebase-config";
 import { db } from "../../../firebase/firebase-config";
+import { dbLite } from "../../../firebase/firebase-config";
+import { getDoc, doc, setDoc } from "firebase/firestore/lite";
 
 const HomeScreen = () => {
   const navigation = useNavigation();
-  const { onTouchStart, onTouchEnd } = useSwipe(onSwipeUp, onSwipeDown, 6);
   const [docs, setDocs] = useState([]);
   const [allDocIds, setAllDocIds] = useState([]);
+  const [startTime, setStartTime] = useState(null);
+  const [endTime, setEndTime] = useState(null);
+  const [stickingPacket, setStickingPacket] = useState(null);
 
   useEffect(() => {
     // Get the userProfile docs
@@ -52,61 +56,93 @@ const HomeScreen = () => {
   }, []);
 
   //FUNCTIONS
+  const onTouchStart = () => {
+    // Get the current time in milliseconds
+    setStartTime(Date.now());
+  };
+
+  const onTouchEnd = async (item) => {
+    // Get the current time in milliseconds
+    setEndTime(Date.now());
+
+    let stickingTime = (endTime - startTime) * -1;
+    let id = item.target.lastChild.innerText;
+
+    if (typeof stickingPacket !== "undefined" && stickingPacket !== null) {
+      if (stickingPacket.includes(id)) {
+        let index = stickingPacket.indexOf(id);
+        let currentDuration = parseInt(
+          stickingPacket.substring(index + id.length + 1)
+        );
+        let updatedDuration = (currentDuration + stickingTime).toString();
+        setStickingPacket(
+          stickingPacket.substring(0, index) +
+            `${id}^${updatedDuration}` +
+            stickingPacket.substring(index + id.length + 1)
+        );
+      } else {
+        setStickingPacket(stickingPacket + `,${id}^${stickingTime}`);
+      }
+    } else {
+      setStickingPacket(`${id}^${stickingTime}`);
+    }
+
+    // Update the user's profile with the duration of time spent on the item
+    //Add a new document in collection "userProfiles"
+    await setDoc(doc(dbLite, "userProfiles", authentication.currentUser.uid), {
+      stickingTime: stickingPacket,
+      email: authentication.currentUser.email,
+    });
+  };
+
   const onEndReached = () => {
     // Get the userProfile docs
     getDocs(collection(db, "userProfiles")).then((userProfileSnapshot) => {
       try {
-      // Create a new array to store the userProfile docs
-      const userProfiles = [];
-      userProfileSnapshot.forEach((doc) => {
-        userProfiles.push(doc.data());
-      });
-    } catch (error) {
-      console.error(error);
-      throw error;
-    }
-      // Get the opportunities docs and filter them based on the userProfile docs
-      getDocs(collection(db, "opportunities")).then((querySnapshot) => {
-        try {
-        // Create a new array to store the remaining opportunities docs that have not been loaded
-        let remainingDocs = [];
-        querySnapshot.forEach((doc) => {
-          if (!includes(allDocIds, doc.id)) {
-            remainingDocs.push({ ...doc.data(), id: doc.id });
-          }
+        // Create a new array to store the userProfile docs
+        const userProfiles = [];
+        userProfileSnapshot.forEach((doc) => {
+          userProfiles.push(doc.data());
         });
-
-        // Randomize the remaining docs array
-        remainingDocs.sort(() => Math.random() - 0.5);
-
-        // Retrieve 3 documents or the remaining number of documents if it is less than 3
-        const threeOrRest =
-          remainingDocs.length >= 3 ? 3 : remainingDocs.length;
-        const nextDocs = remainingDocs.slice(0, threeOrRest);
-
-        // Update the state with the new documents
-        setDocs([...docs, ...nextDocs]);
-
-        // Add the doc ids to the allDocIds array
-        setAllDocIds((prevAllDocIds) => [
-          ...prevAllDocIds,
-          ...nextDocs.map((doc) => doc.id),
-        ]);
       } catch (error) {
         console.error(error);
         throw error;
       }
+      // Get the opportunities docs and filter them based on the userProfile docs
+      getDocs(collection(db, "opportunities")).then((querySnapshot) => {
+        try {
+          // Create a new array to store the remaining opportunities docs that have not been loaded
+          let remainingDocs = [];
+          querySnapshot.forEach((doc) => {
+            if (!includes(allDocIds, doc.id)) {
+              remainingDocs.push({ ...doc.data(), id: doc.id });
+            }
+          });
+
+          // Randomize the remaining docs array
+          remainingDocs.sort(() => Math.random() - 0.5);
+
+          // Retrieve 3 documents or the remaining number of documents if it is less than 3
+          const threeOrRest =
+            remainingDocs.length >= 3 ? 3 : remainingDocs.length;
+          const nextDocs = remainingDocs.slice(0, threeOrRest);
+
+          // Update the state with the new documents
+          setDocs([...docs, ...nextDocs]);
+
+          // Add the doc ids to the allDocIds array
+          setAllDocIds((prevAllDocIds) => [
+            ...prevAllDocIds,
+            ...nextDocs.map((doc) => doc.id),
+          ]);
+        } catch (error) {
+          console.error(error);
+          throw error;
+        }
       });
     });
   };
 
-  function onSwipeUp() {
-    console.log("SWIPE_UP");
-  }
-
-  function onSwipeDown() {
-    console.log("SWIPE_DOWN");
-  }
   const buttonPress = () => {
     navigation.navigate("Profile");
   };
@@ -136,6 +172,7 @@ const HomeScreen = () => {
         <Text>Looking for: {item.lookingFor}</Text>
         <Text>Added on: {dateAdded}</Text>
         <CustomButton text="Profile" onPress={buttonPress} />
+        <Text>{item.id}</Text>
       </View>
     );
   };
@@ -163,7 +200,7 @@ const HomeScreen = () => {
         snapToInterval={Dimensions.get("window").height}
         keyboardDismissMode="on-drag"
         showsVerticalScrollIndicator={true}
-        keyExtractor={(item) => item.id}
+        keyExtractor={(item) => item.id.toString()}
       />
     </View>
   );
