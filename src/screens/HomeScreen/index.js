@@ -16,45 +16,58 @@ const HomeScreen = () => {
   useEffect(() => {
     // Get the userProfile docs
     getDocs(collection(db, "userProfiles")).then((userProfileSnapshot) => {
-      // Create a new array to store the userProfile docs
-      const userProfiles = [];
-      userProfileSnapshot.forEach((doc) => {
-        userProfiles.push(doc.data());
-      });
-
+      try {
+        // Create a new array to store the userProfile docs
+        const userProfiles = [];
+        userProfileSnapshot.forEach((doc) => {
+          userProfiles.push(doc.data());
+        });
+      } catch (error) {
+        console.error(error);
+        throw error;
+      }
       // Get the opportunities docs and filter them based on the userProfile docs
       getDocs(collection(db, "opportunities")).then((querySnapshot) => {
         // Create a new array to store the filtered opportunities docs
-
-        const newDocs = [];
-        let count = 0;
-        querySnapshot.forEach((doc) => {
-          if (count < 3) {
-            newDocs.push({ ...doc.data(), id: doc.id });
-            count++;
-            setAllDocIds((prevAllDocIds) => [...prevAllDocIds, doc.id]); // add the doc id to the allDocIds array
-          }
-        });
-        // Randomize the array of docs
-        newDocs.sort(() => Math.random() - 0.5);
-        // Set the state with the newDocs array
-        setDocs(newDocs);
+        try {
+          const newDocs = [];
+          let count = 0;
+          querySnapshot.forEach((doc) => {
+            if (count < 3) {
+              newDocs.push({ ...doc.data(), id: doc.id });
+              count++;
+              setAllDocIds((prevAllDocIds) => [...prevAllDocIds, doc.id]); // add the doc id to the allDocIds array
+            }
+          });
+          // Randomize the array of docs
+          newDocs.sort(() => Math.random() - 0.5);
+          // Set the state with the newDocs array
+          setDocs(newDocs);
+        } catch (error) {
+          console.error(error);
+          throw error;
+        }
       });
     });
   }, []);
 
   //FUNCTIONS
   const onEndReached = () => {
-    console.log("END");
     // Get the userProfile docs
     getDocs(collection(db, "userProfiles")).then((userProfileSnapshot) => {
+      try {
       // Create a new array to store the userProfile docs
       const userProfiles = [];
       userProfileSnapshot.forEach((doc) => {
         userProfiles.push(doc.data());
       });
+    } catch (error) {
+      console.error(error);
+      throw error;
+    }
       // Get the opportunities docs and filter them based on the userProfile docs
       getDocs(collection(db, "opportunities")).then((querySnapshot) => {
+        try {
         // Create a new array to store the remaining opportunities docs that have not been loaded
         let remainingDocs = [];
         querySnapshot.forEach((doc) => {
@@ -75,11 +88,17 @@ const HomeScreen = () => {
         setDocs([...docs, ...nextDocs]);
 
         // Add the doc ids to the allDocIds array
-        setAllDocIds((prevAllDocIds) => [...prevAllDocIds, ...nextDocs.map((doc) => doc.id)]);
+        setAllDocIds((prevAllDocIds) => [
+          ...prevAllDocIds,
+          ...nextDocs.map((doc) => doc.id),
+        ]);
+      } catch (error) {
+        console.error(error);
+        throw error;
+      }
       });
     });
   };
-
 
   function onSwipeUp() {
     console.log("SWIPE_UP");
@@ -90,9 +109,6 @@ const HomeScreen = () => {
   }
   const buttonPress = () => {
     navigation.navigate("Profile");
-  };
-  const testPress = () => {
-    navigation.navigate("Test");
   };
 
   // Lazy-load the screen component
