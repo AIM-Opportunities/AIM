@@ -19,6 +19,8 @@ const ProfileScreen = () => {
   const [lastName, setLastName] = useState("");
   const [occupation, setOccupation] = useState("");
   const [lookingFor, setLookingFor] = useState("");
+  const [stickingTime, setStickingTime] = useState("");
+
   const navigation = useNavigation();
   const [data, setData] = useState("");
   const [loading, setLoading] = useState(false);
@@ -45,6 +47,7 @@ const ProfileScreen = () => {
           setLastName(docSnap.get("Last Name"));
           setOccupation(docSnap.get("occupation"));
           setLookingFor(docSnap.get("lookingFor"));
+          setStickingTime(docSnap.get("stickingTime"));
         } else {
           setData(undefined);
           console.log("No document!");
@@ -163,7 +166,7 @@ const ProfileScreen = () => {
           value={occupation}
           setValue={setOccupation}
         />
-                <CustomInput
+        <CustomInput
           placeholder={
             lookingFor === null || undefined ? { lookingFor } : "Looking For"
           }
@@ -176,6 +179,7 @@ const ProfileScreen = () => {
         {isSignedIn === !!!authentication.currentUser && (
           <CustomButton text="Sign Out" onPress={onSignOutPressed} />
         )}
+        <Text style={styles.text}>{stickingTime}</Text>
       </View>
     </ScrollView>
   );
@@ -186,6 +190,12 @@ const styles = StyleSheet.create({
   root: {
     alignItems: "center",
     padding: 50,
+  },
+  text: {
+    maxWidth: 200,
+    flexGrow: 1,
+    alignSelf: "center",
+    justifyContent: "center",
   },
 });
 export default ProfileScreen;
