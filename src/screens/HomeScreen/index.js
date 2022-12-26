@@ -11,7 +11,7 @@ const HomeScreen = () => {
   const navigation = useNavigation();
   const { onTouchStart, onTouchEnd } = useSwipe(onSwipeUp, onSwipeDown, 6);
   const [docs, setDocs] = useState([]);
-  const [allDocIds, setAllDocIds] = useState([]); // new state to track all unique doc ids
+  const [allDocIds, setAllDocIds] = useState([]);
 
   useEffect(() => {
     // Get the userProfile docs
@@ -60,57 +60,33 @@ const HomeScreen = () => {
         querySnapshot.forEach((doc) => {
           if (!includes(allDocIds, doc.id)) {
             remainingDocs.push({ ...doc.data(), id: doc.id });
-            setAllDocIds((prevAllDocIds) => [...prevAllDocIds, doc.id]); // add the doc id to the allDocIds array
           }
         });
-        // If there are no remaining docs, exit the function
-        if (remainingDocs.length === 0) return;
+
         // Randomize the remaining docs array
         remainingDocs.sort(() => Math.random() - 0.5);
-        // Get the next 3 docs from the remainingDocs array
-        const nextThreeDocs = remainingDocs.slice(0, 3);
-        // Add the next three docs to the existing docs array
-        const newDocs = [...docs, ...nextThreeDocs];
-        // Set the state with the newDocs array
-        setDocs(newDocs);
+
+        // Retrieve 3 documents or the remaining number of documents if it is less than 3
+        const threeOrRest =
+          remainingDocs.length >= 3 ? 3 : remainingDocs.length;
+        const nextDocs = remainingDocs.slice(0, threeOrRest);
+
+        // Update the state with the new documents
+        setDocs([...docs, ...nextDocs]);
+
+        // Add the doc ids to the allDocIds array
+        setAllDocIds((prevAllDocIds) => [...prevAllDocIds, ...nextDocs.map((doc) => doc.id)]);
       });
     });
   };
+
+
   function onSwipeUp() {
     console.log("SWIPE_UP");
   }
 
   function onSwipeDown() {
     console.log("SWIPE_DOWN");
-    // Get the userProfile docs
-    getDocs(collection(db, "userProfiles")).then((userProfileSnapshot) => {
-      // Create a new array to store the userProfile docs
-      const userProfiles = [];
-      userProfileSnapshot.forEach((doc) => {
-        userProfiles.push(doc.data());
-      });
-      // Get the opportunities docs and filter them based on the userProfile docs
-      getDocs(collection(db, "opportunities")).then((querySnapshot) => {
-        // Create a new array to store the remaining opportunities docs that have not been loaded
-        let remainingDocs = [];
-        querySnapshot.forEach((doc) => {
-          if (!includes(allDocIds, doc.id)) {
-            remainingDocs.push({ ...doc.data(), id: doc.id });
-            setAllDocIds((prevAllDocIds) => [...prevAllDocIds, doc.id]); // add the doc id to the allDocIds array
-          }
-        });
-        // If there are no remaining docs, exit the function
-        if (remainingDocs.length === 0) return;
-        // Randomize the remaining docs array
-        remainingDocs.sort(() => Math.random() - 0.5);
-        // Get the next 3 docs from the remainingDocs array
-        const nextThreeDocs = remainingDocs.slice(0, 3);
-        // Add the next three docs to the existing docs array
-        const newDocs = [...docs, ...nextThreeDocs];
-        // Set the state with the newDocs array
-        setDocs(newDocs);
-      });
-    });
   }
   const buttonPress = () => {
     navigation.navigate("Profile");
