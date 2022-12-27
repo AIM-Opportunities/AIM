@@ -23,7 +23,7 @@ const TestScreen = () => {
         <View style={styles.root}>
           <Text style={styles.title}>Test Screen</Text>
           <CustomButton text="Edit Profile" onPress={onProfilePressed} />
-          <Text>TestScreen</Text>
+          <Text style={{  opacity:.0001 }}>TestScreen</Text>
         </View>
       </View>
     </>

@@ -19,7 +19,7 @@ const ProfileScreen = () => {
   const [lastName, setLastName] = useState("");
   const [occupation, setOccupation] = useState("");
   const [lookingFor, setLookingFor] = useState("");
-  const [stickingTime, setStickingTime] = useState("");
+  const [interestStore, setinterestStore] = useState(null);
 
   const navigation = useNavigation();
   const [data, setData] = useState("");
@@ -47,7 +47,7 @@ const ProfileScreen = () => {
           setLastName(docSnap.get("Last Name"));
           setOccupation(docSnap.get("occupation"));
           setLookingFor(docSnap.get("lookingFor"));
-          setStickingTime(docSnap.get("stickingTime"));
+          setinterestStore(docSnap.get("interests"));
         } else {
           setData(undefined);
           console.log("No document!");
@@ -182,7 +182,7 @@ const ProfileScreen = () => {
         {isSignedIn === !!!authentication.currentUser && (
           <CustomButton text="Sign Out" onPress={onSignOutPressed} />
         )}
-        <Text style={styles.text}>{stickingTime}</Text>
+        <Text style={styles.text}>{interestStore}</Text>
       </View>
     </ScrollView>
   );

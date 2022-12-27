@@ -3,11 +3,10 @@ import { View, Text, FlatList, StyleSheet, Dimensions } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { includes } from "lodash";
 import CustomButton from "../../components/CustomButton";
-import { collection, getDocs  } from "firebase/firestore";
+import { collection, getDocs } from "firebase/firestore";
 import { authentication } from "../../../firebase/firebase-config";
 import { db } from "../../../firebase/firebase-config";
-import { dbLite } from "../../../firebase/firebase-config";
-import { doc, setDoc,updateDoc } from "firebase/firestore/lite";
+import { updateDoc, doc } from "firebase/firestore";
 
 const HomeScreen = () => {
   const navigation = useNavigation();
@@ -15,7 +14,9 @@ const HomeScreen = () => {
   const [allDocIds, setAllDocIds] = useState([]);
   const [startTime, setStartTime] = useState(null);
   const [endTime, setEndTime] = useState(null);
-  const [stickingPacket, setStickingPacket] = useState(null);
+  const [stickingTime, setStickingTime] = useState(null);
+
+  const [interestStore, setInterestStore] = useState(null);
 
   useEffect(() => {
     // Get the userProfile docs
@@ -25,6 +26,13 @@ const HomeScreen = () => {
         const userProfiles = [];
         userProfileSnapshot.forEach((doc) => {
           userProfiles.push(doc.data());
+          // Apply stickingTime from firestore to the setinterestStore
+          if (
+            typeof doc.data().interests !== "undefined" &&
+            doc.data().interests !== null
+          ) {
+            setInterestStore(doc.data().interests);
+          }
         });
       } catch (error) {
         console.error(error);
@@ -58,44 +66,71 @@ const HomeScreen = () => {
   //FUNCTIONS
   const onTouchStart = () => {
     // Get the current time in milliseconds
-    setStartTime(Date.now());
+    setStartTime(Date.now() / 1000);
   };
 
   const onTouchEnd = async (item) => {
     // Get the current time in milliseconds
-    setEndTime(Date.now());
+    setEndTime(Date.now() / 1000);
 
-    let stickingTime = (endTime - startTime) * -1;
-    let id = item.target.lastChild.innerText;
-
-    if (typeof stickingPacket !== "undefined" && stickingPacket !== null) {
-      if (stickingPacket.includes(id)) {
-        let index = stickingPacket.indexOf(id);
-        let currentDuration = parseInt(
-          stickingPacket.substring(index + id.length + 1)
-        );
-        let updatedDuration = (currentDuration + stickingTime).toString();
-        setStickingPacket(
-          stickingPacket.substring(0, index) +
-            `${id}^${updatedDuration}` +
-            stickingPacket.substring(index + id.length + 1)
-        );
-      } else {
-        setStickingPacket(stickingPacket + `,${id}^${stickingTime}`);
-      }
+    if (isNaN(stickingTime) || !stickingTime) {
+      setStickingTime(0);
     } else {
-      setStickingPacket(`${id}^${stickingTime}`);
+      setStickingTime(Math.round((endTime - startTime) * -1));
+    }
+
+    let lookingFor = item.target.lastChild.innerText;
+
+    console.log("sticking time", stickingTime);
+    console.log(item.target.lastChild.innerText);
+    if (
+      typeof interestStore !== "undefined" &&
+      interestStore !== null &&
+      stickingTime !== "undefined" &&
+      stickingTime !== null
+    ) {
+      // Split the interestStore string into an array of individual interests
+      let interests = (interestStore ?? "").split(";");
+      // Split the lookingFor string into an array of individual interests
+      let lookingForArray = lookingFor.split(",");
+
+      for (let interest of lookingForArray) {
+        let found = false;
+        for (let i = 0; i < interests.length; i++) {
+          // Split the current interest in interestStore into name and stickingTime
+          let [name, oldStickingTime] = interests[i].split(",");
+          oldStickingTime = parseInt(oldStickingTime, 10);
+
+          // Check if the current interest in lookingForArray is the same as the current interest in interestStore
+          if (name === interest) {
+            console.log("oldstickingtime", typeof oldStickingTime);
+
+            // If it is, add the stickingTime to the total stickingTime
+            setStickingTime(oldStickingTime + stickingTime);
+            found = true;
+            interests[i] = `${name},${stickingTime}`;
+            break;
+          }
+        }
+
+        if (!found) {
+          // If the interest was not found in interestStore, add it with the current stickingTime
+          interests.push(`${interest},${stickingTime}`);
+        }
+      }
+
+      // Update the interestStore variable with the updated interests array
+      if (interests) {
+        setInterestStore(interests.join(";"));
+      }
     }
 
     // Update the user's profile with the duration of time spent on the item
     //Add a new document in collection "userProfiles"
-    await updateDoc(
-      doc(dbLite, "userProfiles", authentication.currentUser.uid),
-      {
-        stickingTime: stickingPacket,
-        email: authentication.currentUser.email,
-      }
-    );
+    await updateDoc(doc(db, "userProfiles", authentication.currentUser.uid), {
+      interests: interestStore,
+      email: authentication.currentUser.email,
+    });
   };
 
   const onEndReached = () => {
@@ -172,10 +207,9 @@ const HomeScreen = () => {
           {item.Title}
           {`\n`}
         </Text>
-        <Text>Looking for: {item.lookingFor}</Text>
         <Text>Added on: {dateAdded}</Text>
         <CustomButton text="Profile" onPress={buttonPress} />
-        <Text>{item.id}</Text>
+        <Text style={{ opacity: 0.0001 }}>{item.lookingFor}</Text>
       </View>
     );
   };
