@@ -77,6 +77,17 @@ const ProfileScreen = () => {
     navigation.navigate("Home");
   };
 
+  const clearInterests = async () => {
+    //Add a new document in collection "userProfiles"
+    await updateDoc(
+      doc(dbLite, "userProfiles", authentication.currentUser.uid),
+      {
+        interests: "",
+      }
+    );
+    navigation.navigate("Home");
+  };
+
   const onSignOutPressed = () => {
     signOut(authentication)
       .then((re) => {
@@ -179,6 +190,9 @@ const ProfileScreen = () => {
         <FileInput onPress={onUploadResumePressed} />
         {completed && <Text style={{ color: "white" }}>Resume Stored!</Text>}
         <CustomButton text="Apply & Go Back" onPress={onSetDataPressed} />
+        
+        <CustomButton text="Clear lookingFor" onPress={clearInterests} />
+
         {isSignedIn === !!!authentication.currentUser && (
           <CustomButton text="Sign Out" onPress={onSignOutPressed} />
         )}

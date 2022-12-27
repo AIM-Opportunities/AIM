@@ -12,11 +12,11 @@ const HomeScreen = () => {
   const navigation = useNavigation();
   const [docs, setDocs] = useState([]);
   const [allDocIds, setAllDocIds] = useState([]);
-  const [startTime, setStartTime] = useState(null);
-  const [endTime, setEndTime] = useState(null);
-  const [stickingTime, setStickingTime] = useState(null);
-
-  const [interestStore, setInterestStore] = useState(null);
+  const [startTime, setStartTime] = useState(0);
+  const [endTime, setEndTime] = useState(0);
+  const [stickingTime, setStickingTime] = useState(0);
+  const [lookingFor, setLookingFor] = useState("");
+  const [interestStore, setInterestStore] = useState("null");
 
   useEffect(() => {
     // Get the userProfile docs
@@ -73,20 +73,25 @@ const HomeScreen = () => {
     // Get the current time in milliseconds
     setEndTime(Date.now() / 1000);
 
-    if (isNaN(stickingTime) || !stickingTime) {
+    if (isNaN(stickingTime)) {
       setStickingTime(0);
     } else {
       setStickingTime(Math.round((endTime - startTime) * -1));
     }
 
-    let lookingFor = item.target.lastChild.innerText;
+    if (
+      typeof item.target.lastChild.innerText !== "undefined" ||
+      item.target.lastChild.innerText !== null
+    ) {
+      setLookingFor(item.target.lastChild.innerText);
+    }
 
     console.log("sticking time", stickingTime);
-    console.log(item.target.lastChild.innerText);
+    console.log(lookingFor);
     if (
-      typeof interestStore !== "undefined" &&
-      interestStore !== null &&
-      stickingTime !== "undefined" &&
+      typeof interestStore !== "undefined" ||
+      interestStore !== null ||
+      typeof stickingTime !== "undefined" ||
       stickingTime !== null
     ) {
       // Split the interestStore string into an array of individual interests
@@ -99,7 +104,12 @@ const HomeScreen = () => {
         for (let i = 0; i < interests.length; i++) {
           // Split the current interest in interestStore into name and stickingTime
           let [name, oldStickingTime] = interests[i].split(",");
-          oldStickingTime = parseInt(oldStickingTime, 10);
+          if (isNaN(oldStickingTime) || oldStickingTime === "undefined") {
+            oldStickingTime = parseInt(oldStickingTime, 10);
+            oldStickingTime = 0;
+          } else {
+            oldStickingTime = parseInt(oldStickingTime, 10);
+          }
 
           // Check if the current interest in lookingForArray is the same as the current interest in interestStore
           if (name === interest) {
@@ -123,6 +133,7 @@ const HomeScreen = () => {
       if (interests) {
         setInterestStore(interests.join(";"));
       }
+    } else {
     }
 
     // Update the user's profile with the duration of time spent on the item
