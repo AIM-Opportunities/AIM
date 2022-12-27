@@ -4,7 +4,7 @@ import React, { useState, useEffect } from "react";
 import CustomButton from "../../components/CustomButton";
 import { useNavigation } from "@react-navigation/native";
 import { dbLite } from "../../../firebase/firebase-config";
-import { getDoc, doc, setDoc } from "firebase/firestore/lite";
+import { getDoc, doc, setDoc, updateDoc } from "firebase/firestore/lite";
 import { authentication } from "../../../firebase/firebase-config";
 import { signOut } from "firebase/auth";
 import CustomInput from "../../components/CustomInput";
@@ -64,13 +64,16 @@ const ProfileScreen = () => {
   // press events can be async
   const onSetDataPressed = async () => {
     //Add a new document in collection "userProfiles"
-    await setDoc(doc(dbLite, "userProfiles", authentication.currentUser.uid), {
-      "First Name": firstName,
-      "Last Name": lastName,
-      email: authentication.currentUser.email,
-      occupation: occupation,
-      lookingFor: lookingFor,
-    });
+    await updateDoc(
+      doc(dbLite, "userProfiles", authentication.currentUser.uid),
+      {
+        "First Name": firstName,
+        "Last Name": lastName,
+        email: authentication.currentUser.email,
+        occupation: occupation,
+        lookingFor: lookingFor,
+      }
+    );
     navigation.navigate("Home");
   };
 

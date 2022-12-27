@@ -3,11 +3,11 @@ import { View, Text, FlatList, StyleSheet, Dimensions } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { includes } from "lodash";
 import CustomButton from "../../components/CustomButton";
-import { collection, getDocs } from "firebase/firestore";
+import { collection, getDocs  } from "firebase/firestore";
 import { authentication } from "../../../firebase/firebase-config";
 import { db } from "../../../firebase/firebase-config";
 import { dbLite } from "../../../firebase/firebase-config";
-import { getDoc, doc, setDoc } from "firebase/firestore/lite";
+import { doc, setDoc,updateDoc } from "firebase/firestore/lite";
 
 const HomeScreen = () => {
   const navigation = useNavigation();
@@ -89,10 +89,13 @@ const HomeScreen = () => {
 
     // Update the user's profile with the duration of time spent on the item
     //Add a new document in collection "userProfiles"
-    await setDoc(doc(dbLite, "userProfiles", authentication.currentUser.uid), {
-      stickingTime: stickingPacket,
-      email: authentication.currentUser.email,
-    });
+    await updateDoc(
+      doc(dbLite, "userProfiles", authentication.currentUser.uid),
+      {
+        stickingTime: stickingPacket,
+        email: authentication.currentUser.email,
+      }
+    );
   };
 
   const onEndReached = () => {
