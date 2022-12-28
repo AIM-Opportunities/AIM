@@ -12,12 +12,16 @@ import CustomInput from "../../components/CustomInput";
 import CustomButton from "../../components/CustomButton";
 import SocialSignInButtons from "../../components/SocialSignInButtons";
 import { useNavigation } from "@react-navigation/native";
+import { collection, getDoc, getDocs } from "firebase/firestore";
 import { authentication } from "../../../firebase/firebase-config";
+import { db } from "../../../firebase/firebase-config";
+import { updateDoc, doc } from "firebase/firestore";
 import { signInWithEmailAndPassword, signOut } from "firebase/auth";
 
 const SignInScreen = () => {
   authentication.onAuthStateChanged((user) => {
     if (user) {
+
       navigation.navigate("Home");
     } else {
       setIsSignedIn();

@@ -72,6 +72,7 @@ const ProfileScreen = () => {
         email: authentication.currentUser.email,
         occupation: occupation,
         lookingFor: lookingFor,
+        interests: interestStore,
       }
     );
     navigation.navigate("Home");
@@ -82,7 +83,7 @@ const ProfileScreen = () => {
     await updateDoc(
       doc(dbLite, "userProfiles", authentication.currentUser.uid),
       {
-        interests: ",0",
+        interests: "",
       }
     );
     navigation.navigate("Home");
