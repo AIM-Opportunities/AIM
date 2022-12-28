@@ -7,6 +7,8 @@ import { collection, getDocs } from "firebase/firestore";
 import { authentication } from "../../../firebase/firebase-config";
 import { db } from "../../../firebase/firebase-config";
 import { updateDoc, doc } from "firebase/firestore";
+import { getDoc } from "firebase/firestore/lite";
+
 
 const HomeScreen = () => {
   const navigation = useNavigation();
@@ -16,51 +18,51 @@ const HomeScreen = () => {
   const [endTime, setEndTime] = useState(0);
   const [stickingTime, setStickingTime] = useState(0);
   const [lookingFor, setLookingFor] = useState("");
-  const [interestStore, setInterestStore] = useState("null");
+  const [interestStore, setInterestStore] = useState();
 
   useEffect(() => {
     // Get the userProfile docs
-    getDocs(collection(db, "userProfiles")).then((userProfileSnapshot) => {
+    const docRef = doc(db, "userProfiles", authentication.currentUser.uid);
+
+    try {
+      const docSnapshot = getDoc(docRef);
+      if (docSnapshot.exists) {
+        // The document exists, you can access the data like this:
+        const data = docSnapshot.data();
+     
+        setInterestStore(data.interests);
+
+      } else {
+        console.log("The document does not exist");
+      }
+    } catch (error) {
+      console.error(error);
+    }
+
+    // Get the opportunities docs and filter them based on the userProfile docs
+    getDocs(collection(db, "opportunities")).then((querySnapshot) => {
+      // Create a new array to store the filtered opportunities docs
       try {
-        // Create a new array to store the userProfile docs
-        const userProfiles = [];
-        userProfileSnapshot.forEach((doc) => {
-          userProfiles.push(doc.data());
-          // Apply stickingTime from firestore to the setinterestStore
-          if (
-            typeof doc.data().interests !== "undefined" &&
-            doc.data().interests !== null
-          ) {
-            setInterestStore(doc.data().interests);
+        const newDocs = [];
+        let count = 0;
+        querySnapshot.forEach((doc) => {
+          if (count < 3) {
+            newDocs.push({ ...doc.data(), id: doc.id });
+            count++;
+            setAllDocIds((prevAllDocIds) => [...prevAllDocIds, doc.id]); // add the doc id to the allDocIds array
           }
         });
+        // Randomize the array of docs
+        newDocs.sort(() => Math.random() - 0.5);
+        // Set the state with the newDocs array
+        setDocs(newDocs);
       } catch (error) {
         console.error(error);
         throw error;
       }
-      // Get the opportunities docs and filter them based on the userProfile docs
-      getDocs(collection(db, "opportunities")).then((querySnapshot) => {
-        // Create a new array to store the filtered opportunities docs
-        try {
-          const newDocs = [];
-          let count = 0;
-          querySnapshot.forEach((doc) => {
-            if (count < 3) {
-              newDocs.push({ ...doc.data(), id: doc.id });
-              count++;
-              setAllDocIds((prevAllDocIds) => [...prevAllDocIds, doc.id]); // add the doc id to the allDocIds array
-            }
-          });
-          // Randomize the array of docs
-          newDocs.sort(() => Math.random() - 0.5);
-          // Set the state with the newDocs array
-          setDocs(newDocs);
-        } catch (error) {
-          console.error(error);
-          throw error;
-        }
-      });
     });
+
+    // Return the unsubscribe function to clean up the effect when the component unmounts
   }, []);
 
   //FUNCTIONS
@@ -68,7 +70,6 @@ const HomeScreen = () => {
     // Get the current time in milliseconds
     setStartTime(Date.now() / 1000);
   };
-
   const onTouchEnd = async (item) => {
     // Get the current time in milliseconds
     setEndTime(Date.now() / 1000);
@@ -88,6 +89,7 @@ const HomeScreen = () => {
 
     console.log("sticking time", stickingTime);
     console.log(lookingFor);
+    console.log(interestStore);
     if (
       typeof interestStore !== "undefined" ||
       interestStore !== null ||
@@ -138,58 +140,155 @@ const HomeScreen = () => {
 
     // Update the user's profile with the duration of time spent on the item
     //Add a new document in collection "userProfiles"
-    await updateDoc(doc(db, "userProfiles", authentication.currentUser.uid), {
-      interests: interestStore,
-      email: authentication.currentUser.email,
-    });
+    try {
+      // Update the user's profile with the duration of time spent on the item
+      // Add a new document in collection "userProfiles"
+      updateDoc(doc(db, "userProfiles", authentication.currentUser.uid), {
+        interests: interestStore || "", // only update the interests field if it is not an empty string
+        email: authentication.currentUser.email,
+      });
+    } catch (error) {
+      console.error(error);
+      throw error;
+    }
   };
+  // const onTouchEnd = async (item) => {
+  //   // Get the current time in milliseconds
+  //   setEndTime(Date.now() / 1000);
+
+  //   if (isNaN(stickingTime)) {
+  //     setStickingTime(0);
+  //   } else {
+  //     setStickingTime(Math.round((endTime - startTime) * -1));
+  //   }
+
+  //   if (
+  //     typeof item.target.lastChild.innerText !== "undefined" ||
+  //     item.target.lastChild.innerText !== null
+  //   ) {
+  //     setLookingFor(item.target.lastChild.innerText);
+  //   }
+
+  //   console.log("sticking time", stickingTime);
+  //   console.log(lookingFor);
+  //   console.log(interestStore);
+  //   // Check if interestStore is not an empty string before proceeding
+  //   if (interestStore !== "" && typeof interestStore !== "undefined") {
+  //     // Split the interestStore string into an array of individual interests
+  //     let interests = (interestStore ?? "").split(";");
+  //     // Split the lookingFor string into an array of individual interests
+  //     let lookingForArray = lookingFor.split(",");
+
+  //     for (let interest of lookingForArray) {
+  //       let found = false;
+  //       for (let i = 0; i < interests.length; i++) {
+  //         // Split the current interest in interestStore into name and stickingTime
+  //         let [name, oldStickingTime] = interests[i].split(",");
+  //         if (isNaN(oldStickingTime) || oldStickingTime === "undefined") {
+  //           oldStickingTime = parseInt(oldStickingTime, 10);
+  //           oldStickingTime = 0;
+  //         } else {
+  //           oldStickingTime = parseInt(oldStickingTime, 10);
+  //         }
+
+  //         // Check if the current interest in lookingForArray is the same as the current interest in interestStore
+  //         if (name === interest) {
+  //           console.log("oldstickingtime", typeof oldStickingTime);
+
+  //           // If it is, add the stickingTime to the total stickingTime
+  //           setStickingTime(oldStickingTime + stickingTime);
+  //           found = true;
+  //           interests[i] = `${name},${stickingTime}`;
+  //           break;
+  //         }
+  //       }
+
+  //       if (!found) {
+  //         // If the interest was not found in interestStore, add it with the current stickingTime
+  //         interests.push(`${interest},${stickingTime}`);
+  //       }
+  //     }
+
+  //     // Update the interestStore variable with the updated interests array
+  //     if (interests) {
+  //       setInterestStore(interests.join(";"));
+  //     }
+  //   } else {
+  //     // Do something if interestStore is an empty string or undefined
+  //   }
+
+  //   // Update the user's profile with the duration of time spent on the item
+  //   //Add a new document in collection "userProfiles"
+  //   try {
+  //     // Update the user's profile with the duration of time spent on the item
+  //     // Add a new document in collection "userProfiles"
+  //     const unsubscribe = updateDoc(
+  //       doc(db, "userProfiles", authentication.currentUser.uid),
+  //       {
+  //         interests: interestStore, // only update the interests field if it is not an empty string
+  //         email: authentication.currentUser.email,
+  //       }
+  //     );
+  //     return () => unsubscribe();
+  //   } catch (error) {
+  //     console.error(error);
+  //     throw error;
+  //   }
+  // };
 
   const onEndReached = () => {
     // Get the userProfile docs
-    getDocs(collection(db, "userProfiles")).then((userProfileSnapshot) => {
-      try {
-        // Create a new array to store the userProfile docs
-        const userProfiles = [];
-        userProfileSnapshot.forEach((doc) => {
-          userProfiles.push(doc.data());
-        });
-      } catch (error) {
-        console.error(error);
-        throw error;
-      }
-      // Get the opportunities docs and filter them based on the userProfile docs
-      getDocs(collection(db, "opportunities")).then((querySnapshot) => {
+    const unsubscribe = getDocs(collection(db, "userProfiles")).then(
+      (userProfileSnapshot) => {
         try {
-          // Create a new array to store the remaining opportunities docs that have not been loaded
-          let remainingDocs = [];
-          querySnapshot.forEach((doc) => {
-            if (!includes(allDocIds, doc.id)) {
-              remainingDocs.push({ ...doc.data(), id: doc.id });
-            }
+          // Create a new array to store the userProfile docs
+          const userProfiles = [];
+          userProfileSnapshot.forEach((doc) => {
+            userProfiles.push(doc.data());
+            return () => unsubscribe();
           });
-
-          // Randomize the remaining docs array
-          remainingDocs.sort(() => Math.random() - 0.5);
-
-          // Retrieve 3 documents or the remaining number of documents if it is less than 3
-          const threeOrRest =
-            remainingDocs.length >= 3 ? 3 : remainingDocs.length;
-          const nextDocs = remainingDocs.slice(0, threeOrRest);
-
-          // Update the state with the new documents
-          setDocs([...docs, ...nextDocs]);
-
-          // Add the doc ids to the allDocIds array
-          setAllDocIds((prevAllDocIds) => [
-            ...prevAllDocIds,
-            ...nextDocs.map((doc) => doc.id),
-          ]);
         } catch (error) {
           console.error(error);
           throw error;
         }
-      });
-    });
+
+        // Get the opportunities docs and filter them based on the userProfile docs
+        const unsubscribe = getDocs(collection(db, "opportunities")).then(
+          (querySnapshot) => {
+            try {
+              // Create a new array to store the remaining opportunities docs that have not been loaded
+              let remainingDocs = [];
+              querySnapshot.forEach((doc) => {
+                if (!includes(allDocIds, doc.id)) {
+                  remainingDocs.push({ ...doc.data(), id: doc.id });
+                }
+                return () => unsubscribe();
+              });
+
+              // Randomize the remaining docs array
+              remainingDocs.sort(() => Math.random() - 0.5);
+
+              // Retrieve 3 documents or the remaining number of documents if it is less than 3
+              const threeOrRest =
+                remainingDocs.length >= 3 ? 3 : remainingDocs.length;
+              const nextDocs = remainingDocs.slice(0, threeOrRest);
+
+              // Update the state with the new documents
+              setDocs([...docs, ...nextDocs]);
+
+              // Add the doc ids to the allDocIds array
+              setAllDocIds((prevAllDocIds) => [
+                ...prevAllDocIds,
+                ...nextDocs.map((doc) => doc.id),
+              ]);
+            } catch (error) {
+              console.error(error);
+              throw error;
+            }
+          }
+        );
+      }
+    );
   };
 
   const buttonPress = () => {

@@ -82,7 +82,7 @@ const ProfileScreen = () => {
     await updateDoc(
       doc(dbLite, "userProfiles", authentication.currentUser.uid),
       {
-        interests: "",
+        interests: ",0",
       }
     );
     navigation.navigate("Home");
@@ -190,7 +190,7 @@ const ProfileScreen = () => {
         <FileInput onPress={onUploadResumePressed} />
         {completed && <Text style={{ color: "white" }}>Resume Stored!</Text>}
         <CustomButton text="Apply & Go Back" onPress={onSetDataPressed} />
-        
+
         <CustomButton text="Clear lookingFor" onPress={clearInterests} />
 
         {isSignedIn === !!!authentication.currentUser && (
