@@ -21,12 +21,10 @@ const HomeScreen = () => {
   useEffect(() => {
     const getDocument = async () => {
       // Get the userProfile doc
-
       const docRef = doc(db, "userProfiles", authentication.currentUser.uid);
       const docSnap = await getDoc(docRef);
-
       if (docSnap.exists()) {
-        console.log(docSnap.get("interests"));
+        setInterestStore(docSnap.get("interests"));
       }
     };
     getDocument();
@@ -94,8 +92,8 @@ const HomeScreen = () => {
           // Split the current interest in interestStore into name and stickingTime
           let [name, oldStickingTime] = (interests[i] ?? "").split(",");
           if (isNaN(oldStickingTime) || oldStickingTime === "undefined") {
-            oldStickingTime = parseInt(oldStickingTime, 10);
             oldStickingTime = 0;
+            oldStickingTime = parseInt(oldStickingTime, 10);
           } else {
             oldStickingTime = parseInt(oldStickingTime, 10);
           }
