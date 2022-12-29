@@ -12,8 +12,10 @@ import FileInput from "../../components/FileInput";
 import { ref, getDownloadURL, uploadBytesResumable } from "firebase/storage";
 import { storage } from "../../../firebase/firebase-config";
 import moment from "moment";
+import { observer } from "mobx-react";
+import { interestsStore } from "../../store/interests";
 
-const ProfileScreen = () => {
+const ProfileScreen = observer(() => {
   const [isSignedIn, setIsSignedIn] = useState(!!!authentication.currentUser);
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
@@ -73,17 +75,6 @@ const ProfileScreen = () => {
         occupation: occupation,
         lookingFor: lookingFor,
         interests: interestStore,
-      }
-    );
-    navigation.navigate("Home");
-  };
-
-  const clearInterests = async () => {
-    //Add a new document in collection "userProfiles"
-    await updateDoc(
-      doc(dbLite, "userProfiles", authentication.currentUser.uid),
-      {
-        interests: "",
       }
     );
     navigation.navigate("Home");
@@ -192,7 +183,13 @@ const ProfileScreen = () => {
         {completed && <Text style={{ color: "white" }}>Resume Stored!</Text>}
         <CustomButton text="Apply & Go Back" onPress={onSetDataPressed} />
 
-        <CustomButton text="Clear lookingFor" onPress={clearInterests} />
+        <CustomButton
+          text="Clear interests"
+          onPress={() => {
+            interestsStore.clearInterests();
+            navigation.navigate("Home");
+          }}
+        />
 
         {isSignedIn === !!!authentication.currentUser && (
           <CustomButton text="Sign Out" onPress={onSignOutPressed} />
@@ -201,7 +198,7 @@ const ProfileScreen = () => {
       </View>
     </ScrollView>
   );
-};
+});
 
 // styles
 const styles = StyleSheet.create({

@@ -7,8 +7,10 @@ import { collection, getDoc, getDocs } from "firebase/firestore";
 import { authentication } from "../../../firebase/firebase-config";
 import { db } from "../../../firebase/firebase-config";
 import { updateDoc, doc } from "firebase/firestore";
+import { observer } from "mobx-react";
+import { interestsStore } from "../../store/interests";
 
-const HomeScreen = () => {
+const HomeScreen = observer(() => {
   const navigation = useNavigation();
   const [docs, setDocs] = useState([]);
   const [allDocIds, setAllDocIds] = useState([]);
@@ -16,18 +18,11 @@ const HomeScreen = () => {
   const [endTime, setEndTime] = useState(0);
   const [stickingTime, setStickingTime] = useState(0);
   const [lookingFor, setLookingFor] = useState();
-  const [interestStore, setInterestStore] = useState();
 
   useEffect(() => {
-    const getDocument = async () => {
-      // Get the userProfile doc
-      const docRef = doc(db, "userProfiles", authentication.currentUser.uid);
-      const docSnap = await getDoc(docRef);
-      if (docSnap.exists()) {
-        setInterestStore(docSnap.get("interests"));
-      }
-    };
-    getDocument();
+    //interestsStore.getInterests()
+    //interestsStore.setInterests(interests);
+
     // Get the opportunities docs and filter them based on the userProfile docs
     getDocs(collection(db, "opportunities")).then((querySnapshot) => {
       // Create a new array to store the filtered opportunities docs
@@ -59,6 +54,7 @@ const HomeScreen = () => {
   };
 
   const onTouchEnd = async (item) => {
+    console.log(interestsStore.getInterests());
     // Get the current time in milliseconds
     setEndTime(Date.now() / 1000);
 
@@ -76,13 +72,16 @@ const HomeScreen = () => {
     }
 
     if (
-      typeof interestStore !== "undefined" ||
-      interestStore !== null ||
+      typeof interestsStore.getInterests() !== "undefined" ||
+      interestsStore.getInterests() !== null ||
       typeof stickingTime !== "undefined" ||
       stickingTime !== null
     ) {
       // Split the interestStore string into an array of individual interests
-      let interests = (interestStore ?? "").split(";");
+      const interests =
+        typeof interestsStore.getInterests() === "string"
+          ? interestsStore.getInterests().split(";")
+          : "";
       // Split the lookingFor string into an array of individual interests
       let lookingForArray = (lookingFor ?? "").split(",");
 
@@ -116,18 +115,11 @@ const HomeScreen = () => {
 
       // Update the interestStore variable with the updated interests array
       if (interests) {
-        setInterestStore(interests.join(";"));
+        interestsStore.setInterests(interests.join(";"));
+      } else {
       }
-    } else {
     }
-
-    // Update the user's profile with the duration of time spent on the item
-    //Add a new document in collection "userProfiles"
-    await updateDoc(doc(db, "userProfiles", authentication.currentUser.uid), {
-      interests: interestStore || "",
-    });
   };
-
   const onEndReached = () => {
     // Get the opportunities docs and filter them based on the userProfile docs
     getDocs(collection(db, "opportunities")).then((querySnapshot) => {
@@ -223,7 +215,8 @@ const HomeScreen = () => {
       />
     </View>
   );
-};
+});
+
 const styles = StyleSheet.create({
   itemWrapper: {
     width: Dimensions.get("window").width,
@@ -239,5 +232,4 @@ const styles = StyleSheet.create({
     flex: 1,
   },
 });
-
 export default HomeScreen;
