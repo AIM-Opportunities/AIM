@@ -14,15 +14,13 @@ const HomeScreen = observer(() => {
   const navigation = useNavigation();
   const [docs, setDocs] = useState([]);
   const [allDocIds, setAllDocIds] = useState([]);
-  const [startTime, setStartTime] = useState(0);
-  const [endTime, setEndTime] = useState(0);
+  const [startTime, setStartTime] = useState();
+  const [endTime, setEndTime] = useState();
   const [stickingTime, setStickingTime] = useState(0);
   const [lookingFor, setLookingFor] = useState();
+  const [touchCount, setTouchCount] = useState(0);
 
   useEffect(() => {
-    //interestsStore.getInterests()
-    //interestsStore.setInterests(interests);
-
     // Get the opportunities docs and filter them based on the userProfile docs
     getDocs(collection(db, "opportunities")).then((querySnapshot) => {
       // Create a new array to store the filtered opportunities docs
@@ -47,79 +45,82 @@ const HomeScreen = observer(() => {
     });
   }, []);
 
-  //FUNCTIONS
-  const onTouchStart = () => {
-    // Get the current time in milliseconds
-    setStartTime(Date.now() / 1000);
-  };
-
-  const onTouchEnd = async (item) => {
-    console.log(interestsStore.getInterests());
-    // Get the current time in milliseconds
-    setEndTime(Date.now() / 1000);
-
-    if (isNaN(stickingTime)) {
-      setStickingTime(0);
-    } else {
-      setStickingTime(Math.round((endTime - startTime) * -1));
-    }
-
-    if (
-      typeof item.target.lastChild.innerText !== "undefined" ||
-      item.target.lastChild.innerText !== null
-    ) {
-      setLookingFor(item.target.lastChild.innerText);
-    }
-
-    if (
-      typeof interestsStore.getInterests() !== "undefined" ||
-      interestsStore.getInterests() !== null ||
-      typeof stickingTime !== "undefined" ||
-      stickingTime !== null
-    ) {
-      // Split the interestStore string into an array of individual interests
-      const interests =
-        typeof interestsStore.getInterests() === "string"
-          ? interestsStore.getInterests().split(";")
-          : "";
-      // Split the lookingFor string into an array of individual interests
-      let lookingForArray = (lookingFor ?? "").split(",");
-
-      for (let interest of lookingForArray) {
-        let found = false;
-        for (let i = 0; i < interests.length; i++) {
-          // Split the current interest in interestStore into name and stickingTime
-          let [name, oldStickingTime] = (interests[i] ?? "").split(",");
-          if (isNaN(oldStickingTime) || oldStickingTime === "undefined") {
-            oldStickingTime = 0;
-            oldStickingTime = parseInt(oldStickingTime, 10);
-          } else {
-            oldStickingTime = parseInt(oldStickingTime, 10);
-          }
-
-          // Check if the current interest in lookingForArray is the same as the current interest in interestStore
-          if (name === interest) {
-            // If it is, add the stickingTime to the total stickingTime
-            setStickingTime(oldStickingTime + stickingTime);
-            found = true;
-            interests[i] = `${name},${stickingTime}`;
-            break;
-          }
-        }
-
-        if (!found) {
-          // If the interest was not found in interestStore, add it with the current stickingTime
-          interests.push(`${interest},${stickingTime}`);
-        }
+  const onTouchStart = async (item) => {
+    setTouchCount((touchCount) => touchCount + 1);
+    if (touchCount === 1) {
+      // Get the current time in milliseconds
+      setStartTime(parseFloat(Date.now() / 1000).toFixed(3));
+      if (
+        typeof item.target.lastChild.innerText !== "undefined" ||
+        item.target.lastChild.innerText !== null
+      ) {
+        setLookingFor(item.target.lastChild.innerText);
       }
+    } else if (touchCount === 2) {
+      console.log(interestsStore.getInterests());
+      setEndTime(parseFloat(Date.now() / 1000).toFixed(3));
+      setTouchCount(0);
 
-      // Update the interestStore variable with the updated interests array
-      if (interests) {
-        interestsStore.setInterests(interests.join(";"));
+      if (isNaN(stickingTime)) {
+        setStickingTime(0.0);
       } else {
+        setStickingTime(parseFloat((endTime - startTime) * -1).toFixed(3));
+      }
+
+      if (
+        typeof interestsStore.getInterests() !== "undefined" ||
+        interestsStore.getInterests() !== null ||
+        typeof stickingTime !== "undefined" ||
+        stickingTime !== null
+      ) {
+        // Split the interestStore string into an array of individual interests
+        const interests =
+          typeof interestsStore.getInterests() === "string"
+            ? interestsStore.getInterests().split(";")
+            : "";
+        // Split the lookingFor string into an array of individual interests
+        let lookingForArray = (lookingFor ?? "").split(",");
+
+        for (let interest of lookingForArray) {
+          let found = false;
+          for (let i = 0; i < interests.length; i++) {
+            // Split the current interest in interestStore into name and stickingTime
+            let [name, oldStickingTime] = interests[i] ?? "".split(",");
+            if (isNaN(oldStickingTime) || oldStickingTime === "undefined") {
+              console.log(oldStickingTime);
+              break;
+            } else {
+              oldStickingTime = parseFloat(oldStickingTime).toFixed(3);
+            }
+
+            // Check if the current interest in lookingForArray is the same as the current interest in interestStore
+            if (name === interest) {
+              // If it is, add the stickingTime to the total stickingTime
+              setStickingTime(
+                parseFloat(oldStickingTime + stickingTime).toFixed(3)
+              );
+              found = true;
+              interests[i] = `${name},${stickingTime}`;
+              break;
+            }
+          }
+
+          if (!found) {
+            // If the interest was not found in interestStore, add it with the current stickingTime
+            interests.push(`${interest},${stickingTime}`);
+          }
+        }
+
+        // Update the interestStore variable with the updated interests array
+        if (interests) {
+          interestsStore.setInterests(interests.join(";"));
+        } else {
+        }
       }
     }
   };
+
+  const onTouchEnd = async () => {};
   const onEndReached = () => {
     // Get the opportunities docs and filter them based on the userProfile docs
     getDocs(collection(db, "opportunities")).then((querySnapshot) => {
@@ -183,7 +184,7 @@ const HomeScreen = observer(() => {
         </Text>
         <Text>Added on: {dateAdded}</Text>
         <CustomButton text="Profile" onPress={buttonPress} />
-        <Text style={{ opacity: 0.0001 }}>{item.lookingFor}</Text>
+        <Text style={{ opacity: 1 }}>{item.lookingFor}</Text>
       </View>
     );
   };

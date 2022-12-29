@@ -17,11 +17,12 @@ import { authentication } from "../../../firebase/firebase-config";
 import { db } from "../../../firebase/firebase-config";
 import { updateDoc, doc } from "firebase/firestore";
 import { signInWithEmailAndPassword, signOut } from "firebase/auth";
+import { interestsStore } from "../../store/interests";
 
 const SignInScreen = () => {
   authentication.onAuthStateChanged((user) => {
     if (user) {
-
+      interestsStore.setInterests(interestsStore.getInterests())
       navigation.navigate("Home");
     } else {
       setIsSignedIn();
