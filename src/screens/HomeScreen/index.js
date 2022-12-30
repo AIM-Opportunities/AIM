@@ -1,4 +1,11 @@
-import React, { useState, useEffect, useRef, lazy, Suspense } from "react";
+import React, {
+  useState,
+  useEffect,
+  useRef,
+  useCallback,
+  lazy,
+  Suspense,
+} from "react";
 import { View, Text, FlatList, StyleSheet, Dimensions } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { includes } from "lodash";
@@ -115,24 +122,23 @@ const HomeScreen = observer(() => {
     );
   };
 
-  const viewConfigRef = useRef({
-    viewAreaCoveragePercentThreshold: 100,
-  });
-  const onViewRef = useRef(async (item) => {
-    console.log("now index is undefined" ?? "now index is " + flatlistIndex);
+  const viewConfigRef = useRef({ viewAreaCoveragePercentThreshold: 100 });
+  const onViewCallBack = useCallback((viewableItems) => {
+    console.log(viewableItems);
+    // Use viewable items in state or as intended
+    console.log("now index is " + flatlistIndex);
     let currentItem = [];
 
     if (
-      typeof item.viewableItems[flatlistIndex] !== "undefined" ||
-      item.viewableItems[flatlistIndex] !== null
+      typeof viewableItems.viewableItems[flatlistIndex] !==
+        "undefined" ||
+      viewableItems.viewableItems[flatlistIndex] !== null
     ) {
-      currentItem = item.viewableItems[flatlistIndex];
+      currentItem = viewableItems.viewableItems[flatlistIndex];
     } else {
-      setFlatlistIndex(1);
-      currentItem = item.viewableItems[1];
+      setFlatlistIndex(0);
+      currentItem = viewableItems.viewableItems[flatlistIndex];
     }
-
-    console.log(currentItem);
 
     setTouchCount((touchCount) => touchCount + 1);
     if (touchCount === 1) {
@@ -204,7 +210,7 @@ const HomeScreen = observer(() => {
       }
     }
     // Use viewable items in state or as intended
-  });
+  }, []); // any dependencies that require the function to be "redeclared"
 
   return (
     <View style={styles.container}>
@@ -223,7 +229,7 @@ const HomeScreen = observer(() => {
         // onTouchStart={onTouchStart}
         // onTouchEnd={onTouchEnd}
         viewabilityConfig={viewConfigRef.current}
-        onViewableItemsChanged={onViewRef.current} // onTouchMove={() => console.log("onTouchMove")}
+        onViewableItemsChanged={onViewCallBack} // onTouchMove={() => console.log("onTouchMove")}
         // onTouchEnd={() => console.log("onTouchEnd")}
         // onScrollBeginDrag={() => console.log("onScrollBeginDrag")}
         // onScrollEndDrag={() => console.log("onScrollEndDrag")}
