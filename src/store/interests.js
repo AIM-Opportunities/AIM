@@ -1,7 +1,6 @@
 import { makeObservable, observable, action, computed } from "mobx";
-import { getDoc } from "firebase/firestore";
 import { authentication, db } from "../../firebase/firebase-config";
-import { updateDoc, doc } from "firebase/firestore";
+import { updateDoc, doc, getDoc } from "firebase/firestore";
 
 class Interests {
   interests = "";
