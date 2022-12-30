@@ -76,7 +76,6 @@ const HomeScreen = observer(() => {
 
         // Update the state with the new documents
         setDocs([...docs, ...nextDocs]);
-
         // Add the doc ids to the allDocIds array
         setAllDocIds((prevAllDocIds) => [
           ...prevAllDocIds,
@@ -122,23 +121,18 @@ const HomeScreen = observer(() => {
     );
   };
 
-  const viewConfigRef = useRef({ viewAreaCoveragePercentThreshold: 100 });
-  const onViewCallBack = useCallback((viewableItems) => {
-    console.log(viewableItems);
-    // Use viewable items in state or as intended
-    console.log("now index is " + flatlistIndex);
-    let currentItem = [];
+  const scrollHandler = () => {
+    lookingForHandler();
+  };
 
+  const lookingForHandler = () => {
     if (
-      typeof viewableItems.viewableItems[flatlistIndex] !==
-        "undefined" ||
-      viewableItems.viewableItems[flatlistIndex] !== null
+      typeof docs[flatlistIndex].lookingFor === "undefined" ||
+      docs[flatlistIndex].lookingFor === null
     ) {
-      currentItem = viewableItems.viewableItems[flatlistIndex];
-    } else {
-      setFlatlistIndex(0);
-      currentItem = viewableItems.viewableItems[flatlistIndex];
     }
+
+    let currentItem = docs[flatlistIndex].lookingFor;
 
     setTouchCount((touchCount) => touchCount + 1);
     if (touchCount === 1) {
@@ -148,7 +142,6 @@ const HomeScreen = observer(() => {
         setLookingFor(currentItem);
       }
     } else if (touchCount === 2) {
-      console.log(interestsStore.getInterests());
       setEndTime(parseFloat(Date.now() / 1000).toFixed(3));
       setTouchCount(0);
 
@@ -178,7 +171,6 @@ const HomeScreen = observer(() => {
             // Split the current interest in interestStore into name and stickingTime
             let [name, oldStickingTime] = interests[i] ?? "".split(",");
             if (isNaN(oldStickingTime) || oldStickingTime === "undefined") {
-              console.log(oldStickingTime);
               break;
             } else {
               oldStickingTime = parseFloat(oldStickingTime).toFixed(3);
@@ -210,7 +202,7 @@ const HomeScreen = observer(() => {
       }
     }
     // Use viewable items in state or as intended
-  }, []); // any dependencies that require the function to be "redeclared"
+  };
 
   return (
     <View style={styles.container}>
@@ -220,7 +212,7 @@ const HomeScreen = observer(() => {
           setFlatlistIndex(parseInt(offset / Dimensions.get("window").height)); // your cell height
           if (flatlistIndex !== flatlistLastIndex) {
             setFlatlistLastIndex(flatlistIndex);
-            console.log("now index is at initial ", flatlistIndex);
+            scrollHandler();
           } else {
           }
         }}
@@ -228,8 +220,7 @@ const HomeScreen = observer(() => {
         renderItem={renderItem}
         // onTouchStart={onTouchStart}
         // onTouchEnd={onTouchEnd}
-        viewabilityConfig={viewConfigRef.current}
-        onViewableItemsChanged={onViewCallBack} // onTouchMove={() => console.log("onTouchMove")}
+        // onTouchMove={() => console.log("onTouchMove")}
         // onTouchEnd={() => console.log("onTouchEnd")}
         // onScrollBeginDrag={() => console.log("onScrollBeginDrag")}
         // onScrollEndDrag={() => console.log("onScrollEndDrag")}
