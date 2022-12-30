@@ -25,51 +25,8 @@ const HomeScreen = observer(() => {
     });
   }, []);
 
-  const onEndReached = () => {
-    opportunitiesStore.getMoreOpportunities().then((opportunities) => {
-      // wait until Promise resolves and set the next 3 opportunities
-      setDocs(toJS(opportunities));
-    });
-  };
-
-  const buttonPress = () => {
-    navigation.navigate("Profile");
-  };
-
-  // Lazy-load the screen component
-  const TestScreen = lazy(() => import("../../screens/TestScreen"));
-
-  const renderItem = ({ item }) => {
-    // Check if the item is the screen you want to render
-    if (item.type === "test") {
-      // Render the screen component using the React.Suspense component
-      return (
-        <Suspense fallback={<Text>Loading...</Text>}>
-          <TestScreen style={styles.itemWrapper} />
-        </Suspense>
-      );
-    }
-    // Return the default rendering for the other items
-    const dateAdded = new Date(item.DateAdded?.seconds * 1000).toDateString();
-    return (
-      <View style={styles.itemWrapper}>
-        <Text>{item.Company}</Text>
-        <Text>
-          {item.Title}
-          {`\n`}
-        </Text>
-        <Text>Added on: {dateAdded}</Text>
-        <CustomButton text="Profile" onPress={buttonPress} />
-        <Text style={{ opacity: 1 }}>{item.lookingFor}</Text>
-      </View>
-    );
-  };
-
+  //FUNCTIONS
   const scrollHandler = () => {
-    lookingForHandler();
-  };
-
-  const lookingForHandler = () => {
     if (
       typeof docs[flatlistIndex].lookingFor === "undefined" ||
       docs[flatlistIndex].lookingFor === null
@@ -81,19 +38,15 @@ const HomeScreen = observer(() => {
     setTouchCount((touchCount) => touchCount + 1);
     if (touchCount === 1) {
       // Get the current time in milliseconds
-      setStartTime(parseFloat(Date.now() / 1000).toFixed(3));
+      setStartTime(parseFloat(Date.now() / 1000 - 1672430000).toFixed(3));
       if (typeof currentItem !== "undefined" || currentItem !== null) {
         setLookingFor(currentItem);
       }
     } else if (touchCount === 2) {
-      setEndTime(parseFloat(Date.now() / 1000).toFixed(3));
+      setEndTime(parseFloat(Date.now() / 1000 - 1672430000).toFixed(3));
       setTouchCount(0);
 
-      if (isNaN(stickingTime)) {
-        setStickingTime(0.0);
-      } else {
-        setStickingTime(parseFloat((endTime - startTime) * -1).toFixed(3));
-      }
+      setStickingTime(parseFloat((endTime - startTime) * -1).toFixed(3));
 
       if (
         typeof interestsStore.getInterests() !== "undefined" ||
@@ -123,9 +76,7 @@ const HomeScreen = observer(() => {
             // Check if the current interest in lookingForArray is the same as the current interest in interestStore
             if (name === interest) {
               // If it is, add the stickingTime to the total stickingTime
-              setStickingTime(
-                parseFloat(oldStickingTime + stickingTime).toFixed(3)
-              );
+              setStickingTime(oldStickingTime + stickingTime);
               found = true;
               interests[i] = `${name},${stickingTime}`;
               break;
@@ -146,6 +97,53 @@ const HomeScreen = observer(() => {
       }
     }
     // Use viewable items in state or as intended
+  };
+
+  const onEndReached = () => {
+    opportunitiesStore.getMoreOpportunities().then((opportunities) => {
+      // wait until Promise resolves and set the next 3 opportunities
+      setDocs(toJS(opportunities));
+    });
+  };
+
+  const buttonPress = () => {
+    navigation.navigate("Profile");
+  };
+
+  // Lazy-load the screen components
+  const TestScreen = lazy(() => import("../../screens/TestScreen"));
+
+  // Render the screen
+  const renderItem = ({ item }) => {
+    // Check if the item is the screen you want to render
+    if (item.type === "test") {
+      // Render the screen component using the React.Suspense component
+      return (
+        <Suspense fallback={<Text>Loading...</Text>}>
+          <TestScreen style={styles.itemWrapper} />
+        </Suspense>
+      );
+    }
+    // Return the default rendering for the other items
+    const dateAdded = new Date(item.DateAdded?.seconds * 1000).toDateString();
+    return (
+      <View style={styles.itemWrapper}>
+        <Text>{item.Company}</Text>
+        <Text>
+          {item.Title}
+          {`\n`}
+        </Text>
+        <Text>Added on: {dateAdded}</Text>
+        <CustomButton text="Profile" onPress={buttonPress} />
+        <Text style={{ opacity: 1 }}>{item.lookingFor}</Text>
+
+        <Text>End: {endTime}</Text>
+
+        <Text>Start: {startTime}</Text>
+
+        <Text> {stickingTime}</Text>
+      </View>
+    );
   };
 
   return (
