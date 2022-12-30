@@ -6,6 +6,7 @@ import { observer } from "mobx-react";
 import { interestsStore } from "../../store/interests";
 import { opportunitiesStore } from "../../store/opportunities";
 import { toJS } from "mobx";
+import Moment from "moment";
 
 const HomeScreen = observer(() => {
   const navigation = useNavigation();
@@ -22,81 +23,79 @@ const HomeScreen = observer(() => {
     opportunitiesStore.getOpportunities().then((opportunities) => {
       // wait until Promise resolves and set the initial 3 opportunities
       setDocs(toJS(opportunities));
+      setStartTime(Moment().valueOf());
     });
   }, []);
 
   //FUNCTIONS
   const scrollHandler = () => {
+    // Use Moment.js to get the end time in milliseconds
+    setEndTime(Moment().valueOf());
+    // Calculate the time spent between the start and end times in milliseconds
+    setStickingTime(Moment(startTime).diff(Moment(endTime), "milliseconds"));
+
     if (
       typeof docs[flatlistIndex].lookingFor === "undefined" ||
       docs[flatlistIndex].lookingFor === null
     ) {
+      return;
     }
 
-    let currentItem = docs[flatlistIndex].lookingFor;
+    const currentItem = docs[flatlistIndex].lookingFor;
 
-    setTouchCount((touchCount) => touchCount + 1);
-    if (touchCount === 1) {
-      // Get the current time in milliseconds
-      setStartTime(parseFloat(Date.now() / 1000 - 1672430000).toFixed(3));
-      if (typeof currentItem !== "undefined" || currentItem !== null) {
-        setLookingFor(currentItem);
-      }
-    } else if (touchCount === 2) {
-      setEndTime(parseFloat(Date.now() / 1000 - 1672430000).toFixed(3));
-      setTouchCount(0);
+    // Use Moment.js to get the current time in milliseconds
 
-      setStickingTime(parseFloat((endTime - startTime) * -1).toFixed(3));
+    if (typeof currentItem !== "undefined" || currentItem !== null) {
+      setLookingFor(currentItem);
+    }
 
-      if (
-        typeof interestsStore.getInterests() !== "undefined" ||
-        interestsStore.getInterests() !== null ||
-        typeof stickingTime !== "undefined" ||
-        stickingTime !== null
-      ) {
-        // Split the interestStore string into an array of individual interests
-        const interests =
-          typeof interestsStore.getInterests() === "string"
-            ? interestsStore.getInterests().split(";")
-            : "";
-        // Split the lookingFor string into an array of individual interests
-        let lookingForArray = (lookingFor ?? "").split(",");
+    if (
+      typeof interestsStore.getInterests() !== "undefined" ||
+      interestsStore.getInterests() !== null ||
+      typeof stickingTime !== "undefined" ||
+      stickingTime !== null
+    ) {
+      // Split the interestStore string into an array of individual interests
+      const interests =
+        typeof interestsStore.getInterests() === "string"
+          ? interestsStore.getInterests().split(";")
+          : "";
+      // Split the lookingFor string into an array of individual interests
+      let lookingForArray = (lookingFor ?? "").split(",");
 
-        for (let interest of lookingForArray) {
-          let found = false;
-          for (let i = 0; i < interests.length; i++) {
-            // Split the current interest in interestStore into name and stickingTime
-            let [name, oldStickingTime] = interests[i] ?? "".split(",");
-            if (isNaN(oldStickingTime) || oldStickingTime === "undefined") {
-              break;
-            } else {
-              oldStickingTime = parseFloat(oldStickingTime).toFixed(3);
-            }
-
-            // Check if the current interest in lookingForArray is the same as the current interest in interestStore
-            if (name === interest) {
-              // If it is, add the stickingTime to the total stickingTime
-              setStickingTime(oldStickingTime + stickingTime);
-              found = true;
-              interests[i] = `${name},${stickingTime}`;
-              break;
-            }
+      for (let interest of lookingForArray) {
+        let found = false;
+        for (let i = 0; i < interests.length; i++) {
+          // Split the current interest in interestStore into name and stickingTime
+          let [name, oldStickingTime] = interests[i] ?? "".split(",");
+          if (isNaN(oldStickingTime) || oldStickingTime === "undefined") {
+            break;
+          } else {
           }
 
-          if (!found) {
-            // If the interest was not found in interestStore, add it with the current stickingTime
-            interests.push(`${interest},${stickingTime}`);
+          // Check if the current interest in lookingForArray is the same as the current interest in interestStore
+          if (name === interest) {
+            // If it is, add the stickingTime to the total stickingTime
+            setStickingTime(oldStickingTime + stickingTime);
+            found = true;
+            interests[i] = `${name},${stickingTime}`;
+
+            break;
           }
         }
 
-        // Update the interestStore variable with the updated interests array
-        if (interests) {
-          interestsStore.setInterests(interests.join(";"));
-        } else {
+        if (!found) {
+          // If the interest was not found in interestStore, add it with the current stickingTime
+          interests.push(`${interest},${stickingTime}`);
         }
       }
+
+      // Update the interestStore variable with the updated interests array
+      if (interests) {
+        interestsStore.setInterests(interests.join(";"));
+        setStartTime(Moment().valueOf());
+      }
     }
-    // Use viewable items in state or as intended
   };
 
   const onEndReached = () => {
@@ -154,6 +153,7 @@ const HomeScreen = observer(() => {
           setFlatlistIndex(parseInt(offset / Dimensions.get("window").height)); // your cell height
           if (flatlistIndex !== flatlistLastIndex) {
             setFlatlistLastIndex(flatlistIndex);
+
             scrollHandler();
           } else {
           }
@@ -166,8 +166,8 @@ const HomeScreen = observer(() => {
         // onTouchEnd={() => console.log("onTouchEnd")}
         // onScrollBeginDrag={() => console.log("onScrollBeginDrag")}
         // onScrollEndDrag={() => console.log("onScrollEndDrag")}
-        // onMomentumScrollBegin={() => console.log("onMomentumScrollBegin")}
-        // onMomentumScrollEnd={() => console.log("onMomentumScrollEnd")}r
+        //onMomentumScrollBegin={() => console.log("onMomentumScrollBegin")}
+        //onMomentumScrollEnd={() => console.log("onMomentumScrollEnd")}
         onEndReachedThreshold={0.5}
         onEndReached={onEndReached}
         pagingEnabled={true}
