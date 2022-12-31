@@ -14,6 +14,7 @@ import { storage } from "../../../firebase/firebase-config";
 import moment from "moment";
 import { observer } from "mobx-react";
 import { interestsStore } from "../../store/interests";
+import { JSONTree } from "react-json-tree";
 
 const ProfileScreen = observer(() => {
   const [isSignedIn, setIsSignedIn] = useState(!!!authentication.currentUser);
@@ -50,7 +51,6 @@ const ProfileScreen = observer(() => {
           setOccupation(docSnap.get("occupation"));
           setLookingFor(docSnap.get("lookingFor"));
           setinterestStore(docSnap.get("interests"));
-          console.log(interestStore);
         } else {
           setData(undefined);
           console.log("No document!");
@@ -195,7 +195,13 @@ const ProfileScreen = observer(() => {
         {isSignedIn === !!!authentication.currentUser && (
           <CustomButton text="Sign Out" onPress={onSignOutPressed} />
         )}
-        <Text style={styles.text}>{interestStore}</Text>
+        <View>
+          <JSONTree
+            theme={JSONTreeTheme}
+            invertTheme={false}
+            data={interestStore}
+          />
+        </View>
       </View>
     </ScrollView>
   );
@@ -214,4 +220,22 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
 });
+const JSONTreeTheme = {
+  base00: "transparent",
+  base01: "white",
+  base02: "white",
+  base03: "white",
+  base04: "white",
+  base05: "white",
+  base06: "white",
+  base07: "white",
+  base08: "white",
+  base09: "white",
+  base0A: "white",
+  base0B: "white",
+  base0C: "white",
+  base0D: "white",
+  base0E: "white",
+  base0F: "white",
+};
 export default ProfileScreen;

@@ -42,7 +42,7 @@ const HomeScreen = observer(() => {
     let interests =
       typeof interestsStore.getInterests() === "string"
         ? interestsStore.getInterests().split(";")
-        : "";
+        : [];
     // Split the lookingFor string into an array of individual interests
     let lookingForArray = (docs[flatlistIndex].lookingFor ?? "").split(",");
     for (let interest of lookingForArray) {
@@ -68,39 +68,51 @@ const HomeScreen = observer(() => {
         interests.push(`${interest},${stickingTime}`);
       }
     }
-    // Update the interestStore variable with the updated interests array
-    if (interests) {
-      interestsStore.setInterests(stringToDict(interests.join(";")));
-    }
-  };
-  
-  const stringToDict = (string) => {
-    // Create an empty dictionary to store the counts for each type of job
-    const dict = {};
-    // Split the input string into an array of job strings
-    const jobs = string.split(";");
+
+    // Create an empty object to store the counts for each type of job
+    const object = {};
+    // Split the input string into an array of job strings, starting at the second element to remove the leading ,NaN;
+    const jobs = interests.join(";").split(";").slice(1);
     // Iterate over the array of job strings
     for (let i = 0; i < jobs.length; i++) {
       // Split each job string into a job title and a count
       const [title, count] = jobs[i].split(",");
-      // If the job title is not in the dictionary, add it and set its count to the count from the input string
-      if (!dict[title]) {
-        dict[title] = parseInt(count);
+      // If the job title is not in the object, add it and set its count to the count from the input string
+      if (!object[title]) {
+        object[title] = parseInt(count);
       }
-      // If the job title is already in the dictionary, add the count from the input string to the existing count for that title
+      // If the job title is already in the object, add the count from the input string to the existing count for that title
       else {
-        dict[title] += parseInt(count);
+        object[title] += parseInt(count);
       }
     }
-    // Create an empty array to store the job title/count strings
-    const output = [];
-    // Iterate over the keys in the dictionary (which are the job titles)
-    for (const title in dict) {
-      // Add the job title and count to the output array as a string in the desired format
-      output.push(`${title},${dict[title]}`);
+
+    // Update the interestStore variable with the updated interests array
+    if (interests) {
+      const combinedMap = new Map(
+        Object.entries(interestsStore.getInterests())
+      );
+
+      // Iterate over the keys in the object
+      for (const key of Object.keys(object)) {
+        // Check if the key is already in the map
+        if (combinedMap.has(key)) {
+          // If it is, add the value to the existing value
+          combinedMap.set(key, combinedMap.get(key) + object[key]);
+        } else {
+          // If it is not, add the key-value pair to the map
+          combinedMap.set(key, object[key]);
+        }
+      }
+      // Convert the combinedMap Map object to an object using Object.fromEntries()
+      const combinedObject = Object.fromEntries(combinedMap);
+
+      console.log(combinedObject);
+      // Update the interestStore variable with the updated combinedMap
+      interestsStore.setInterests(combinedObject);
+      // interestsStore.setInterests(stringToDict(interests.join(";")));
+      // console.log(stringToDict(interests.join(";")));
     }
-    // Join the elements of the output array with semicolons and return the resulting string
-    return output.join(";");
   };
 
   const onEndReached = () => {

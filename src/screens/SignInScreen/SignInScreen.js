@@ -22,7 +22,6 @@ import { interestsStore } from "../../store/interests";
 const SignInScreen = () => {
   authentication.onAuthStateChanged((user) => {
     if (user) {
-      interestsStore.setInterests(interestsStore.getInterests())
       navigation.navigate("Home");
     } else {
       setIsSignedIn();
