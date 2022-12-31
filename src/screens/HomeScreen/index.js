@@ -98,11 +98,39 @@ const HomeScreen = observer(() => {
 
       // Update the interestStore variable with the updated interests array
       if (interests) {
-        interestsStore.setInterests(interests.join(";"));
+        interestsStore.setInterests(stringToDict(interests.join(";")));
       }
     } else {
       interestsStore.setInterests(interestsStore.getInterests());
     }
+  };
+  const stringToDict = (string) => {
+    // Create an empty dictionary to store the counts for each type of job
+    const dict = {};
+    // Split the input string into an array of job strings
+    const jobs = string.split(";");
+    // Iterate over the array of job strings
+    for (let i = 0; i < jobs.length; i++) {
+      // Split each job string into a job title and a count
+      const [title, count] = jobs[i].split(",");
+      // If the job title is not in the dictionary, add it and set its count to the count from the input string
+      if (!dict[title]) {
+        dict[title] = parseInt(count);
+      }
+      // If the job title is already in the dictionary, add the count from the input string to the existing count for that title
+      else {
+        dict[title] += parseInt(count);
+      }
+    }
+    // Create an empty array to store the job title/count strings
+    const output = [];
+    // Iterate over the keys in the dictionary (which are the job titles)
+    for (const title in dict) {
+      // Add the job title and count to the output array as a string in the desired format
+      output.push(`${title},${dict[title]}`);
+    }
+    // Join the elements of the output array with semicolons and return the resulting string
+    return output.join(";");
   };
 
   const onEndReached = () => {
