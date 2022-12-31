@@ -36,8 +36,13 @@ const HomeScreen = observer(() => {
   const scrollHandler = () => {
     // Calculate the time spent between the start and end times in milliseconds
     setEndTime(Moment().valueOf());
-    setStickingTime(Moment(startTime).diff(Moment(endTime), "milliseconds"));
 
+    // Set the stickingTime variable to the time spent between startTime and endTime
+    if (isNaN(stickingTime)) {
+      setStickingTime(0);
+    } else {
+      setStickingTime(Moment(startTime).diff(Moment(endTime), "milliseconds"));
+    }
     console.log(stickingTime);
 
     if (stickingTime === 0) {
@@ -51,14 +56,6 @@ const HomeScreen = observer(() => {
       return;
     }
 
-    const currentItem = docs[flatlistIndex].lookingFor;
-
-    // Use Moment.js to get the current time in milliseconds
-
-    if (typeof currentItem !== "undefined" || currentItem !== null) {
-      setLookingFor(currentItem);
-    }
-
     if (
       typeof interestsStore.getInterests() !== "undefined" ||
       interestsStore.getInterests() !== null ||
@@ -66,36 +63,35 @@ const HomeScreen = observer(() => {
       stickingTime !== null
     ) {
       // Split the interestStore string into an array of individual interests
-      const interests =
+      let interests =
         typeof interestsStore.getInterests() === "string"
           ? interestsStore.getInterests().split(";")
           : "";
       // Split the lookingFor string into an array of individual interests
-      let lookingForArray = (lookingFor ?? "").split(",");
+      let lookingForArray = (docs[flatlistIndex].lookingFor ?? "").split(",");
 
       for (let interest of lookingForArray) {
         let found = false;
         for (let i = 0; i < interests.length; i++) {
-          // Split the current interest in interestStore into name and stickingTime
+          // Split the current interest in interests into name and stickingTime
           let [name, oldStickingTime] = interests[i] ?? "".split(",");
           if (isNaN(oldStickingTime) || oldStickingTime === "undefined") {
-            break;
+            oldStickingTime = 0;
           } else {
           }
 
-          // Check if the current interest in lookingForArray is the same as the current interest in interestStore
+          // Check if the current interest in lookingForArray is the same as the current interest in interests
           if (name === interest) {
             // If it is, add the stickingTime to the total stickingTime
             setStickingTime(oldStickingTime + stickingTime);
             found = true;
             interests[i] = `${name},${stickingTime}`;
-
             break;
           }
         }
 
         if (!found) {
-          // If the interest was not found in interestStore, add it with the current stickingTime
+          // If the interest was not found in interests, add it with the current stickingTime
           interests.push(`${interest},${stickingTime}`);
         }
       }
@@ -104,6 +100,8 @@ const HomeScreen = observer(() => {
       if (interests) {
         interestsStore.setInterests(interests.join(";"));
       }
+    } else {
+      interestsStore.setInterests(interestsStore.getInterests());
     }
   };
 

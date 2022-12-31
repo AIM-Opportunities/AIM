@@ -50,6 +50,7 @@ const ProfileScreen = observer(() => {
           setOccupation(docSnap.get("occupation"));
           setLookingFor(docSnap.get("lookingFor"));
           setinterestStore(docSnap.get("interests"));
+          console.log(interestStore);
         } else {
           setData(undefined);
           console.log("No document!");
