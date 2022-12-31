@@ -14,7 +14,6 @@ const HomeScreen = observer(() => {
   const [startTime, setStartTime] = useState(0);
   const [endTime, setEndTime] = useState(0);
   const [stickingTime, setStickingTime] = useState(0);
-  const [lookingFor, setLookingFor] = useState();
   const [flatlistIndex, setFlatlistIndex] = useState(0);
   const [flatlistLastIndex, setFlatlistLastIndex] = useState(0);
 
@@ -36,74 +35,45 @@ const HomeScreen = observer(() => {
   const scrollHandler = () => {
     // Calculate the time spent between the start and end times in milliseconds
     setEndTime(Moment().valueOf());
-
     // Set the stickingTime variable to the time spent between startTime and endTime
-    if (isNaN(stickingTime)) {
-      setStickingTime(0);
-    } else {
-      setStickingTime(Moment(startTime).diff(Moment(endTime), "milliseconds"));
-    }
+    setStickingTime(Moment(startTime).diff(Moment(endTime), "milliseconds"));
     console.log(stickingTime);
-
-    if (stickingTime === 0) {
-      setFlatlistIndex(flatlistIndex + 1);
-    }
-
-    if (
-      typeof docs[flatlistIndex].lookingFor === "undefined" ||
-      docs[flatlistIndex].lookingFor === null
-    ) {
-      return;
-    }
-
-    if (
-      typeof interestsStore.getInterests() !== "undefined" ||
-      interestsStore.getInterests() !== null ||
-      typeof stickingTime !== "undefined" ||
-      stickingTime !== null
-    ) {
-      // Split the interestStore string into an array of individual interests
-      let interests =
-        typeof interestsStore.getInterests() === "string"
-          ? interestsStore.getInterests().split(";")
-          : "";
-      // Split the lookingFor string into an array of individual interests
-      let lookingForArray = (docs[flatlistIndex].lookingFor ?? "").split(",");
-
-      for (let interest of lookingForArray) {
-        let found = false;
-        for (let i = 0; i < interests.length; i++) {
-          // Split the current interest in interests into name and stickingTime
-          let [name, oldStickingTime] = interests[i] ?? "".split(",");
-          if (isNaN(oldStickingTime) || oldStickingTime === "undefined") {
-            oldStickingTime = 0;
-          } else {
-          }
-
-          // Check if the current interest in lookingForArray is the same as the current interest in interests
-          if (name === interest) {
-            // If it is, add the stickingTime to the total stickingTime
-            setStickingTime(oldStickingTime + stickingTime);
-            found = true;
-            interests[i] = `${name},${stickingTime}`;
-            break;
-          }
+    // Split the interestStore string into an array of individual interests
+    let interests =
+      typeof interestsStore.getInterests() === "string"
+        ? interestsStore.getInterests().split(";")
+        : "";
+    // Split the lookingFor string into an array of individual interests
+    let lookingForArray = (docs[flatlistIndex].lookingFor ?? "").split(",");
+    for (let interest of lookingForArray) {
+      let found = false;
+      for (let i = 0; i < interests.length; i++) {
+        // Split the current interest in interests into name and stickingTime
+        let [name, oldStickingTime] = interests[i] ?? "".split(",");
+        if (isNaN(oldStickingTime) || oldStickingTime === "undefined") {
+          oldStickingTime = 0;
+        } else {
         }
-
-        if (!found) {
-          // If the interest was not found in interests, add it with the current stickingTime
-          interests.push(`${interest},${stickingTime}`);
+        // Check if the current interest in lookingForArray is the same as the current interest in interests
+        if (name === interest) {
+          // If it is, add the stickingTime to the total stickingTime
+          setStickingTime(oldStickingTime + stickingTime);
+          found = true;
+          interests[i] = `${name},${stickingTime}`;
+          break;
         }
       }
-
-      // Update the interestStore variable with the updated interests array
-      if (interests) {
-        interestsStore.setInterests(stringToDict(interests.join(";")));
+      if (!found) {
+        // If the interest was not found in interests, add it with the current stickingTime
+        interests.push(`${interest},${stickingTime}`);
       }
-    } else {
-      interestsStore.setInterests(interestsStore.getInterests());
+    }
+    // Update the interestStore variable with the updated interests array
+    if (interests) {
+      interestsStore.setInterests(stringToDict(interests.join(";")));
     }
   };
+  
   const stringToDict = (string) => {
     // Create an empty dictionary to store the counts for each type of job
     const dict = {};
@@ -146,7 +116,6 @@ const HomeScreen = observer(() => {
 
   // Lazy-load the screen components
   const TestScreen = lazy(() => import("../../screens/TestScreen"));
-
   // Render the screen
   const renderItem = ({ item }) => {
     // Check if the item is the screen you want to render
@@ -170,11 +139,8 @@ const HomeScreen = observer(() => {
         <Text>Added on: {dateAdded}</Text>
         <CustomButton text="Profile" onPress={buttonPress} />
         <Text style={{ opacity: 1 }}>{item.lookingFor}</Text>
-
         <Text>End: {endTime}</Text>
-
         <Text>Start: {startTime}</Text>
-
         <Text> {stickingTime}</Text>
       </View>
     );
@@ -188,7 +154,6 @@ const HomeScreen = observer(() => {
           setFlatlistIndex(parseInt(offset / Dimensions.get("window").height)); // your cell height
           if (flatlistIndex !== flatlistLastIndex) {
             setFlatlistLastIndex(flatlistIndex);
-
             scrollHandler();
           } else {
           }
