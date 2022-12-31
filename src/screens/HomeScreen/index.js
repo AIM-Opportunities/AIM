@@ -11,11 +11,10 @@ import Moment from "moment";
 const HomeScreen = observer(() => {
   const navigation = useNavigation();
   const [docs, setDocs] = useState([]);
-  const [startTime, setStartTime] = useState();
-  const [endTime, setEndTime] = useState();
+  const [startTime, setStartTime] = useState(0);
+  const [endTime, setEndTime] = useState(0);
   const [stickingTime, setStickingTime] = useState(0);
   const [lookingFor, setLookingFor] = useState();
-  const [touchCount, setTouchCount] = useState(1);
   const [flatlistIndex, setFlatlistIndex] = useState(0);
   const [flatlistLastIndex, setFlatlistLastIndex] = useState(0);
 
@@ -23,16 +22,27 @@ const HomeScreen = observer(() => {
     opportunitiesStore.getOpportunities().then((opportunities) => {
       // wait until Promise resolves and set the initial 3 opportunities
       setDocs(toJS(opportunities));
+      setEndTime(Moment().valueOf());
+      // setStartTime(Moment().valueOf());
       setStartTime(Moment().valueOf());
     });
   }, []);
 
-  //FUNCTIONS
+  useEffect(() => {
+    // Update the start time to the current time
+    setStartTime(Moment().valueOf());
+  }, [flatlistIndex]);
+
   const scrollHandler = () => {
-    // Use Moment.js to get the end time in milliseconds
-    setEndTime(Moment().valueOf());
     // Calculate the time spent between the start and end times in milliseconds
+    setEndTime(Moment().valueOf());
     setStickingTime(Moment(startTime).diff(Moment(endTime), "milliseconds"));
+
+    console.log(stickingTime);
+
+    if (stickingTime === 0) {
+      setFlatlistIndex(flatlistIndex + 1);
+    }
 
     if (
       typeof docs[flatlistIndex].lookingFor === "undefined" ||
@@ -93,7 +103,6 @@ const HomeScreen = observer(() => {
       // Update the interestStore variable with the updated interests array
       if (interests) {
         interestsStore.setInterests(interests.join(";"));
-        setStartTime(Moment().valueOf());
       }
     }
   };
