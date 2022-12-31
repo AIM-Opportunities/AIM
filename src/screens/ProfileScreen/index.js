@@ -173,13 +173,6 @@ const ProfileScreen = observer(() => {
           value={occupation}
           setValue={setOccupation}
         />
-        <CustomInput
-          placeholder={
-            lookingFor === null || undefined ? { lookingFor } : "Looking For"
-          }
-          value={lookingFor}
-          setValue={setLookingFor}
-        />
         <FileInput onPress={onUploadResumePressed} />
         {completed && <Text style={{ color: "white" }}>Resume Stored!</Text>}
         <CustomButton text="Apply & Go Back" onPress={onSetDataPressed} />
