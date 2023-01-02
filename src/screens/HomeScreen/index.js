@@ -74,7 +74,7 @@ const HomeScreen = observer(() => {
     const object = {};
     // Split the input string into an array of job strings, starting at the second element to remove the leading ,NaN;
     let jobs;
-    if (isNaN(interests[""])) {
+    if (interests[0] === "") {
       jobs = interests.join(";").split(";").slice(1);
     } else {
       jobs = interests.join(";").split(";");
