@@ -11,11 +11,19 @@ import Moment from "moment";
 const HomeScreen = observer(() => {
   const navigation = useNavigation();
   const [docs, setDocs] = useState([]);
+  const [interestDocs, setInterestDocs] = useState({});
   const [startTime, setStartTime] = useState(0);
   const [endTime, setEndTime] = useState(0);
   const [stickingTime, setStickingTime] = useState(0);
   const [flatlistIndex, setFlatlistIndex] = useState(0);
   const [flatlistLastIndex, setFlatlistLastIndex] = useState(0);
+
+  useEffect(() => {
+    interestsStore.getInterests().then((interests) => {
+      // wait until Promise resolves and set the initial 3 opportunities
+      setInterestDocs(toJS(interests));
+    });
+  }, []);
 
   useEffect(() => {
     opportunitiesStore.getOpportunities().then((opportunities) => {
@@ -39,86 +47,26 @@ const HomeScreen = observer(() => {
     setStickingTime(
       Moment(startTime).diff(Moment(endTime), "milliseconds") / 1000
     );
-    // Split the interestStore string into an array of individual interests'
-    let interests = [];
-    console.log(
-      "THIS IS A PROBLEM BECAUSE IT MIGHT BE RESETING INTERESTS ON REFRESH",
-      interests
-    );
 
     // Split the lookingFor string into an array of individual interests
     let lookingForArray = (docs[flatlistIndex].lookingFor ?? "").split(",");
     for (let interest of lookingForArray) {
-      let found = false;
-      for (let i = 0; i < interests.length; i++) {
-        // Split the current interest in interests into name and stickingTime
-        let [name, oldStickingTime] = interests[i] ?? "".split(",");
-        if (isNaN(oldStickingTime) || oldStickingTime === "undefined") {
-          oldStickingTime = 0;
-        } else {
-        }
-        // Check if the current interest in lookingForArray is the same as the current interest in interests
-        if (name === interest) {
-          // If it is, add the stickingTime to the total stickingTime
-          setStickingTime(oldStickingTime + stickingTime);
-          found = true;
-          interests[i] = `${name},${stickingTime}`;
-          break;
-        }
-      }
-      if (!found) {
-        // If the interest was not found in interests, add it with the current stickingTime
-        interests.push(`${interest},${stickingTime}`);
+      // Check if the current interest is already in the interests object
+      if (interestDocs[interest]) {
+        // If it is, add the stickingTime to the total stickingTime for that interest
+        interestDocs[interest] += stickingTime;
+      } else {
+        // If it is not, add the interest to the object with the current stickingTime
+        interestDocs[interest] = stickingTime;
       }
     }
 
-    // Create an empty object to store the counts for each type of job
-
-    const object = {};
-    // Split the input string into an array of job strings, starting at the second element to remove the leading ,NaN;
-    let jobs;
-    if (interests[0] === "") {
-      jobs = interests.join(";").split(";").slice(1);
-    } else {
-      jobs = interests.join(";").split(";");
-    }
-    // Iterate over the array of job strings
-    for (let i = 0; i < jobs.length; i++) {
-      // Split each job string into a job title and a count
-      const [title, count] = jobs[i].split(",");
-      // If the job title is not in the object, add it and set its count to the count from the input string
-      if (!object[title]) {
-        object[title] = parseInt(count);
-      }
-      // If the job title is already in the object, add the count from the input string to the existing count for that title
-      else {
-        object[title] += parseInt(count);
-      }
-    }
-
-    // Update the interestStore variable with the updated interests array
-    if (interests) {
-      const combinedMap = new Map(
-        Object.entries(interestsStore.getInterests())
-      );
-      // Iterate over the keys in the object
-      for (const key of Object.keys(object)) {
-        // Check if the key is already in the map
-        if (combinedMap.has(key)) {
-          // If it is, add the value to the existing value
-          combinedMap.set(key, combinedMap.get(key) + object[key]);
-        } else {
-          // If it is not, add the key-value pair to the map
-          combinedMap.set(key, object[key]);
-        }
-      }
-      // Convert the combinedMap Map object to an object using Object.fromEntries()
-      const combinedObject = Object.fromEntries(combinedMap);
-      // Update the interestStore variable with the updated combinedMap
-      interestsStore.setInterests(combinedObject);
-      // interestsStore.setInterests(stringToDict(interests.join(";")));
-      // console.log(stringToDict(interests.join(";")));
-    }
+    // Update the interestStore variable with the updated interests object
+    const combinedObject = {
+      ...interestsStore.getInterests(),
+      ...interestDocs,
+    };
+    interestsStore.setInterests(combinedObject);
   };
 
   const onEndReached = () => {

@@ -191,7 +191,7 @@ const ProfileScreen = observer(() => {
           <JSONTree
             theme={JSONTreeTheme}
             invertTheme={false}
-            data={interestStore}
+            data={interestStore }
           />
         </View>
       </View>

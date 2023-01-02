@@ -14,16 +14,27 @@ class Interests {
   }
 
   getInterests() {
-    const getDocument = async () => {
-      // Get the userProfile doc
-      const docRef = doc(db, "userProfiles", authentication.currentUser.uid);
-      const docSnap = await getDoc(docRef);
-      if (docSnap.exists()) {
-        this.interests = docSnap.get("interests");
-      }
-    };
-    getDocument();
-    return this.interests;
+    return new Promise((resolve, reject) => {
+      const getDocument = async () => {
+        try {
+          // Get the userProfile doc
+          const docRef = doc(
+            db,
+            "userProfiles",
+            authentication.currentUser.uid
+          );
+          const docSnap = await getDoc(docRef);
+          if (docSnap.exists()) {
+            this.interests = docSnap.get("interests");
+            resolve(this.interests);
+          }
+        } catch (error) {
+          console.error(error);
+          reject(error);
+        }
+      };
+      getDocument();
+    });
   }
 
   async setInterests(interestsParam) {
@@ -32,20 +43,32 @@ class Interests {
     });
   }
 
-  async clearInterests() {
-    await updateDoc(doc(db, "userProfiles", authentication.currentUser.uid), {
-      interests: "",
-    });
-    const getDocument = async () => {
-      // Get the userProfile doc
-      const docRef = doc(db, "userProfiles", authentication.currentUser.uid);
-      const docSnap = await getDoc(docRef);
-      if (docSnap.exists()) {
-        this.interests = docSnap.get("interests");
+  clearInterests() {
+    return new Promise((resolve, reject) => {
+      try {
+        updateDoc(doc(db, "userProfiles", authentication.currentUser.uid), {
+          interests: "",
+        }).then(() => {
+          const getDocument = async () => {
+            // Get the userProfile doc
+            const docRef = doc(
+              db,
+              "userProfiles",
+              authentication.currentUser.uid
+            );
+            const docSnap = await getDoc(docRef);
+            if (docSnap.exists()) {
+              this.interests = docSnap.get("interests");
+            }
+          };
+          getDocument();
+          resolve(this.interests);
+        });
+      } catch (error) {
+        console.error(error);
+        reject(error);
       }
-    };
-    getDocument();
-    return this.interests;
+    });
   }
 
   get count() {
