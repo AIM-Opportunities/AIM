@@ -39,12 +39,13 @@ const HomeScreen = observer(() => {
     setStickingTime(
       Moment(startTime).diff(Moment(endTime), "milliseconds") / 1000
     );
-    console.log(stickingTime);
-    // Split the interestStore string into an array of individual interests
-    let interests =
-      typeof interestsStore.getInterests() === "string"
-        ? interestsStore.getInterests().split(";")
-        : [];
+    // Split the interestStore string into an array of individual interests'
+    let interests = [];
+    console.log(
+      "THIS IS A PROBLEM BECAUSE IT MIGHT BE RESETING INTERESTS ON REFRESH",
+      interests
+    );
+
     // Split the lookingFor string into an array of individual interests
     let lookingForArray = (docs[flatlistIndex].lookingFor ?? "").split(",");
     for (let interest of lookingForArray) {
@@ -81,7 +82,6 @@ const HomeScreen = observer(() => {
     } else {
       jobs = interests.join(";").split(";");
     }
-    console.log("JOBS", jobs);
     // Iterate over the array of job strings
     for (let i = 0; i < jobs.length; i++) {
       // Split each job string into a job title and a count
@@ -101,7 +101,6 @@ const HomeScreen = observer(() => {
       const combinedMap = new Map(
         Object.entries(interestsStore.getInterests())
       );
-
       // Iterate over the keys in the object
       for (const key of Object.keys(object)) {
         // Check if the key is already in the map
@@ -115,8 +114,6 @@ const HomeScreen = observer(() => {
       }
       // Convert the combinedMap Map object to an object using Object.fromEntries()
       const combinedObject = Object.fromEntries(combinedMap);
-
-      console.log("COMBINED", combinedObject);
       // Update the interestStore variable with the updated combinedMap
       interestsStore.setInterests(combinedObject);
       // interestsStore.setInterests(stringToDict(interests.join(";")));
