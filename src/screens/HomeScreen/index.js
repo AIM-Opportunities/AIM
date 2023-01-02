@@ -70,9 +70,16 @@ const HomeScreen = observer(() => {
     }
 
     // Create an empty object to store the counts for each type of job
+
     const object = {};
     // Split the input string into an array of job strings, starting at the second element to remove the leading ,NaN;
-    const jobs = interests.join(";").split(";").slice(1);
+    let jobs;
+    if (isNaN(interests[""])) {
+      jobs = interests.join(";").split(";").slice(1);
+    } else {
+      jobs = interests.join(";").split(";");
+    }
+    console.log("JOBS", jobs);
     // Iterate over the array of job strings
     for (let i = 0; i < jobs.length; i++) {
       // Split each job string into a job title and a count
@@ -107,7 +114,7 @@ const HomeScreen = observer(() => {
       // Convert the combinedMap Map object to an object using Object.fromEntries()
       const combinedObject = Object.fromEntries(combinedMap);
 
-      console.log(combinedObject);
+      console.log("COMBINED", combinedObject);
       // Update the interestStore variable with the updated combinedMap
       interestsStore.setInterests(combinedObject);
       // interestsStore.setInterests(stringToDict(interests.join(";")));
