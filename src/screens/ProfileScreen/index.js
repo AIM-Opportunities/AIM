@@ -74,7 +74,6 @@ const ProfileScreen = observer(() => {
         "Last Name": lastName,
         email: authentication.currentUser.email,
         occupation: occupation,
-        lookingFor: lookingFor,
         interests: interestStore,
       }
     );
@@ -192,7 +191,7 @@ const ProfileScreen = observer(() => {
           <JSONTree
             theme={JSONTreeTheme}
             invertTheme={false}
-            data={interestStore }
+            data={interestStore}
           />
         </View>
       </View>
