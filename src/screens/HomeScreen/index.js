@@ -44,11 +44,7 @@ const HomeScreen = observer(() => {
     // Calculate the time spent between the start and end times in milliseconds
     setEndTime(Moment().valueOf());
     // Set the stickingTime variable to the time spent between startTime and endTime
-    setStickingTime(
-      (Moment(startTime).diff(Moment(endTime), "milliseconds") / 1000).toFixed(
-        3
-      )
-    );
+    setStickingTime(Moment(startTime).diff(Moment(endTime), "seconds"));
 
     // Split the lookingFor string into an array of individual interests
     let lookingForArray = (docs[flatlistIndex].lookingFor ?? "").split(",");
@@ -107,9 +103,6 @@ const HomeScreen = observer(() => {
         <Text>Added on: {dateAdded}</Text>
         <CustomButton text="Profile" onPress={buttonPress} />
         <Text style={{ opacity: 1 }}>{item.lookingFor}</Text>
-        <Text>End: {endTime}</Text>
-        <Text>Start: {startTime}</Text>
-        <Text> {stickingTime}</Text>
       </View>
     );
   };
