@@ -36,7 +36,9 @@ const HomeScreen = observer(() => {
     // Calculate the time spent between the start and end times in milliseconds
     setEndTime(Moment().valueOf());
     // Set the stickingTime variable to the time spent between startTime and endTime
-    setStickingTime(Moment(startTime).diff(Moment(endTime), "milliseconds"));
+    setStickingTime(
+      Moment(startTime).diff(Moment(endTime), "milliseconds") / 1000
+    );
     console.log(stickingTime);
     // Split the interestStore string into an array of individual interests
     let interests =
