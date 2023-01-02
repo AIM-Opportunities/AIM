@@ -12,9 +12,9 @@ const HomeScreen = observer(() => {
   const navigation = useNavigation();
   const [docs, setDocs] = useState([]);
   const [interestDocs, setInterestDocs] = useState({});
-  const [startTime, setStartTime] = useState(0);
-  const [endTime, setEndTime] = useState(0);
-  const [stickingTime, setStickingTime] = useState(0);
+  const [startTime, setStartTime] = useState(0.0);
+  const [endTime, setEndTime] = useState(0.0);
+  const [stickingTime, setStickingTime] = useState(0.0);
   const [flatlistIndex, setFlatlistIndex] = useState(0);
   const [flatlistLastIndex, setFlatlistLastIndex] = useState(0);
 
@@ -45,7 +45,9 @@ const HomeScreen = observer(() => {
     setEndTime(Moment().valueOf());
     // Set the stickingTime variable to the time spent between startTime and endTime
     setStickingTime(
-      Moment(startTime).diff(Moment(endTime), "milliseconds") / 1000
+      (Moment(startTime).diff(Moment(endTime), "milliseconds") / 1000).toFixed(
+        3
+      )
     );
 
     // Split the lookingFor string into an array of individual interests
@@ -54,10 +56,10 @@ const HomeScreen = observer(() => {
       // Check if the current interest is already in the interests object
       if (interestDocs[interest]) {
         // If it is, add the stickingTime to the total stickingTime for that interest
-        interestDocs[interest] += stickingTime;
+        interestDocs[interest] += parseFloat(stickingTime);
       } else {
         // If it is not, add the interest to the object with the current stickingTime
-        interestDocs[interest] = stickingTime;
+        interestDocs[interest] = parseFloat(stickingTime);
       }
     }
 

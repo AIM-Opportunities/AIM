@@ -22,7 +22,7 @@ const ProfileScreen = observer(() => {
   const [lastName, setLastName] = useState("");
   const [occupation, setOccupation] = useState("");
   const [lookingFor, setLookingFor] = useState("");
-  const [interestStore, setinterestStore] = useState(null);
+  const [interestStore, setinterestStore] = useState({});
 
   const navigation = useNavigation();
   const [data, setData] = useState("");

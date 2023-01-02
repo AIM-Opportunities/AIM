@@ -47,7 +47,7 @@ class Interests {
     return new Promise((resolve, reject) => {
       try {
         updateDoc(doc(db, "userProfiles", authentication.currentUser.uid), {
-          interests: "",
+          interests: {},
         }).then(() => {
           const getDocument = async () => {
             // Get the userProfile doc
