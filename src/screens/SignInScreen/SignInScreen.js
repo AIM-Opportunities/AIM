@@ -27,6 +27,7 @@ const SignInScreen = () => {
       setIsSignedIn();
     }
   });
+
   const [isSignedIn, setIsSignedIn] = useState(false);
 
   const [email, setEmail] = useState("t@t.com");
@@ -40,7 +41,7 @@ const SignInScreen = () => {
       .then((re) => {
         console.log(re);
         setIsSignedIn(true);
-        navigation.navigate("Profile");
+        navigation.navigate("Home");
       })
       .catch((re) => {
         console.log(re);
