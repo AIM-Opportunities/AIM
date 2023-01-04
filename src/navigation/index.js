@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import { MaterialIcons } from "react-native-vector-icons";
 import SignInScreen from "../screens/SignInScreen";
 import SignUpScreen from "../screens/SignUpScreen";
 import ConfirmEmailScreen from "../screens/ConfirmEmailScreen";
@@ -12,6 +14,7 @@ import TestScreen from "../screens/TestScreen";
 import { authentication } from "../../firebase/firebase-config";
 
 const Stack = createNativeStackNavigator();
+const Tab = createBottomTabNavigator();
 
 const MyTheme = {
   colors: {
@@ -36,27 +39,49 @@ const Navigation = () => {
 
   return (
     <NavigationContainer theme={MyTheme}>
-      <Stack.Navigator screenOptions={{ headerShown: false }}>
-        {!isAuthenticated && (
-          <>
-            <Stack.Screen name="SignIn" component={SignInScreen} />
-            <Stack.Screen name="SignUp" component={SignUpScreen} />
-            <Stack.Screen name="ConfirmEmail" component={ConfirmEmailScreen} />
-            <Stack.Screen
-              name="ForgotPassword"
-              component={ForgotPasswordScreen}
-            />
-            <Stack.Screen name="NewPassword" component={NewPasswordScreen} />
-          </>
-        )}
-        {isAuthenticated && (
-          <>
-            <Stack.Screen name="Home" component={HomeScreen} />
-            <Stack.Screen name="Profile" component={ProfileScreen} />
-            <Stack.Screen name="Test" component={TestScreen} />
-          </>
-        )}
-      </Stack.Navigator>
+      {!isAuthenticated ? (
+        <Stack.Navigator screenOptions={{ headerShown: false }}>
+          <Stack.Screen name="SignIn" component={SignInScreen} />
+          <Stack.Screen name="SignUp" component={SignUpScreen} />
+          <Stack.Screen name="ConfirmEmail" component={ConfirmEmailScreen} />
+          <Stack.Screen
+            name="ForgotPassword"
+            component={ForgotPasswordScreen}
+          />
+          <Stack.Screen name="NewPassword" component={NewPasswordScreen} />
+        </Stack.Navigator>
+      ) : (
+        <Tab.Navigator
+          screenOptions={{
+            headerShown: false,
+            tabBarActiveTintColor: "#FFF",
+            tabBarInactiveTintColor: "#333",
+            tabBarStyle: {
+              backgroundColor: "black",
+              height: "7vh"
+            },
+          }}
+        >
+          <Tab.Screen
+            name="Home"
+            component={HomeScreen}
+            options={{
+              tabBarIcon: ({ color, size }) => (
+                <MaterialIcons name="home" color={color} size={size}/>
+              ),
+            }}
+          />
+          <Tab.Screen
+            name="Profile"
+            component={ProfileScreen}
+            options={{
+              tabBarIcon: ({ color, size }) => (
+                <MaterialIcons name="person" color={color} size={size} />
+              ),
+            }}
+          />
+        </Tab.Navigator>
+      )}
     </NavigationContainer>
   );
 };

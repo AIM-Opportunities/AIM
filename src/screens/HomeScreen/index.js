@@ -104,7 +104,6 @@ const HomeScreen = observer(() => {
           {`\n`}
         </Text>
         <Text>Added on: {dateAdded}</Text>
-        <CustomButton text="Profile" onPress={buttonPress} />
         <CustomButton text="Like" onPress={likePress} />
         <Text style={{ opacity: 1 }}>{item.lookingFor}</Text>
       </View>
