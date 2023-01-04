@@ -1,7 +1,7 @@
 # ProjectX
 working title for opportunity app
 
-Completed screens
+## Completed Screens
 
 <p float="left">
   <img src="assets/images/SignInScreen.png" width="400" />
