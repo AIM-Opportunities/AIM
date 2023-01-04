@@ -77,6 +77,9 @@ const HomeScreen = observer(() => {
   const buttonPress = () => {
     navigation.navigate("Profile");
   };
+  const likePress = () => {
+    alert("LIKED!");
+  };
 
   // Lazy-load the screen components
   const TestScreen = lazy(() => import("../../screens/TestScreen"));
@@ -102,6 +105,7 @@ const HomeScreen = observer(() => {
         </Text>
         <Text>Added on: {dateAdded}</Text>
         <CustomButton text="Profile" onPress={buttonPress} />
+        <CustomButton text="Like" onPress={likePress} />
         <Text style={{ opacity: 1 }}>{item.lookingFor}</Text>
       </View>
     );
