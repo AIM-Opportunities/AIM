@@ -1,6 +1,6 @@
-import React, { useState, useEffect, lazy, Suspense } from "react";
+import React, { useState, useEffect, lazy, Suspense, useCallback } from "react";
 import { View, Text, FlatList, StyleSheet, Dimensions } from "react-native";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation, useFocusEffect } from "@react-navigation/native";
 import CustomButton from "../../components/CustomButton";
 import { observer } from "mobx-react";
 import { interestsStore } from "../../store/interests";
@@ -18,12 +18,21 @@ const HomeScreen = observer(() => {
   const [flatlistIndex, setFlatlistIndex] = useState(0);
   const [flatlistLastIndex, setFlatlistLastIndex] = useState(0);
 
-  useEffect(() => {
-    interestsStore.getInterests().then((interests) => {
-      // wait until Promise resolves and set the initial 3 opportunities
-      setInterestDocs(toJS(interests));
-    });
-  }, []);
+  useFocusEffect(
+    useCallback(() => {
+      // this will be called every time the screen becomes focused
+      interestsStore.getInterests().then((interests) => {
+        // wait until Promise resolves and set the initial 3 opportunities
+        setInterestDocs(toJS(interests));
+      });
+
+      return () => {
+        // this will be called when the screen becomes unfocused
+        // you can do any cleanup here (e.g. cancel async tasks)
+      };
+    }, [])
+  );
+
 
   useEffect(() => {
     opportunitiesStore.getOpportunities().then((opportunities) => {

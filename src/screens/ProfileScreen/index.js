@@ -1,8 +1,8 @@
 import { Text, View, ScrollView, StyleSheet } from "react-native";
 import * as DocumentPicker from "expo-document-picker";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import CustomButton from "../../components/CustomButton";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation, useFocusEffect } from "@react-navigation/native";
 import { dbLite } from "../../../firebase/firebase-config";
 import { getDoc, doc, setDoc, updateDoc } from "firebase/firestore/lite";
 import { authentication } from "../../../firebase/firebase-config";
@@ -12,6 +12,7 @@ import FileInput from "../../components/FileInput";
 import { ref, getDownloadURL, uploadBytesResumable } from "firebase/storage";
 import { storage } from "../../../firebase/firebase-config";
 import moment from "moment";
+import { toJS } from "mobx";
 import { observer } from "mobx-react";
 import { interestsStore } from "../../store/interests";
 import { JSONTree } from "react-json-tree";
@@ -21,16 +22,29 @@ const ProfileScreen = observer(() => {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [occupation, setOccupation] = useState("");
-  const [lookingFor, setLookingFor] = useState("");
   const [interestStore, setinterestStore] = useState({});
 
   const navigation = useNavigation();
-  const [data, setData] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [blobFile, setBlobFile] = useState([]);
   const [fileName, setFileName] = useState([]);
   const [completed, setCompleted] = useState(false);
+
+  useFocusEffect(
+    useCallback(() => {
+      // this will be called every time the screen becomes focused
+      interestsStore.getInterests().then((interests) => {
+        // wait until Promise resolves and set the initial 3 opportunities
+        setinterestStore(toJS(interests));
+      });
+
+      return () => {
+        // this will be called when the screen becomes unfocused
+        // you can do any cleanup here (e.g. cancel async tasks)
+      };
+    }, [])
+  );
 
   // get user data and display it
   useEffect(() => {
@@ -49,7 +63,6 @@ const ProfileScreen = observer(() => {
           setFirstName(docSnap.get("First Name"));
           setLastName(docSnap.get("Last Name"));
           setOccupation(docSnap.get("occupation"));
-          setLookingFor(docSnap.get("lookingFor"));
           setinterestStore(docSnap.get("interests"));
         } else {
           setData(undefined);
@@ -179,7 +192,10 @@ const ProfileScreen = observer(() => {
         <CustomButton
           text="Clear interests"
           onPress={() => {
-            interestsStore.clearInterests();
+            interestsStore.clearInterests().then((opportunities) => {
+              // wait until Promise resolves
+
+            });
             navigation.navigate("Home");
           }}
         />
@@ -191,7 +207,7 @@ const ProfileScreen = observer(() => {
           <JSONTree
             theme={JSONTreeTheme}
             invertTheme={false}
-            data={interestStore }
+            data={interestStore}
           />
         </View>
       </View>

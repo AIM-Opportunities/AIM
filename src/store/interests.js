@@ -9,7 +9,6 @@ class Interests {
       interests: observable,
       getInterests: action,
       clearInterests: action,
-      count: computed,
     });
   }
 
@@ -48,21 +47,6 @@ class Interests {
       try {
         updateDoc(doc(db, "userProfiles", authentication.currentUser.uid), {
           interests: {},
-        }).then(() => {
-          const getDocument = async () => {
-            // Get the userProfile doc
-            const docRef = doc(
-              db,
-              "userProfiles",
-              authentication.currentUser.uid
-            );
-            const docSnap = await getDoc(docRef);
-            if (docSnap.exists()) {
-              this.interests = docSnap.get("interests");
-            }
-          };
-          getDocument();
-          resolve(this.interests);
         });
       } catch (error) {
         console.error(error);
@@ -71,9 +55,6 @@ class Interests {
     });
   }
 
-  get count() {
-    return console.log(this.interests.length);
-  }
 }
 
 export const interestsStore = new Interests();
