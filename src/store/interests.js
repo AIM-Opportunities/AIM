@@ -47,6 +47,7 @@ class Interests {
       try {
         updateDoc(doc(db, "userProfiles", authentication.currentUser.uid), {
           interests: {},
+          birthday: "",
         });
       } catch (error) {
         console.error(error);
