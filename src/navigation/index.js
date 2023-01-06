@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { View, Text, FlatList, StyleSheet, Dimensions } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
@@ -52,13 +53,15 @@ const Navigation = () => {
         </Stack.Navigator>
       ) : (
         <Tab.Navigator
+    
           screenOptions={{
             headerShown: false,
+            tabBarShowLabel: false,
             tabBarActiveTintColor: "#FFF",
-            tabBarInactiveTintColor: "#333",
+            tabBarInactiveTintColor: "#737373",
             tabBarStyle: {
               backgroundColor: "black",
-              height: "7vh"
+              height: "7vh",
             },
           }}
         >
@@ -67,7 +70,7 @@ const Navigation = () => {
             component={HomeScreen}
             options={{
               tabBarIcon: ({ color, size }) => (
-                <MaterialIcons name="home" color={color} size={size}/>
+                <MaterialIcons name="home" color={color} size={size} />
               ),
             }}
           />
