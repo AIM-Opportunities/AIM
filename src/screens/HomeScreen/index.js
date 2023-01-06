@@ -83,9 +83,6 @@ const HomeScreen = observer(() => {
     });
   };
 
-  const buttonPress = () => {
-    navigation.navigate("Profile");
-  };
   const likePress = () => {
     alert("LIKED!");
   };
