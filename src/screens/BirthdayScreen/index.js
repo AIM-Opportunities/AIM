@@ -4,8 +4,9 @@ import CustomButton from "../../components/CustomButton";
 import { Picker } from "@react-native-picker/picker";
 import { updateDoc, doc, Timestamp } from "firebase/firestore";
 import { db, authentication } from "../../../firebase/firebase-config";
+import { opportunitiesStore } from "../../store/opportunities";
 
-const BirthdayScreen = () => {
+const BirthdayScreen = (props) => {
   const [selectedMonth, setSelectedMonth] = useState("January");
   const [selectedDay, setSelectedDay] = useState("1");
   const [selectedYear, setSelectedYear] = useState("1999");
@@ -28,8 +29,12 @@ const BirthdayScreen = () => {
   const years = Array.from(Array(100).keys()).map((i) => i + 1930);
 
   const submitPressed = async () => {
-    const date = new Date(selectedYear, months.indexOf(selectedMonth), selectedDay);
-  const timestamp = Timestamp.fromDate(date);
+    const date = new Date(
+      selectedYear,
+      months.indexOf(selectedMonth),
+      selectedDay
+    );
+    const timestamp = Timestamp.fromDate(date);
 
     console.log(timestamp);
 
@@ -37,6 +42,7 @@ const BirthdayScreen = () => {
       birthday: timestamp,
     });
     console.log("Submitted");
+    props.removeCurrentScreen("birthday");
   };
 
   return (

@@ -1,4 +1,11 @@
-import React, { useState, useEffect, lazy, Suspense, useCallback } from "react";
+import React, {
+  useState,
+  useEffect,
+  lazy,
+  Suspense,
+  useCallback,
+  createRef,
+} from "react";
 import { View, Text, FlatList, StyleSheet, Dimensions } from "react-native";
 import { useNavigation, useFocusEffect } from "@react-navigation/native";
 import CustomButton from "../../components/CustomButton";
@@ -11,6 +18,7 @@ import Moment from "moment";
 
 const HomeScreen = observer(() => {
   const navigation = useNavigation();
+  const flatListRef = createRef();
   const [docs, setDocs] = useState([]);
   const [interestDocs, setInterestDocs] = useState({});
   const [birthday, setBirthday] = useState();
@@ -53,6 +61,19 @@ const HomeScreen = observer(() => {
     // Update the start time to the current time
     setStartTime(Moment().valueOf());
   }, [flatlistIndex]);
+
+  const removeCurrentScreen = (type) => {
+    // Make a copy of the current `docs` array
+    const updatedDocs = [...docs];
+    // Remove the current item from the array
+    updatedDocs.splice(flatlistIndex, 1);
+    // Update the state with the new array
+    setDocs(updatedDocs);
+    // remove the
+    if (type === "birthday") {
+      setBirthday(true);
+    }
+  };
 
   const scrollHandler = () => {
     // Calculate the time spent between the start and end times in milliseconds
@@ -109,7 +130,10 @@ const HomeScreen = observer(() => {
     if (item.type === "birthday" && !birthday) {
       return (
         <Suspense fallback={<Text>Loading...</Text>}>
-          <BirthdayScreen style={styles.itemWrapper} />
+          <BirthdayScreen
+            removeCurrentScreen={removeCurrentScreen}
+            style={styles.itemWrapper}
+          />
         </Suspense>
       );
     } else if (item.type === "birthday" && birthday) {
@@ -135,6 +159,7 @@ const HomeScreen = observer(() => {
   return (
     <View style={styles.container}>
       <FlatList
+        ref={flatListRef}
         onScroll={(e) => {
           let offset = e.nativeEvent.contentOffset.y + 30;
           setFlatlistIndex(parseInt(offset / Dimensions.get("window").height)); // your cell height
