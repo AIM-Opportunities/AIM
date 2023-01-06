@@ -5,6 +5,7 @@ import CustomButton from "../../components/CustomButton";
 import { observer } from "mobx-react";
 import { interestsStore } from "../../store/interests";
 import { opportunitiesStore } from "../../store/opportunities";
+import { profileStore } from "../../store/profile";
 import { toJS } from "mobx";
 import Moment from "moment";
 
@@ -12,6 +13,7 @@ const HomeScreen = observer(() => {
   const navigation = useNavigation();
   const [docs, setDocs] = useState([]);
   const [interestDocs, setInterestDocs] = useState({});
+  const [birthday, setBirthday] = useState();
   const [startTime, setStartTime] = useState(0.0);
   const [endTime, setEndTime] = useState(0.0);
   const [stickingTime, setStickingTime] = useState(0.0);
@@ -22,8 +24,12 @@ const HomeScreen = observer(() => {
     useCallback(() => {
       // this will be called every time the screen becomes focused
       interestsStore.getInterests().then((interests) => {
-        // wait until Promise resolves and set the initial 3 opportunities
+        // wait until Promise resolves
         setInterestDocs(toJS(interests));
+      });
+      profileStore.getBirthday().then((birthday) => {
+        // wait until Promise resolves
+        setBirthday(birthday);
       });
 
       return () => {
@@ -32,7 +38,6 @@ const HomeScreen = observer(() => {
       };
     }, [])
   );
-
 
   useEffect(() => {
     opportunitiesStore.getOpportunities().then((opportunities) => {
@@ -89,6 +94,7 @@ const HomeScreen = observer(() => {
 
   // Lazy-load the screen components
   const TestScreen = lazy(() => import("../../screens/TestScreen"));
+  const BirthdayScreen = lazy(() => import("../../screens/BirthdayScreen"));
   // Render the screen
   const renderItem = ({ item }) => {
     // Check if the item is the screen you want to render
@@ -100,6 +106,16 @@ const HomeScreen = observer(() => {
         </Suspense>
       );
     }
+    if (item.type === "birthday" && !birthday) {
+      return (
+        <Suspense fallback={<Text>Loading...</Text>}>
+          <BirthdayScreen style={styles.itemWrapper} />
+        </Suspense>
+      );
+    } else if (item.type === "birthday" && birthday) {
+      return;
+    }
+
     // Return the default rendering for the other items
     const dateAdded = new Date(item.DateAdded?.seconds * 1000).toDateString();
     return (
