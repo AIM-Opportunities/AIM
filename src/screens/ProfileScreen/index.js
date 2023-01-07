@@ -15,7 +15,6 @@ import moment from "moment";
 import { toJS } from "mobx";
 import { observer } from "mobx-react";
 import { interestsStore } from "../../store/interests";
-import { JSONTree } from "react-json-tree";
 
 const ProfileScreen = observer(() => {
   const [isSignedIn, setIsSignedIn] = useState(!!!authentication.currentUser);
@@ -203,13 +202,6 @@ const ProfileScreen = observer(() => {
         {isSignedIn === !!!authentication.currentUser && (
           <CustomButton text="Sign Out" onPress={onSignOutPressed} />
         )}
-        <View>
-          <JSONTree
-            theme={JSONTreeTheme}
-            invertTheme={false}
-            data={interestStore}
-          />
-        </View>
       </View>
     </ScrollView>
   );
