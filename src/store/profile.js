@@ -2,17 +2,16 @@ import { makeObservable, observable, action, computed } from "mobx";
 import { authentication, db } from "../../firebase/firebase-config";
 import { updateDoc, doc, getDoc } from "firebase/firestore";
 
-class Interests {
-  interests = "";
+class Profile {
+  birthday = "";
   constructor() {
     makeObservable(this, {
-      interests: observable,
-      getInterests: action,
-      clearInterests: action,
+      birthday: observable,
+      getBirthday: action,
     });
   }
 
-  getInterests() {
+  getBirthday() {
     return new Promise((resolve, reject) => {
       const getDocument = async () => {
         try {
@@ -24,8 +23,8 @@ class Interests {
           );
           const docSnap = await getDoc(docRef);
           if (docSnap.exists()) {
-            this.interests = docSnap.get("interests");
-            resolve(this.interests);
+            this.birthday = docSnap.get("birthday");
+            resolve(this.birthday);
           }
         } catch (error) {
           console.error(error);
@@ -36,26 +35,11 @@ class Interests {
     });
   }
 
-  async setInterests(interestsParam) {
+  async setBirthday(birthdayParam) {
     await updateDoc(doc(db, "userProfiles", authentication.currentUser.uid), {
-      interests: interestsParam,
+      birthday: birthdayParam,
     });
   }
-
-  clearInterests() {
-    return new Promise((resolve, reject) => {
-      try {
-        updateDoc(doc(db, "userProfiles", authentication.currentUser.uid), {
-          interests: {},
-          birthday: "",
-        });
-      } catch (error) {
-        console.error(error);
-        reject(error);
-      }
-    });
-  }
-
 }
 
-export const interestsStore = new Interests();
+export const profileStore = new Profile();

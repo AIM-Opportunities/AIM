@@ -190,7 +190,7 @@ const ProfileScreen = observer(() => {
         <CustomButton text="Apply & Go Back" onPress={onSetDataPressed} />
 
         <CustomButton
-          text="Clear interests"
+          text="Clear interests & Birthday"
           onPress={() => {
             interestsStore.clearInterests().then((opportunities) => {
               // wait until Promise resolves

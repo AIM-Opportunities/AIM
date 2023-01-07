@@ -23,6 +23,7 @@
     "@react-native-firebase/firestore": "^15.7.0",
     "@react-native-firebase/installations": "^15.7.0",
     "@react-native-firebase/storage": "^16.1.1",
+    "@react-native-picker/picker": "^2.4.8",
     "@react-navigation/bottom-tabs": "^6.5.2",
     "@react-navigation/native": "^6.1.0",
     "@react-navigation/native-stack": "^6.9.1",
