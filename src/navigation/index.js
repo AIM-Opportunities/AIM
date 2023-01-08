@@ -53,7 +53,6 @@ const Navigation = () => {
         </Stack.Navigator>
       ) : (
         <Tab.Navigator
-    
           screenOptions={{
             headerShown: false,
             tabBarShowLabel: false,
@@ -61,7 +60,6 @@ const Navigation = () => {
             tabBarInactiveTintColor: "#737373",
             tabBarStyle: {
               backgroundColor: "black",
-              height: "7vh",
             },
           }}
         >
