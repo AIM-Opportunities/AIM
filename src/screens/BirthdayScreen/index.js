@@ -29,18 +29,20 @@ const BirthdayScreen = (props) => {
     { label: "December", key: "december", value: "december" },
   ];
   const days = Array.from(Array(31).keys()).map((i) => ({
-    key: i + 1,
+    key: (i + 1).toString(),
     label: (i + 1).toString(),
-    value: (i + 1).toString(),
+    value: i + 1,
   }));
-  const years = Array.from(Array(100).keys()).map((i) => ({
+  const years = Array.from(Array(81).keys()).map((i) => ({
     key: (i + 1930).toString(),
     label: (i + 1930).toString(),
+    value: i + 1930,
   }));
+
   const submitPressed = async () => {
     const date = new Date(
       parseInt(selectedYear),
-      parseInt(months.indexOf(selectedMonth)),
+      months.indexOf(selectedMonth) + 1,
       parseInt(selectedDay)
     );
     const timestamp = Timestamp.fromDate(date);
@@ -70,7 +72,9 @@ const BirthdayScreen = (props) => {
           <View style={{ ...styles.pickersContainer, zIndex: 1 }}>
             <View>
               <DropDownPicker
+                autoScroll={true}
                 placeholder={selectedMonth}
+                onOpen={() => setDayOpen(false) && setYearOpen(false)}
                 open={monthOpen}
                 setOpen={setMonthOpen}
                 value={selectedMonth}
@@ -87,14 +91,16 @@ const BirthdayScreen = (props) => {
             </View>
             <View>
               <DropDownPicker
+                autoScroll={true}
                 placeholder={selectedDay}
+                onOpen={() => setMonthOpen(false) && setYearOpen(false)}
                 open={dayOpen}
                 setOpen={setDayOpen}
                 value={selectedDay}
                 setValue={setSelectedDay}
                 maxHeight={200}
                 style={styles.picker}
-                listKey={days.key}
+                listKey={days.keys}
                 items={days}
                 listMode="SCROLLVIEW"
                 scrollViewProps={{
@@ -104,14 +110,17 @@ const BirthdayScreen = (props) => {
             </View>
             <View>
               <DropDownPicker
+                defaultValue={years.keys[1999]}
+                autoScroll={true}
                 placeholder={selectedYear}
+                onOpen={() => setMonthOpen(false) && setDayOpen(false)}
                 open={yearOpen}
                 setOpen={setYearOpen}
                 value={selectedYear}
                 setValue={setSelectedYear}
                 maxHeight={200}
                 style={styles.picker}
-                listKey={years.key}
+                listKey={years.keys}
                 items={years}
                 listMode="SCROLLVIEW"
                 scrollViewProps={{
@@ -144,11 +153,13 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
-    marginBottom: 10,
+    margin: 10,
+    paddingLeft: 10,
+    paddingRight: 10,
   },
   picker: {
     width: 130,
-    marginHorizontal: 5,
+    margin: 3,
     borderRadius: 4,
     fontSize: 12,
     height: 30, // slightly bigger
