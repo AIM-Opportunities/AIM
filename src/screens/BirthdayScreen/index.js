@@ -7,6 +7,7 @@ import { db, authentication } from "../../../firebase/firebase-config";
 import { opportunitiesStore } from "../../store/opportunities";
 
 const BirthdayScreen = (props) => {
+  
   const [monthOpen, setMonthOpen] = useState(false);
   const [dayOpen, setDayOpen] = useState(false);
   const [yearOpen, setYearOpen] = useState(false);
@@ -50,12 +51,11 @@ const BirthdayScreen = (props) => {
     console.log(timestamp);
 
     await updateDoc(doc(db, "userProfiles", authentication.currentUser.uid), {
-      birthday: timestamp,
+      birthday: { date: timestamp },
     });
-    console.log("Submitted");
+
     props.removeCurrentScreen("birthday");
   };
-
   return (
     <>
       <View
