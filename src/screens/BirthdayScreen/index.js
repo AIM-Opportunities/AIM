@@ -7,7 +7,6 @@ import { db, authentication } from "../../../firebase/firebase-config";
 import { opportunitiesStore } from "../../store/opportunities";
 
 const BirthdayScreen = (props) => {
-  
   const [monthOpen, setMonthOpen] = useState(false);
   const [dayOpen, setDayOpen] = useState(false);
   const [yearOpen, setYearOpen] = useState(false);
@@ -74,7 +73,7 @@ const BirthdayScreen = (props) => {
               <DropDownPicker
                 autoScroll={true}
                 placeholder={selectedMonth}
-                onOpen={() => setDayOpen(false) && setYearOpen(false)}
+                onOpen={() => setDayOpen(false) & setYearOpen(false)}
                 open={monthOpen}
                 setOpen={setMonthOpen}
                 value={selectedMonth}
@@ -93,7 +92,7 @@ const BirthdayScreen = (props) => {
               <DropDownPicker
                 autoScroll={true}
                 placeholder={selectedDay}
-                onOpen={() => setMonthOpen(false) && setYearOpen(false)}
+                onOpen={() => setMonthOpen(false) & setYearOpen(false)}
                 open={dayOpen}
                 setOpen={setDayOpen}
                 value={selectedDay}
@@ -113,7 +112,7 @@ const BirthdayScreen = (props) => {
                 defaultValue={years.keys[1999]}
                 autoScroll={true}
                 placeholder={selectedYear}
-                onOpen={() => setMonthOpen(false) && setDayOpen(false)}
+                onOpen={() => setMonthOpen(false) & setDayOpen(false)}
                 open={yearOpen}
                 setOpen={setYearOpen}
                 value={selectedYear}
