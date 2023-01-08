@@ -11,7 +11,6 @@ import ForgotPasswordScreen from "../screens/ForgotPasswordScreen";
 import NewPasswordScreen from "../screens/NewPasswordScreen";
 import ProfileScreen from "../screens/ProfileScreen/";
 import HomeScreen from "../screens/HomeScreen";
-import TestScreen from "../screens/TestScreen";
 import { authentication } from "../../firebase/firebase-config";
 
 const Stack = createNativeStackNavigator();
@@ -50,10 +49,10 @@ const Navigation = () => {
             component={ForgotPasswordScreen}
           />
           <Stack.Screen name="NewPassword" component={NewPasswordScreen} />
+          <Stack.Screen name="Home" component={HomeScreen} />
         </Stack.Navigator>
       ) : (
         <Tab.Navigator
-    
           screenOptions={{
             headerShown: false,
             tabBarShowLabel: false,
@@ -61,7 +60,6 @@ const Navigation = () => {
             tabBarInactiveTintColor: "#737373",
             tabBarStyle: {
               backgroundColor: "black",
-              height: "7vh",
             },
           }}
         >

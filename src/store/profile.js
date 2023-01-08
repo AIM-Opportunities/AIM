@@ -37,7 +37,12 @@ class Profile {
 
   async setBirthday(birthdayParam) {
     await updateDoc(doc(db, "userProfiles", authentication.currentUser.uid), {
-      birthday: birthdayParam,
+      birthday: {date: birthdayParam},
+    });
+  }
+  async setBirthdaySkipped(birthdaySkippedParam) {
+    await updateDoc(doc(db, "userProfiles", authentication.currentUser.uid), {
+      birthday: {skippedOn: birthdaySkippedParam},
     });
   }
 }
