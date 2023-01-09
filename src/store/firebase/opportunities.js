@@ -1,5 +1,5 @@
 import { makeObservable, observable, action, toJS } from "mobx";
-import { db } from "../../firebase/firebase-config";
+import { db } from "../../../firebase/firebase-config";
 import { collection, getDocs } from "firebase/firestore";
 import { includes } from "lodash";
 

@@ -1,5 +1,5 @@
 import { makeObservable, observable, action, computed } from "mobx";
-import { authentication, db } from "../../firebase/firebase-config";
+import { authentication, db } from "../../../firebase/firebase-config";
 import { updateDoc, doc, getDoc } from "firebase/firestore";
 
 class Interests {
@@ -55,7 +55,6 @@ class Interests {
       }
     });
   }
-
 }
 
 export const interestsStore = new Interests();

@@ -1,5 +1,5 @@
 import { makeObservable, observable, action, computed } from "mobx";
-import { authentication, db } from "../../firebase/firebase-config";
+import { authentication, db } from "../../../firebase/firebase-config";
 import { updateDoc, doc, getDoc } from "firebase/firestore";
 
 class Profile {
@@ -37,12 +37,12 @@ class Profile {
 
   async setBirthday(birthdayParam) {
     await updateDoc(doc(db, "userProfiles", authentication.currentUser.uid), {
-      birthday: {date: birthdayParam},
+      birthday: { date: birthdayParam },
     });
   }
   async setBirthdaySkipped(birthdaySkippedParam) {
     await updateDoc(doc(db, "userProfiles", authentication.currentUser.uid), {
-      birthday: {skippedOn: birthdaySkippedParam},
+      birthday: { skippedOn: birthdaySkippedParam },
     });
   }
 }

@@ -14,7 +14,8 @@ import { storage } from "../../../firebase/firebase-config";
 import moment from "moment";
 import { toJS } from "mobx";
 import { observer } from "mobx-react";
-import { interestsStore } from "../../store/interests";
+import { interestsStore } from "../../store/firebase/interests";
+import { usajobsStore } from "../../store/usajobs";
 
 const ProfileScreen = observer(() => {
   const [isSignedIn, setIsSignedIn] = useState(!!!authentication.currentUser);
@@ -74,6 +75,11 @@ const ProfileScreen = observer(() => {
     };
     getDocument();
   }, []);
+
+  const usajobsPressed = async () => {
+    usajobsStore.searchJobs();
+    // usajobsStore.searchCodes();
+  };
 
   // set the user data in firestore db
   // press events can be async
@@ -187,13 +193,12 @@ const ProfileScreen = observer(() => {
         <FileInput onPress={onUploadResumePressed} />
         {completed && <Text style={{ color: "white" }}>Resume Stored!</Text>}
         <CustomButton text="Apply & Go Back" onPress={onSetDataPressed} />
-
+        <CustomButton text="Jobs" onPress={usajobsPressed} />
         <CustomButton
           text="Clear interests & Birthday"
           onPress={() => {
             interestsStore.clearInterests().then((opportunities) => {
               // wait until Promise resolves
-
             });
             navigation.navigate("Home");
           }}

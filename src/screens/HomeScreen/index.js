@@ -10,9 +10,9 @@ import { View, Text, FlatList, StyleSheet, Dimensions } from "react-native";
 import { useNavigation, useFocusEffect } from "@react-navigation/native";
 import CustomButton from "../../components/CustomButton";
 import { observer } from "mobx-react";
-import { interestsStore } from "../../store/interests";
-import { opportunitiesStore } from "../../store/opportunities";
-import { profileStore } from "../../store/profile";
+import { interestsStore } from "../../store/firebase/interests";
+import { opportunitiesStore } from "../../store/firebase/opportunities";
+import { profileStore } from "../../store/firebase/profile";
 import { toJS } from "mobx";
 import Moment from "moment";
 

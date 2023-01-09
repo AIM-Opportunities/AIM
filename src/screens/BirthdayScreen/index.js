@@ -4,7 +4,7 @@ import CustomButton from "../../components/CustomButton";
 import DropDownPicker from "react-native-dropdown-picker";
 import { updateDoc, doc, Timestamp } from "firebase/firestore";
 import { db, authentication } from "../../../firebase/firebase-config";
-import { opportunitiesStore } from "../../store/opportunities";
+import { opportunitiesStore } from "../../store/firebase/opportunities";
 
 const BirthdayScreen = (props) => {
   const [monthOpen, setMonthOpen] = useState(false);
