@@ -10,23 +10,23 @@ const BirthdayScreen = (props) => {
   const [monthOpen, setMonthOpen] = useState(false);
   const [dayOpen, setDayOpen] = useState(false);
   const [yearOpen, setYearOpen] = useState(false);
-  const [selectedMonth, setSelectedMonth] = useState("January");
+  const [selectedMonth, setSelectedMonth] = useState(1);
   const [selectedDay, setSelectedDay] = useState("1");
   const [selectedYear, setSelectedYear] = useState("1999");
 
   const months = [
-    { label: "January", key: "january", value: "january" },
-    { label: "February", key: "february", value: "february" },
-    { label: "March", key: "march", value: "march" },
-    { label: "April", key: "april", value: "april" },
-    { label: "May", key: "may", value: "may" },
-    { label: "June", key: "june", value: "june" },
-    { label: "July", key: "july", value: "july" },
-    { label: "August", key: "august", value: "august" },
-    { label: "September", key: "september", value: "september" },
-    { label: "October", key: "october", value: "october" },
-    { label: "November", key: "november", value: "november" },
-    { label: "December", key: "december", value: "december" },
+    { label: "January", key: "january", value: 1 },
+    { label: "February", key: "february", value: 2},
+    { label: "March", key: "march", value: 3},
+    { label: "April", key: "april", value: 4 },
+    { label: "May", key: "may", value: 5 },
+    { label: "June", key: "june", value: 6 },
+    { label: "July", key: "july", value: 7 },
+    { label: "August", key: "august", value: 8 },
+    { label: "September", key: "september", value: 9 },
+    { label: "October", key: "october", value: 10 },
+    { label: "November", key: "november", value: 11 },
+    { label: "December", key: "december", value: 12 },
   ];
   const days = Array.from(Array(31).keys()).map((i) => ({
     key: (i + 1).toString(),
@@ -42,9 +42,10 @@ const BirthdayScreen = (props) => {
   const submitPressed = async () => {
     const date = new Date(
       parseInt(selectedYear),
-      months.indexOf(selectedMonth) + 1,
+      selectedMonth,
       parseInt(selectedDay)
     );
+    console.log(months.indexOf(selectedMonth) + 1)
     const timestamp = Timestamp.fromDate(date);
 
     console.log(timestamp);
