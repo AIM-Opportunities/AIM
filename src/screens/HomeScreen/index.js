@@ -6,7 +6,7 @@ import React, {
   useCallback,
   createRef,
 } from "react";
-import { View, Text, FlatList, StyleSheet, Dimensions } from "react-native";
+import { View, Text, FlatList, StyleSheet, Dimensions, TouchableOpacity } from "react-native";
 import { useNavigation, useFocusEffect } from "@react-navigation/native";
 import CustomButton from "../../components/CustomButton";
 import { observer } from "mobx-react";
@@ -15,6 +15,7 @@ import { opportunitiesStore } from "../../store/firebase/opportunities";
 import { profileStore } from "../../store/firebase/profile";
 import { toJS } from "mobx";
 import Moment from "moment";
+import { sendEmailVerification } from "firebase/auth/react-native";
 
 const HomeScreen = observer(() => {
   const navigation = useNavigation();
@@ -113,6 +114,13 @@ const HomeScreen = observer(() => {
     alert("LIKED!");
   };
 
+  // Custom button
+  const LikeButton = ({ onPress, title }) => (
+    <TouchableOpacity onPress={likePress} style={styles.likeButton}>
+      <Text style={styles.likeButtonText}>{title}</Text>
+    </TouchableOpacity>
+  );
+
   // Lazy-load the screen components
   const TestScreen = lazy(() => import("../../screens/TestScreen"));
   const BirthdayScreen = lazy(() => import("../../screens/BirthdayScreen"));
@@ -144,14 +152,18 @@ const HomeScreen = observer(() => {
     const dateAdded = new Date(item.DateAdded?.seconds * 1000).toDateString();
     return (
       <View style={styles.itemWrapper}>
-        <Text>{item.Company}</Text>
-        <Text>
-          {item.Title}
+        <Text style={styles.title}>{item.Company}</Text>
+        <Text style={styles.info}>
+        <Text style={styles.infoTitle}>Job Title: </Text> {item.Title}
           {`\n`}
         </Text>
-        <Text>Added on: {dateAdded}</Text>
-        <CustomButton text="Like" onPress={likePress} />
-        <Text style={{ opacity: 1 }}>{item.lookingFor}</Text>
+        <Text style={styles.info}><Text style={styles.infoTitle}>Description: </Text>This will be the job deescription here! Lots of words!</Text>
+        {/* <Text style={styles.info}><Text style={styles.infoTitle}>Looking For: </Text>{item.lookingFor}</Text> */}
+        <Text style={styles.info}><Text style={styles.infoTitle}>Added on: </Text>{dateAdded}</Text>
+        {/* <CustomButton style={styles.button} text="Like" onPress={likePress} /> */}
+        <View style={styles.paddingTop}>
+          <LikeButton title="Like" size="sm"></LikeButton>
+        </View>
       </View>
     );
   };
@@ -199,14 +211,62 @@ const styles = StyleSheet.create({
     width: Dimensions.get("window").width,
     height: Dimensions.get("window").height,
     justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "white",
+    // alignItems: "center",
+    backgroundColor: "#495057",
     borderColor: "#000",
     borderWidth: 2,
-    alignSelf: "center",
+    // alignSelf: "center",
   },
   container: {
     flex: 1,
+    flexWrap: "wrap",
   },
+  title: {
+    // fontFamily: "MontserratRoman-Regular",
+    fontSize: 50,
+    fontWeight: "bold",
+    // marginTop: 30,
+    marginBottom: 30,
+    marginLeft: 10,
+    color: "white",
+    borderBottomColor: "white",
+    borderBottomWidth: 2,
+    width: "88%"
+    // borderBottomRightRadius: 50,
+  },
+  info: {
+    color: "white",
+    // fontFamily: "Quicksand-Regular",
+    fontSize: 18,
+    marginLeft: 15,
+    paddingBottom: 5,
+  },
+  infoTitle: {
+    color: "white",
+    // fontFamily: "Quicksand-Regular",
+    fontSize: 18,
+    fontWeight: "bold",
+    marginLeft: 10,
+  },
+  likeButton: {
+    padding: 15,
+    backgroundColor: "#0382FF",
+    color: "white",
+    borderRadius: 5,
+    width: "80%",
+    alignSelf: "center",
+    
+  },
+  likeButtonText: {
+    color: "white",
+    // fontFamily: "Quicksand-Regular",
+    fontSize: 18,
+    fontWeight: "bold",
+    alignSelf: "center",
+    textTransform: "uppercase",
+  },
+  paddingTop: {
+    paddingTop: 30,
+  }
 });
 export default HomeScreen;
