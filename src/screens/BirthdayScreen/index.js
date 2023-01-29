@@ -28,11 +28,26 @@ const BirthdayScreen = (props) => {
     { label: "November", key: "november", value: 11 },
     { label: "December", key: "december", value: 12 },
   ];
-  const days = Array.from(Array(31).keys()).map((i) => ({
+
+  const createDays = (selectedMonth) => {
+    let dayNum;
+    if(selectedMonth === 1 || selectedMonth === 3 || selectedMonth === 5 || selectedMonth === 7 ||
+      selectedMonth === 8 || selectedMonth === 10 || selectedMonth === 12) {
+        dayNum = 31;
+      }
+      else if(selectedMonth === 4 || selectedMonth === 6 || selectedMonth === 9 || selectedMonth === 11) {
+        dayNum = 30;
+      } else {
+        dayNum = 28;
+      }
+      return dayNum;
+  }
+  const days = Array.from(Array(createDays(selectedMonth)).keys()).map((i) => ({
     key: (i + 1).toString(),
     label: (i + 1).toString(),
     value: i + 1,
   }));
+  
   const years = Array.from(Array(81).keys()).map((i) => ({
     key: (i + 1930).toString(),
     label: (i + 1930).toString(),
