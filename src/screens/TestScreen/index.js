@@ -23,7 +23,7 @@ const TestScreen = () => {
         <View style={styles.root}>
           <Text style={styles.title}>Test Screen</Text>
           <CustomButton text="Edit Profile" onPress={onProfilePressed} />
-          <Text style={{  opacity:.0001 }}>TestScreen</Text>
+          <Text style={{ opacity: 0.0001 }}>TestScreen</Text>
         </View>
       </View>
     </>
@@ -37,7 +37,7 @@ const styles = StyleSheet.create({
     width: Dimensions.get("window").width,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "#0582FF",
+    backgroundColor: "#495057",
     borderColor: "#000",
     borderWidth: 2,
     alignSelf: "center",

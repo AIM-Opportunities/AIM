@@ -15,7 +15,7 @@ const App = () => {
 const styles = StyleSheet.create({
   root: {
     flexGrow: 1,
-    backgroundColor: "#0582FF",
+    backgroundColor: "#495057",
   },
 });
 

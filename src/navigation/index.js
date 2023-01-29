@@ -18,7 +18,7 @@ const Tab = createBottomTabNavigator();
 
 const MyTheme = {
   colors: {
-    background: "#0582FF",
+    background: "#495057",
   },
 };
 

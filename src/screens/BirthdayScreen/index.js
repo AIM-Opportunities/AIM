@@ -16,8 +16,8 @@ const BirthdayScreen = (props) => {
 
   const months = [
     { label: "January", key: "january", value: 1 },
-    { label: "February", key: "february", value: 2},
-    { label: "March", key: "march", value: 3},
+    { label: "February", key: "february", value: 2 },
+    { label: "March", key: "march", value: 3 },
     { label: "April", key: "april", value: 4 },
     { label: "May", key: "may", value: 5 },
     { label: "June", key: "june", value: 6 },
@@ -31,23 +31,34 @@ const BirthdayScreen = (props) => {
 
   const createDays = (selectedMonth) => {
     let dayNum;
-    if(selectedMonth === 1 || selectedMonth === 3 || selectedMonth === 5 || selectedMonth === 7 ||
-      selectedMonth === 8 || selectedMonth === 10 || selectedMonth === 12) {
-        dayNum = 31;
-      }
-      else if(selectedMonth === 4 || selectedMonth === 6 || selectedMonth === 9 || selectedMonth === 11) {
-        dayNum = 30;
-      } else {
-        dayNum = 28;
-      }
-      return dayNum;
-  }
+    if (
+      selectedMonth === 1 ||
+      selectedMonth === 3 ||
+      selectedMonth === 5 ||
+      selectedMonth === 7 ||
+      selectedMonth === 8 ||
+      selectedMonth === 10 ||
+      selectedMonth === 12
+    ) {
+      dayNum = 31;
+    } else if (
+      selectedMonth === 4 ||
+      selectedMonth === 6 ||
+      selectedMonth === 9 ||
+      selectedMonth === 11
+    ) {
+      dayNum = 30;
+    } else {
+      dayNum = 28;
+    }
+    return dayNum;
+  };
   const days = Array.from(Array(createDays(selectedMonth)).keys()).map((i) => ({
     key: (i + 1).toString(),
     label: (i + 1).toString(),
     value: i + 1,
   }));
-  
+
   const years = Array.from(Array(81).keys()).map((i) => ({
     key: (i + 1930).toString(),
     label: (i + 1930).toString(),
@@ -60,7 +71,7 @@ const BirthdayScreen = (props) => {
       selectedMonth,
       parseInt(selectedDay)
     );
-    console.log(months.indexOf(selectedMonth) + 1)
+    console.log(months.indexOf(selectedMonth) + 1);
     const timestamp = Timestamp.fromDate(date);
 
     console.log(timestamp);
@@ -87,6 +98,8 @@ const BirthdayScreen = (props) => {
           <View style={{ ...styles.pickersContainer, zIndex: 1 }}>
             <View>
               <DropDownPicker
+                placeholderStyle={{ color: "white" }}
+                labelStyle={{ color: "white" }}
                 autoScroll={true}
                 placeholder={selectedMonth}
                 onOpen={() => setDayOpen(false) & setYearOpen(false)}
@@ -106,6 +119,8 @@ const BirthdayScreen = (props) => {
             </View>
             <View>
               <DropDownPicker
+                placeholderStyle={{ color: "white" }}
+                labelStyle={{ color: "white" }}
                 autoScroll={true}
                 placeholder={selectedDay}
                 onOpen={() => setMonthOpen(false) & setYearOpen(false)}
@@ -125,6 +140,8 @@ const BirthdayScreen = (props) => {
             </View>
             <View>
               <DropDownPicker
+                placeholderStyle={{ color: "white" }}
+                labelStyle={{ color: "white" }}
                 defaultValue={years.keys[1999]}
                 autoScroll={true}
                 placeholder={selectedYear}
@@ -158,7 +175,7 @@ const styles = StyleSheet.create({
     width: Dimensions.get("window").width,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "#0582FF",
+    backgroundColor: "#495057",
     borderColor: "#000",
     borderWidth: 2,
     alignSelf: "center",
@@ -180,8 +197,7 @@ const styles = StyleSheet.create({
     height: 30, // slightly bigger
     fontWeight: "semi-bold",
     marginBottom: 20,
-    backgroundColor: "#0582FF",
-    color: "white",
+    backgroundColor: "#495057",
     borderColor: "rgba(0, 0, 0, 0.07)",
   },
   title: {
