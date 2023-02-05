@@ -6,7 +6,14 @@ import React, {
   useCallback,
   createRef,
 } from "react";
-import { View, Text, FlatList, StyleSheet, Dimensions, TouchableOpacity } from "react-native";
+import {
+  View,
+  Text,
+  FlatList,
+  StyleSheet,
+  Dimensions,
+  TouchableOpacity,
+} from "react-native";
 import { useNavigation, useFocusEffect } from "@react-navigation/native";
 import CustomButton from "../../components/CustomButton";
 import { observer } from "mobx-react";
@@ -110,12 +117,20 @@ const HomeScreen = observer(() => {
     });
   };
 
+  const FloatingComponent = () => {
+    return (
+      <View style={styles.floatingContainer}>
+        <Text>I am a floating component, i will become the progress bar</Text>
+      </View>
+    );
+  };
+
   const likePress = () => {
-    alert("LIKED!");
+    alert("Saved!");
   };
 
   // Custom button
-  const LikeButton = ({ onPress, title }) => (
+  const LikeButton = ({ title }) => (
     <TouchableOpacity onPress={likePress} style={styles.likeButton}>
       <Text style={styles.likeButtonText}>{title}</Text>
     </TouchableOpacity>
@@ -154,15 +169,25 @@ const HomeScreen = observer(() => {
       <View style={styles.itemWrapper}>
         <Text style={styles.title}>{item.Company}</Text>
         <Text style={styles.info}>
-        <Text style={styles.infoTitle}>Job Title: </Text> {item.Title}
-          {`\n`}
+          <Text style={styles.infoTitle}>Job Title: </Text> {item.Title}
         </Text>
-        <Text style={styles.info}><Text style={styles.infoTitle}>Description: </Text>This will be the job deescription here! Lots of words!</Text>
+        <Text style={styles.info}>
+          <Text style={styles.infoTitle}>Description: </Text>"Sed ut
+          perspiciatis unde omnis iste natus error sit voluptatem accusantium
+          doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo
+          inventore veritatis et quasi architecto beatae vitae dicta sunt
+          explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut
+          odit aut fugit, sed quia consequuntur magni dolores eos qui ratione
+          voluptatem sequi nesciunt."
+        </Text>
         {/* <Text style={styles.info}><Text style={styles.infoTitle}>Looking For: </Text>{item.lookingFor}</Text> */}
-        <Text style={styles.info}><Text style={styles.infoTitle}>Added on: </Text>{dateAdded}</Text>
+        <Text style={styles.info}>
+          <Text style={styles.infoTitle}>Added on: </Text>
+          {dateAdded}
+        </Text>
         {/* <CustomButton style={styles.button} text="Like" onPress={likePress} /> */}
         <View style={styles.paddingTop}>
-          <LikeButton title="Like" size="sm"></LikeButton>
+          <LikeButton title="SAVE" size="sm"></LikeButton>
         </View>
       </View>
     );
@@ -170,38 +195,45 @@ const HomeScreen = observer(() => {
 
   return (
     <View style={styles.container}>
-      <FlatList
-        ref={flatListRef}
-        onScroll={(e) => {
-          let offset = e.nativeEvent.contentOffset.y + 30;
-          setFlatlistIndex(parseInt(offset / Dimensions.get("window").height)); // your cell height
-          if (flatlistIndex !== flatlistLastIndex) {
-            setFlatlistLastIndex(flatlistIndex);
-            scrollHandler();
-          } else {
-          }
-        }}
-        data={docs}
-        renderItem={renderItem}
-        // onTouchStart={onTouchStart}
-        // onTouchEnd={onTouchEnd}
-        // onTouchMove={() => console.log("onTouchMove")}
-        // onTouchEnd={() => console.log("onTouchEnd")}
-        // onScrollBeginDrag={() => console.log("onScrollBeginDrag")}
-        // onScrollEndDrag={() => console.log("onScrollEndDrag")}
-        //onMomentumScrollBegin={() => console.log("onMomentumScrollBegin")}
-        //onMomentumScrollEnd={() => console.log("onMomentumScrollEnd")}
-        onEndReachedThreshold={0.5}
-        onEndReached={onEndReached}
-        pagingEnabled={true}
-        snapToAlignment="start"
-        scrollEnabled={true}
-        decelerationRate={"fast"}
-        snapToInterval={Dimensions.get("window").height}
-        keyboardDismissMode="on-drag"
-        showsVerticalScrollIndicator={true}
-        keyExtractor={(item) => item.id}
-      />
+      <View style={styles.floatingContainer}>
+      <FloatingComponent />
+      </View>
+      <View style={styles.container}>
+        <FlatList
+          ref={flatListRef}
+          onScroll={(e) => {
+            let offset = e.nativeEvent.contentOffset.y + 30;
+            setFlatlistIndex(
+              parseInt(offset / Dimensions.get("window").height)
+            ); // your cell height
+            if (flatlistIndex !== flatlistLastIndex) {
+              setFlatlistLastIndex(flatlistIndex);
+              scrollHandler();
+            } else {
+            }
+          }}
+          data={docs}
+          renderItem={renderItem}
+          // onTouchStart={onTouchStart}
+          // onTouchEnd={onTouchEnd}
+          // onTouchMove={() => console.log("onTouchMove")}
+          // onTouchEnd={() => console.log("onTouchEnd")}
+          // onScrollBeginDrag={() => console.log("onScrollBeginDrag")}
+          // onScrollEndDrag={() => console.log("onScrollEndDrag")}
+          //onMomentumScrollBegin={() => console.log("onMomentumScrollBegin")}
+          //onMomentumScrollEnd={() => console.log("onMomentumScrollEnd")}
+          onEndReachedThreshold={0.5}
+          onEndReached={onEndReached}
+          pagingEnabled={true}
+          snapToAlignment="start"
+          scrollEnabled={true}
+          decelerationRate={"fast"}
+          snapToInterval={Dimensions.get("window").height}
+          keyboardDismissMode="on-drag"
+          showsVerticalScrollIndicator={true}
+          keyExtractor={(item) => item.id}
+        />
+      </View>
     </View>
   );
 });
@@ -210,7 +242,7 @@ const styles = StyleSheet.create({
   itemWrapper: {
     width: Dimensions.get("window").width,
     height: Dimensions.get("window").height,
-    justifyContent: "center",
+    // justifyContent: "center",
     // alignItems: "center",
     backgroundColor: "#495057",
     borderColor: "#000",
@@ -220,25 +252,38 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     flexWrap: "wrap",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  floatingContainer: {
+    position: "absolute",
+    top: 10,
+    left: 0,
+    right: 0,
+    alignItems: "center",
+    backgroundColor: "white",
+    borderRadius: 5,
+    zIndex: 999,
   },
   title: {
     // fontFamily: "MontserratRoman-Regular",
-    fontSize: 50,
+    fontSize: 40,
     fontWeight: "bold",
-    // marginTop: 30,
+    marginTop: 70,
     marginBottom: 30,
     marginLeft: 10,
     color: "white",
     borderBottomColor: "white",
     borderBottomWidth: 2,
-    width: "88%"
+    width: "88%",
     // borderBottomRightRadius: 50,
   },
   info: {
     color: "white",
     // fontFamily: "Quicksand-Regular",
     fontSize: 18,
-    marginLeft: 15,
+    marginLeft: 25,
+    marginRight: 25,
     paddingBottom: 5,
   },
   infoTitle: {
@@ -246,7 +291,6 @@ const styles = StyleSheet.create({
     // fontFamily: "Quicksand-Regular",
     fontSize: 18,
     fontWeight: "bold",
-    marginLeft: 10,
   },
   likeButton: {
     padding: 15,
@@ -255,7 +299,6 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     width: "80%",
     alignSelf: "center",
-    
   },
   likeButtonText: {
     color: "white",
@@ -266,7 +309,7 @@ const styles = StyleSheet.create({
     textTransform: "uppercase",
   },
   paddingTop: {
-    paddingTop: 30,
-  }
+    paddingTop: 10,
+  },
 });
 export default HomeScreen;
