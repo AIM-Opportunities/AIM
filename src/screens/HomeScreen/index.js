@@ -119,7 +119,7 @@ const HomeScreen = observer(() => {
 
   const FloatingComponent = () => {
     return (
-      <View style={styles.floatingContainer}>
+      <View >
         <Text>I am a floating component, i will become the progress bar</Text>
       </View>
     );
@@ -195,10 +195,12 @@ const HomeScreen = observer(() => {
 
   return (
     <View style={styles.container}>
+
       <View style={styles.floatingContainer}>
       <FloatingComponent />
       </View>
-      <View style={styles.container}>
+
+      <View>
         <FlatList
           ref={flatListRef}
           onScroll={(e) => {
@@ -260,6 +262,7 @@ const styles = StyleSheet.create({
     top: 10,
     left: 0,
     right: 0,
+    padding: 7,
     alignItems: "center",
     backgroundColor: "white",
     borderRadius: 5,
