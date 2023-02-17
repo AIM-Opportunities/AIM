@@ -196,11 +196,11 @@ const HomeScreen = observer(() => {
   return (
     <View style={styles.container}>
 
-      <View style={styles.floatingContainer}>
-      <FloatingComponent />
-      </View>
+       <View style={styles.floatingContainer}>
+       <FloatingComponent />
+       </View>
 
-      <View>
+
         <FlatList
           ref={flatListRef}
           onScroll={(e) => {
@@ -236,7 +236,6 @@ const HomeScreen = observer(() => {
           keyExtractor={(item) => item.id}
         />
       </View>
-    </View>
   );
 });
 
