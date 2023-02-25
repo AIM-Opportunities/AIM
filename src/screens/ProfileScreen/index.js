@@ -14,6 +14,7 @@ import { storage } from "../../../firebase/firebase-config";
 import moment from "moment";
 import { toJS } from "mobx";
 import { observer } from "mobx-react";
+import { opportunitiesStore } from "../../store/firebase/opportunities";
 import { interestsStore } from "../../store/firebase/interests";
 import { usajobsStore } from "../../store/usajobs";
 
@@ -101,6 +102,7 @@ const ProfileScreen = observer(() => {
   const onSignOutPressed = () => {
     signOut(authentication)
       .then((re) => {
+        opportunitiesStore.reset();
         setIsSignedIn(false);
         navigation.navigate("SignIn");
       })

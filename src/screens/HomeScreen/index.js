@@ -22,8 +22,6 @@ import { opportunitiesStore } from "../../store/firebase/opportunities";
 import { profileStore } from "../../store/firebase/profile";
 import { toJS } from "mobx";
 import Moment from "moment";
-import { sendEmailVerification } from "firebase/auth/react-native";
-
 const HomeScreen = observer(() => {
   const navigation = useNavigation();
   const flatListRef = createRef();
@@ -119,8 +117,11 @@ const HomeScreen = observer(() => {
 
   const FloatingComponent = () => {
     return (
-      <View >
-        <Text>I am a floating component, i will become the progress bar</Text>
+      <View>
+        <Text>
+          {interestsStore.totalStickingTime}
+          
+          </Text>
       </View>
     );
   };
@@ -195,47 +196,43 @@ const HomeScreen = observer(() => {
 
   return (
     <View style={styles.container}>
-
-       <View style={styles.floatingContainer}>
-       <FloatingComponent />
-       </View>
-
-
-        <FlatList
-          ref={flatListRef}
-          onScroll={(e) => {
-            let offset = e.nativeEvent.contentOffset.y + 30;
-            setFlatlistIndex(
-              parseInt(offset / Dimensions.get("window").height)
-            ); // your cell height
-            if (flatlistIndex !== flatlistLastIndex) {
-              setFlatlistLastIndex(flatlistIndex);
-              scrollHandler();
-            } else {
-            }
-          }}
-          data={docs}
-          renderItem={renderItem}
-          // onTouchStart={onTouchStart}
-          // onTouchEnd={onTouchEnd}
-          // onTouchMove={() => console.log("onTouchMove")}
-          // onTouchEnd={() => console.log("onTouchEnd")}
-          // onScrollBeginDrag={() => console.log("onScrollBeginDrag")}
-          // onScrollEndDrag={() => console.log("onScrollEndDrag")}
-          //onMomentumScrollBegin={() => console.log("onMomentumScrollBegin")}
-          //onMomentumScrollEnd={() => console.log("onMomentumScrollEnd")}
-          onEndReachedThreshold={0.5}
-          onEndReached={onEndReached}
-          pagingEnabled={true}
-          snapToAlignment="start"
-          scrollEnabled={true}
-          decelerationRate={"fast"}
-          snapToInterval={Dimensions.get("window").height}
-          keyboardDismissMode="on-drag"
-          showsVerticalScrollIndicator={true}
-          keyExtractor={(item) => item.id}
-        />
+      <View style={styles.floatingContainer}>
+        <FloatingComponent />
       </View>
+
+      <FlatList
+        ref={flatListRef}
+        onScroll={(e) => {
+          let offset = e.nativeEvent.contentOffset.y + 30;
+          setFlatlistIndex(parseInt(offset / Dimensions.get("window").height)); // your cell height
+          if (flatlistIndex !== flatlistLastIndex) {
+            setFlatlistLastIndex(flatlistIndex);
+            scrollHandler();
+          } else {
+          }
+        }}
+        data={docs}
+        renderItem={renderItem}
+        // onTouchStart={onTouchStart}
+        // onTouchEnd={onTouchEnd}
+        // onTouchMove={() => console.log("onTouchMove")}
+        // onTouchEnd={() => console.log("onTouchEnd")}
+        // onScrollBeginDrag={() => console.log("onScrollBeginDrag")}
+        // onScrollEndDrag={() => console.log("onScrollEndDrag")}
+        //onMomentumScrollBegin={() => console.log("onMomentumScrollBegin")}
+        //onMomentumScrollEnd={() => console.log("onMomentumScrollEnd")}
+        onEndReachedThreshold={0.5}
+        onEndReached={onEndReached}
+        pagingEnabled={true}
+        snapToAlignment="start"
+        scrollEnabled={true}
+        decelerationRate={"fast"}
+        snapToInterval={Dimensions.get("window").height}
+        keyboardDismissMode="on-drag"
+        showsVerticalScrollIndicator={true}
+        keyExtractor={(item) => item.id}
+      />
+    </View>
   );
 });
 

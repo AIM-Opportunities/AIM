@@ -14,7 +14,11 @@ class Opportunities {
       getMoreOpportunities: action,
     });
   }
-
+  reset() {
+    this.opportunities = [];
+    this.allDocIds = [];
+  }
+  
   getOpportunities() {
     return new Promise((resolve, reject) => {
       const getDocument = () => {
@@ -67,7 +71,7 @@ class Opportunities {
             const threeOrRest =
               remainingDocs.length >= 3 ? 3 : remainingDocs.length;
             const nextDocs = remainingDocs.slice(0, threeOrRest);
-
+ 
             // Update the state with the new documents
             this.opportunities = [...this.opportunities, ...nextDocs];
             resolve(this.opportunities, this.allDocIds);
@@ -83,6 +87,7 @@ class Opportunities {
         });
       };
       getDocument();
+      console.log("got more opportunities");
     });
   }
 }

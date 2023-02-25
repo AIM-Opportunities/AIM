@@ -2,6 +2,22 @@ import { makeObservable, observable, action, computed } from "mobx";
 import { authentication, db } from "../../../firebase/firebase-config";
 import { updateDoc, doc, getDoc } from "firebase/firestore";
 
+function sumIntegers(map) {
+  let sum = 0;
+  for (const value of Object.values(map)) {
+    if (typeof value === "number") {
+      sum += value;
+    } else if (typeof value === "string") {
+      const integers = value.split(":").map(str => parseInt(str.trim()));
+      for (const integer of integers) {
+        if (!isNaN(integer)) {
+          sum += integer;
+        }
+      }
+    }
+  }
+  return sum;
+}
 class Interests {
   interests = "";
   constructor() {
@@ -9,6 +25,7 @@ class Interests {
       interests: observable,
       getInterests: action,
       clearInterests: action,
+      totalStickingTime: computed,
     });
   }
 
@@ -54,6 +71,11 @@ class Interests {
         reject(error);
       }
     });
+  }
+
+  get totalStickingTime() {
+    const interestsMap = this.interests;
+    return sumIntegers(interestsMap);
   }
 }
 
